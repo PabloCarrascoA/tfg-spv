@@ -5,12 +5,12 @@ DATABASE_URL = "test.db"
 
 @contextmanager
 def get_db_connection():
-    conn = sqlite3.connect(DATABASE_URL)
+    db = sqlite3.connect(DATABASE_URL)
     try:
-        yield conn
+        yield db
     finally:
-        conn.close()
+        db.close()
 
 def get_db():
-    with get_db_connection() as conn:
-        yield conn
+    with get_db_connection() as db:
+        yield db
