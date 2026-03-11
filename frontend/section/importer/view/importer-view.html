@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Importador</title>
+</head>
+
+<body>
+
+<h2>Importador</h2>
+
+<!-- PASO 1 -->
+
+<h3>1. Seleccionar tabla</h3>
+
+<select id="tabla">
+<option value="">- Seleccionar -</option>
+<option value="bandas">Bandas</option>
+<option value="sin_fin">Empalmes - Sin Fin</option>
+<option value="extremos_preparados">Empalmes - Extremos Preparados</option>
+<option value="grapas">Empalmes - Grapas</option>
+</select>
+<button type="button" onclick="cancelarImport()" style="margin-left:10px;">Cancelar</button>
+
+<div id="tabla_campos"></div>
+
+<hr>
+
+<!-- PASO 2 -->
+
+<h3>2. Subir archivo</h3>
+
+<input type="file" id="archivo">
+
+<button type="button" onclick="subirArchivo()">Cargar archivo</button>
+
+<div id="preview_archivo"></div>
+
+<hr>
+
+<!-- PASO 3 -->
+
+<h3>3. Relacionar columnas</h3>
+
+<div id="mapeo_container"></div>
+
+<button type="button" onclick="previewMapeo()">Previsualizar</button>
+<button type="button" onclick="importar()">Importar</button>
+<button type="button" onclick="cancelarImport()">Cancelar</button>
+
+<div id="preview_import"></div>
+
+<hr>
+
+<div id="resultado_import"></div>
+
+<script src="../js/importer.js"></script>
+
+</body>
+</html>

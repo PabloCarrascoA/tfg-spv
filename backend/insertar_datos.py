@@ -4,6 +4,11 @@ from app.db.database import get_db_connection
 # Datos de prueba
 # -----------------------
 
+perfiles_longitudinales = [
+    {"nombre": "Perfil ejemplo 1", "codigo": "PL01", "precio": 25.0},
+    {"nombre": "Perfil ejemplo 2", "codigo": "PL02", "precio": 35.0}
+]
+
 sin_fin = [
     {"codigo": "SF01", "precio": 15.0},
     {"codigo": "SF02", "precio": 20.0}
@@ -118,6 +123,24 @@ with get_db_connection() as conn:
             g["precio"]
         ))
 
+    # =====================
+    # PERFILES
+    # =====================
+
+    codigos_perfiles = [p["codigo"] for p in perfiles_longitudinales]
+    placeholders = ",".join("?" * len(codigos_perfiles))
+    cursor.execute(f"DELETE FROM perfiles_longitudinales WHERE codigo IN ({placeholders})", codigos_perfiles)
+
+    for perfil_l in perfiles_longitudinales:
+        cursor.execute("""
+            INSERT INTO perfiles_longitudinales (nombre, codigo, precio)
+            VALUES (?, ?, ?)
+        """, (
+            perfil_l["nombre"],
+            perfil_l["codigo"],
+            perfil_l["precio"]
+        ))
+
     conn.commit()
 
     print("Datos insertados correctamente:")
@@ -125,3 +148,5 @@ with get_db_connection() as conn:
     print(f"- {len(sin_fin)} sin fin")
     print(f"- {len(extremos_preparados)} extremos preparados")
     print(f"- {len(grapas)} grapas")
+    print(f"- {len(perfiles_longitudinales)} perfiles longitudinales")
+

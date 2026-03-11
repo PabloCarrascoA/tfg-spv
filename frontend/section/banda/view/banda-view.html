@@ -1,17 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>Prueba</p>
-    <select>
-        <option>-Seleccionar-</option>
-        <option>Código</option>
+<!doctype html>
+<html>
+  <head>
+    <title>Calcular Banda</title>
+  </head>
+  <body>
+    <h2>Calcular precio de banda</h2>
 
+    <label>Código:</label>
+    <select id="codigo"></select><br /><br />
+
+    <label>Largo:</label>
+    <input type="number" id="largo" step="0.01" /><br /><br />
+
+    <label>Ancho:</label>
+    <input type="number" id="ancho" step="0.01" /><br /><br />
+
+    <label>Tipo de empalme:</label>
+    <select id="tipoEmpalme">
+      <option value="" disabled selected>-- Selecciona tipo --</option>
+      <option value="banda-abierta">Banda abierta</option>
+      <option value="banda-sin-fin">Banda sin fin</option>
+      <option value="extremos-preparados">Extremos preparados</option>
+      <option value="grapas">Grapas</option>
     </select>
-    
-</body>
+    <br /><br />
+
+    <label>Código empalme:</label>
+    <select id="codigoEmpalme" disabled>
+      <option value="" disabled selected>-- Selecciona código --</option>
+    </select>
+    <br /><br />
+
+    <button id="calcular">Calcular</button>
+
+    <h3 id="resultado"></h3>
+
+    <script src="../js/banda.js"></script>
+  </body>
 </html>

@@ -9,6 +9,8 @@ from app.services.banda_service import (
     obtener_banda_por_codigo,
     calcular_precio_banda,
     obtener_empalmes,
+    obtener_perfil_longitudinal_por_codigo,
+    obtener_perfil_transversal_por_codigo
 )
 from app.schemas.configuracion import CalculoBandaRequest, CalculoBandaResponse
 
@@ -16,7 +18,7 @@ from app.services.banda_service import calcular_precio_empalme, obtener_bandas
 
 router = APIRouter(
     prefix="/configuracion",
-    tags=["Configuración"]
+    tags=["Configurador"]
 )
 
 @router.get("/bandas")
@@ -46,6 +48,30 @@ def listar_empalmes(tipo: str, db = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Tipo de empalme no encontrado")
 
     return empalmes
+
+@router.get('perfiles/longitudinales/{codigo}')
+def obtener_perfil(codigo: str, db = Depends(get_db)):
+    perfil = obtener_perfil_longitudinal_por_codigo(db, codigo)
+
+    if not perfil:
+        raise HTTPException(status_code=404, detail="Perfil no encontrado")
+    
+    return {
+        "nombre": perfil["nombre"],
+        "precio": perfil["precio"]
+    }
+
+@router.get('perfiles/transversales/{codigo}')
+def obtener_perfil_transversal(codigo: str, db = Depends(get_db)):
+    perfil = obtener_perfil_transversal_por_codigo(db, codigo)
+
+    if not perfil:
+        raise HTTPException(status_code=404, detail="Perfil no encontrado")
+    
+    return {
+        "nombre": perfil["nombre"],
+        "precio": perfil["precio"]
+    }
 
 @router.post("/calcular", response_model=CalculoBandaResponse)
 def calcular(request: CalculoBandaRequest, db = Depends(get_db)):

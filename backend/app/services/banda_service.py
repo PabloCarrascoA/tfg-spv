@@ -25,6 +25,44 @@ def obtener_banda_por_codigo(db, codigo: str):
         "precio": row[6]
     }
 
+def obtener_perfil_longitudinal_por_codigo(db, codigo: str):
+    cursor = db.cursor()
+    cursor.execute(
+        "SELECT id, nombre, codigo, precio FROM perfiles_longitudinales WHERE codigo = ?",
+        (codigo,)
+    )
+
+    row = cursor.fetchone()
+
+    if row is None:
+        return None
+    
+    return {
+        "id": row[0],
+        "nombre": row[1],
+        "codigo": row[2],
+        "precio": row[3]
+    }
+
+def obtener_perfil_transversal_por_codigo(db, codigo: str):
+    cursor = db.cursor()
+    cursor.execute(
+        "SELECT id, nombre, codigo, precio FROM perfiles_transversales WHERE codigo = ?",
+        (codigo,)
+    )
+
+    row = cursor.fetchone()
+
+    if row is None:
+        return None
+    
+    return {
+        "id": row[0],
+        "nombre": row[1],
+        "codigo": row[2],
+        "precio": row[3]
+    }
+
 def obtener_bandas(db):
     """
     Obtiene todas las bandas usando SQL directo.
@@ -106,11 +144,14 @@ def calcular_precio_banda(db, codigo, largo, ancho):
     largo_m = largo / 1000
     ancho_m = ancho / 1000
 
-    ancho_ajustado = math.ceil(ancho_m / 50) * 50
+    if (ancho % 50) != 0:
+        ancho_ajustado = ((math.trunc(ancho / 50)) + 1) * 50
+    else:
+        ancho_ajustado = ancho
 
-    area_m2 = largo_m * ancho_ajustado
+    ancho_ajustado_m = ancho_ajustado / 1000
 
-    # print(f"Ancho ajustado: {ancho_ajustado} m")
+    area_m2 = largo_m * ancho_ajustado_m
 
     precio_total = area_m2 * precio_unitario
 
@@ -159,6 +200,89 @@ def calcular_precio_empalme(db, tipo_empalme, codigo):
         "tipo_empalme": tipo_empalme,
         "codigo_empalme": codigo,
         "precio_empalme": precio_empalme
+    }
+
+
+# lo de los perfiles está para cambiar 
+def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, n_perfiles, distancia_margen, descuento = 0, ):
+
+    cursor = db.cursor()
+
+    cursor.execute(
+        "SELECT precio FROM perfiles WHERE codigo = ?",
+        (codigo_perfil,)
+    )
+
+    row = cursor.fetchone()
+
+    if row is None:
+        raise ValueError("Perfil no encontrado")
+
+    precio_m2 = row[0]
+
+    if largo <= 0:
+        raise ValueError("Largo debe ser mayor que cero")
+    
+    if n_perfiles <= 0:
+        raise ValueError("El número de perfiles no puede ser 0")
+
+    largo_m = largo / 1000
+
+    # falta ver si el descuento es un valor fijo o un porcentaje
+
+    precio_total = (n_perfiles * largo_m * precio_m2) - descuento
+
+    return {
+        "codigo_perfil": codigo_perfil,
+        "precio_unitario": precio_m2,
+        "precio_total": precio_total,
+        "distancia_margen": distancia_margen
+    }
+
+def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles, distancia_paso, descuento = 0):
+
+    cursor = db.cursor()
+
+    cursor.execute("SELECT precio from perfiles WHERE codigo = ?", (codigo_perfil,))
+
+    row = cursor.fetchone()
+
+    if row is None:
+        raise ValueError("Perfil no encontrado")
+    
+    precio_m2 = row[0]
+
+    if ancho <= 0:
+        raise ValueError("Ancho debe ser mayor que cero")
+
+    if n_perfiles <= 0:
+        raise ValueError("El número de perfiles no puede ser 0")
+    
+    if largo <= 0:
+        raise ValueError("Largo debe ser mayor que cero")
+    
+    if distancia_paso <= 0:
+        raise ValueError("La distancia entre perfiles no puede ser 0")
+    
+    # ajustar el número de perfiles y el paso si el largo no es múltiplo de la distancia entre perfiles
+    if largo % distancia_paso != 0:
+
+        nuevo_numero_perfiles = round(largo / distancia_paso)
+        n_perfiles = nuevo_numero_perfiles
+
+        nueva_distancia_paso = largo / nuevo_numero_perfiles
+        distancia_paso = nueva_distancia_paso
+
+    ancho_m = (ancho + 40) / 1000 # se suman 40mm de banda por el desaprovechamiento en los cortes
+
+    precio_total = (n_perfiles * ancho_m * precio_m2) - descuento
+
+    return {
+        "codigo_perfil": codigo_perfil,
+        "precio_unitario": precio_m2,
+        "precio_total": precio_total,
+        "numero_pefiles": n_perfiles,
+        "distancia_paso": distancia_paso
     }
 
 def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme):
