@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const selectTipoEmpalme = document.getElementById("tipoEmpalme");
   const selectCodigoEmpalme = document.getElementById("codigoEmpalme");
   const selectCodigoPerfilLongitudinal = document.getElementById("selectCodigoPerfilLongitudinal");
+  const selectCodigoPerfilTransversal = document.getElementById("selectCodigoPerfilTransversal");
 
   // -------------------------
   // CARGAR BANDAS
@@ -44,6 +45,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       option.value = perfilL.codigo;
       option.textContent = `${perfilL.codigo} - ${perfilL.nombre}`;
       selectCodigoPerfilLongitudinal.appendChild(option);
+    });
+
+  } catch (err) {
+    console.error("Error cargando perfiles longitudinales:", err);
+  }
+
+  // -------------------------
+  // CARGAR PERFILES TRANSVERSALES
+  // -------------------------
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/configuracion/perfiles/transversales");
+    const perfilesT = await response.json();
+
+    perfilesT.forEach(perfilT => {
+      const option = document.createElement("option");
+      option.value = perfilT.codigo;
+      option.textContent = `${perfilT.codigo} - ${perfilT.nombre}`;
+      selectCodigoPerfilTransversal.appendChild(option);
     });
 
   } catch (err) {
