@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const selectBanda = document.getElementById("codigo");
   const selectTipoEmpalme = document.getElementById("tipoEmpalme");
   const selectCodigoEmpalme = document.getElementById("codigoEmpalme");
+  const selectCodigoPerfilLongitudinal = document.getElementById("selectCodigoPerfilLongitudinal");
 
   // -------------------------
   // CARGAR BANDAS
@@ -28,6 +29,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   } catch (err) {
     console.error("Error cargando bandas:", err);
+  }
+
+  // -------------------------
+  // CARGAR PERFILES LONGITUDINALES
+  // -------------------------
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/configuracion/perfiles/longitudinales");
+    const perfilesL = await response.json();
+
+    perfilesL.forEach(perfilL => {
+      const option = document.createElement("option");
+      option.value = perfilL.codigo;
+      option.textContent = `${perfilL.codigo} - ${perfilL.nombre}`;
+      selectCodigoPerfilLongitudinal.appendChild(option);
+    });
+
+  } catch (err) {
+    console.error("Error cargando perfiles longitudinales:", err);
   }
 
   // -------------------------
@@ -59,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/configuracion/empalmes/${tipo}`
+        `http://127.0.0.1:8000/configuracion/empalmes/`
       );
 
       const empalmes = await response.json();
@@ -77,7 +97,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   });
 
+  // -------------------------
+  // PERFILES LONGITUDINALES (REMOVED - now loaded on page load)
+  // -------------------------
+
+  // REMOVED: selectCodigoPerfilLongitudinal.addEventListener("change", async () => { ... });
+
   document.getElementById("calcular").addEventListener("click", calcular);
+
 });
 
 
@@ -121,8 +148,8 @@ async function calcular() {
     if (response.ok) {
       document.getElementById("resultado").innerText =
         `Precio banda: ${data.precio_banda} €
-Precio empalme: ${data.precio_empalme} €
-Precio total: ${data.precio_total} €`;
+        Precio empalme: ${data.precio_empalme} €
+        Precio total: ${data.precio_total} €`;
     } else {
       document.getElementById("resultado").innerText =
         "Error: " + data.detail;

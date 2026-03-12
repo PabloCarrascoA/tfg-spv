@@ -10,7 +10,9 @@ from app.services.banda_service import (
     calcular_precio_banda,
     obtener_empalmes,
     obtener_perfil_longitudinal_por_codigo,
-    obtener_perfil_transversal_por_codigo
+    obtener_perfil_transversal_por_codigo,
+    obtener_perfiles_longitudinales,
+    obtener_perfiles_transversales
 )
 from app.schemas.configuracion import CalculoBandaRequest, CalculoBandaResponse
 
@@ -26,6 +28,34 @@ def listar_bandas(db = Depends(get_db)):
     bandas = obtener_bandas(db)
     return bandas
 
+@router.get("/empalmes/{tipo}")
+def listar_empalmes(tipo: str, db = Depends(get_db)):
+
+    empalmes = obtener_empalmes(db, tipo)
+
+    if not empalmes:
+        raise HTTPException(status_code=404, detail="Tipo de empalme no encontrado")
+
+    return empalmes
+
+@router.get("/perfiles/longitudinales")
+def listar_perfiles_longitudinales(db = Depends(get_db)):
+    perfiles = obtener_perfiles_longitudinales(db)
+
+    if not perfiles:
+        raise HTTPException(status_code=404, detail="No se encontraron perfiles longitudinales")
+
+    return perfiles
+
+@router.get("/perfiles/transversales")
+def listar_perfiles_transversales(db = Depends(get_db)):
+    perfiles = obtener_perfiles_transversales(db)
+
+    if not perfiles:
+        raise HTTPException(status_code=404, detail="No se encontraron perfiles transversales")
+
+    return perfiles
+
 @router.get("/banda/{codigo}")
 def obtener_banda(codigo: str, db = Depends(get_db)):
     
@@ -39,18 +69,8 @@ def obtener_banda(codigo: str, db = Depends(get_db)):
         "precio": banda["precio"]
     }
 
-@router.get("/empalmes/{tipo}")
-def listar_empalmes(tipo: str, db = Depends(get_db)):
-
-    empalmes = obtener_empalmes(db, tipo)
-
-    if not empalmes:
-        raise HTTPException(status_code=404, detail="Tipo de empalme no encontrado")
-
-    return empalmes
-
-@router.get('perfiles/longitudinales/{codigo}')
-def obtener_perfil(codigo: str, db = Depends(get_db)):
+@router.get('/perfiles/longitudinales/{codigo}')
+def obtener_perfil_longitudinal(codigo: str, db = Depends(get_db)):
     perfil = obtener_perfil_longitudinal_por_codigo(db, codigo)
 
     if not perfil:
@@ -61,7 +81,7 @@ def obtener_perfil(codigo: str, db = Depends(get_db)):
         "precio": perfil["precio"]
     }
 
-@router.get('perfiles/transversales/{codigo}')
+@router.get('/perfiles/transversales/{codigo}')
 def obtener_perfil_transversal(codigo: str, db = Depends(get_db)):
     perfil = obtener_perfil_transversal_por_codigo(db, codigo)
 

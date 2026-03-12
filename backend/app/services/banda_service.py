@@ -122,6 +122,38 @@ def obtener_empalmes(db, tipo_empalme):
 
     return empalmes
 
+def obtener_perfiles_longitudinales(db):
+    cursor = db.cursor()
+    cursor.execute("SELECT id, nombre, codigo, precio FROM perfiles_longitudinales")
+    rows = cursor.fetchall()
+
+    perfiles = []
+    for row in rows:
+        perfiles.append({
+            "id": row[0],
+            "nombre": row[1],
+            "codigo": row[2],
+            "precio": row[3]
+        })
+
+    return perfiles
+
+def obtener_perfiles_transversales(db):
+    cursor = db.cursor()
+    cursor.execute("SELECT id, nombre, codigo, precio FROM perfiles_transversales")
+    rows = cursor.fetchall()
+
+    perfiles = []
+    for row in rows:
+        perfiles.append({
+            "id": row[0],
+            "nombre": row[1],
+            "codigo": row[2],
+            "precio": row[3]
+        })
+
+    return perfiles
+
 def calcular_precio_banda(db, codigo, largo, ancho):
 
     cursor = db.cursor()

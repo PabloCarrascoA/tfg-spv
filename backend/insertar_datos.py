@@ -4,6 +4,11 @@ from app.db.database import get_db_connection
 # Datos de prueba
 # -----------------------
 
+perfiles_transversales = [
+    {"nombre": "Perfil ejemplo 1", "codigo": "PT01", "precio": 25.0},
+    {"nombre": "Perfil ejemplo 2", "codigo": "PT02", "precio": 35.0}
+]
+
 perfiles_longitudinales = [
     {"nombre": "Perfil ejemplo 1", "codigo": "PL01", "precio": 25.0},
     {"nombre": "Perfil ejemplo 2", "codigo": "PL02", "precio": 35.0}
@@ -124,7 +129,7 @@ with get_db_connection() as conn:
         ))
 
     # =====================
-    # PERFILES
+    # PERFILES LONGITUDINALES
     # =====================
 
     codigos_perfiles = [p["codigo"] for p in perfiles_longitudinales]
@@ -141,6 +146,24 @@ with get_db_connection() as conn:
             perfil_l["precio"]
         ))
 
+    # =====================
+    # PERFILES TRANSVERSALES
+    # =====================
+
+    codigos_perfiles = [p["codigo"] for p in perfiles_transversales]
+    placeholders = ",".join("?" * len(codigos_perfiles))
+    cursor.execute(f"DELETE FROM perfiles_transversales WHERE codigo IN ({placeholders})", codigos_perfiles)
+
+    for perfil_t in perfiles_transversales:
+        cursor.execute("""
+            INSERT INTO perfiles_transversales (nombre, codigo, precio)
+            VALUES (?, ?, ?)
+        """, (
+            perfil_t["nombre"],
+            perfil_t["codigo"],
+            perfil_t["precio"]
+        ))
+
     conn.commit()
 
     print("Datos insertados correctamente:")
@@ -149,4 +172,5 @@ with get_db_connection() as conn:
     print(f"- {len(extremos_preparados)} extremos preparados")
     print(f"- {len(grapas)} grapas")
     print(f"- {len(perfiles_longitudinales)} perfiles longitudinales")
+    print(f"- {len(perfiles_transversales)} perfiles transversales")
 

@@ -34,6 +34,18 @@ with get_db_connection() as conn:
     """)
     conn.commit()
 
+with get_db_connection() as conn:
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS perfiles_transversales (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            codigo TEXT UNIQUE NOT NULL,
+            precio REAL NOT NULL
+        )
+    """)
+    conn.commit()
+
 app = FastAPI(
     title="Configurador Industrial API",
     description="API para configurar y gestionar productos",

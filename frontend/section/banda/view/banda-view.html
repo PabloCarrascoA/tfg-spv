@@ -3,7 +3,9 @@
   <head>
     <title>Calcular Banda</title>
   </head>
+
   <body>
+
     <h2>Calcular precio de banda</h2>
 
     <label>Código:</label>
@@ -31,10 +33,18 @@
     </select>
     <br /><br />
 
+    <label style="margin-bottom: 20px;">Código perfil longitudinal:</label>
+    <select style="margin-bottom: 20px;" id="selectCodigoPerfilLongitudinal">
+      <option value="" disabled selected >- Seleccionar -</option>
+    </select>
+    
+    <br>
+    
     <button id="calcular">Calcular</button>
 
     <h3 id="resultado"></h3>
 
     <script src="../js/banda.js"></script>
+
   </body>
 </html>
