@@ -241,7 +241,7 @@ def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, n_perfiles, di
     cursor = db.cursor()
 
     cursor.execute(
-        "SELECT precio FROM perfiles WHERE codigo = ?",
+        "SELECT precio FROM perfiles_longitudinales WHERE codigo = ?",
         (codigo_perfil,)
     )
 
@@ -271,11 +271,11 @@ def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, n_perfiles, di
         "distancia_margen": distancia_margen
     }
 
-def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles, distancia_paso, descuento = 0):
+def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles=None, distancia_paso=None, descuento = 0):
 
     cursor = db.cursor()
 
-    cursor.execute("SELECT precio from perfiles WHERE codigo = ?", (codigo_perfil,))
+    cursor.execute("SELECT precio from perfiles_transversales WHERE codigo = ?", (codigo_perfil,))
 
     row = cursor.fetchone()
 
@@ -297,13 +297,21 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
         raise ValueError("La distancia entre perfiles no puede ser 0")
     
     # ajustar el número de perfiles y el paso si el largo no es múltiplo de la distancia entre perfiles
-    if largo % distancia_paso != 0:
+   
 
-        nuevo_numero_perfiles = round(largo / distancia_paso)
-        n_perfiles = nuevo_numero_perfiles
+    if n_perfiles and not distancia_paso:
+        distancia_paso = largo / n_perfiles
 
-        nueva_distancia_paso = largo / nuevo_numero_perfiles
-        distancia_paso = nueva_distancia_paso
+    elif distancia_paso and not n_perfiles:
+        n_perfiles = round(largo / distancia_paso)
+        distancia_paso = largo / n_perfiles
+
+    elif n_perfiles and distancia_paso:
+        # priorizar nº perfiles
+        distancia_paso = largo / n_perfiles
+
+    else:
+        raise ValueError("Debes indicar n_perfiles o distancia_paso")
 
     ancho_m = (ancho + 40) / 1000 # se suman 40mm de banda por el desaprovechamiento en los cortes
 
@@ -317,7 +325,7 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
         "distancia_paso": distancia_paso
     }
 
-def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme):
+def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None):
     
     # Precio banda
     resultado_banda = calcular_precio_banda(db, codigo_banda, largo, ancho)
@@ -327,12 +335,31 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
     resultado_empalme = calcular_precio_empalme(db, tipo_empalme, codigo_empalme)
     precio_empalme = resultado_empalme["precio_empalme"]
 
+    # Precio perfiles
+
+    precio_perfil = 0
+
+    if distancia_margen is not None:
+        resultado_perfil = calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, n_perfiles, distancia_margen)
+        precio_perfil += resultado_perfil["precio_total"] 
+
+    elif distancia_paso is not None:
+        resultado_perfil = calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles, distancia_paso)
+        precio_perfil += resultado_perfil["precio_total"]
+        n_perfiles = resultado_perfil["numero_pefiles"]
+        distancia_paso = resultado_perfil["distancia_paso"]
+
+
     # Precio total
-    precio_total = precio_banda + precio_empalme
+    precio_total = precio_banda + precio_empalme + precio_perfil
 
     return {
         "codigo_banda": codigo_banda,
         "precio_banda": round(precio_banda, 2),
         "precio_empalme": round(precio_empalme, 2),
-        "precio_total": round(precio_total, 2)
+        "precio_perfil": round(precio_perfil, 2),
+        "precio_total": round(precio_total, 2),
+        "n_perfiles": n_perfiles,
+        "distancia_margen": distancia_margen,
+        "distancia_paso": distancia_paso
     }

@@ -104,7 +104,11 @@ def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
             request.largo,
             request.ancho,
             request.tipo_empalme,
-            request.codigo_empalme
+            request.codigo_empalme,
+            request.codigo_perfil,
+            request.n_perfiles,
+            request.distancia_margen,
+            request.distancia_paso
 
         )
 

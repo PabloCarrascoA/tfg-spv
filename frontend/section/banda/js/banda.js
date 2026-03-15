@@ -5,6 +5,36 @@ document.addEventListener("DOMContentLoaded", async () => {
   const selectCodigoEmpalme = document.getElementById("codigoEmpalme");
   const selectCodigoPerfilLongitudinal = document.getElementById("selectCodigoPerfilLongitudinal");
   const selectCodigoPerfilTransversal = document.getElementById("selectCodigoPerfilTransversal");
+  const tipoPerfilSelect = document.getElementById("tipoPerfilSelect");
+  const perfilesLongitudinalesSection = document.getElementById("perfilesLongitudinalesSection");
+  const perfilesTransversalesSection = document.getElementById("perfilesTransversalesSection");
+
+  // -------------------------
+  // CAMBIO TIPO DE PERFIL
+  // -------------------------
+
+  tipoPerfilSelect.addEventListener("change", () => {
+    const tipoSelected = tipoPerfilSelect.value;
+
+    if (tipoSelected === "longitudinal") {
+      perfilesLongitudinalesSection.style.display = "block";
+      perfilesTransversalesSection.style.display = "none";
+      // Limpiar campos transversales
+      document.getElementById("selectCodigoPerfilTransversal").value = "";
+      document.getElementById("nPerfilesTransversal").value = "";
+      document.getElementById("pasoTransversal").value = "";
+    } else if (tipoSelected === "transversal") {
+      perfilesLongitudinalesSection.style.display = "none";
+      perfilesTransversalesSection.style.display = "block";
+      // Limpiar campos longitudinales
+      document.getElementById("selectCodigoPerfilLongitudinal").value = "";
+      document.getElementById("nPerfilesLongitudinal").value = "";
+      document.getElementById("margenLongitudinal").value = "";
+    } else {
+      perfilesLongitudinalesSection.style.display = "none";
+      perfilesTransversalesSection.style.display = "none";
+    }
+  });
 
   // -------------------------
   // CARGAR BANDAS
@@ -99,7 +129,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/configuracion/empalmes/`
+        `http://127.0.0.1:8000/configuracion/empalmes/${tipo}`
       );
 
       const empalmes = await response.json();
@@ -124,6 +154,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // REMOVED: selectCodigoPerfilLongitudinal.addEventListener("change", async () => { ... });
 
   document.getElementById("calcular").addEventListener("click", calcular);
+  document.getElementById("limpiar").addEventListener("click", () => {
+    window.location.reload();
+  });
 
 });
 
@@ -137,8 +170,31 @@ async function calcular() {
   const codigo = document.getElementById("codigo").value;
   const largo = parseFloat(document.getElementById("largo").value);
   const ancho = parseFloat(document.getElementById("ancho").value);
+
+
   const tipoEmpalme = document.getElementById("tipoEmpalme").value;
   const codigoEmpalme = document.getElementById("codigoEmpalme").value;
+
+
+  const codigoPerfilLongitudinal = document.getElementById("selectCodigoPerfilLongitudinal").value;
+
+  const numeroPerfilesLongitudinales = document.getElementById("nPerfilesLongitudinal").value;
+
+  const distanciaMargen = document.getElementById("margenLongitudinal").value;
+
+
+  const codigoPerfilTransversal = document.getElementById("selectCodigoPerfilTransversal").value;
+
+  const numeroPerfilesTransversales = document.getElementById("nPerfilesTransversal").value;
+
+  const distanciaPaso = document.getElementById("pasoTransversal").value;
+
+  // Helper function to convert empty strings to null
+  const toNullIfEmpty = (val) => val === "" || val === null ? null : val;
+  const toFloatOrNull = (val) => {
+    const parsed = parseFloat(val);
+    return isNaN(parsed) ? null : parsed;
+  };
 
   if (!codigo || !tipoEmpalme || !codigoEmpalme) {
     alert("Debes seleccionar banda y empalme.");
@@ -159,6 +215,10 @@ async function calcular() {
           ancho: ancho,
           tipo_empalme: tipoEmpalme,
           codigo_empalme: codigoEmpalme,
+          codigo_perfil: toNullIfEmpty(codigoPerfilLongitudinal) || toNullIfEmpty(codigoPerfilTransversal),
+          n_perfiles: toFloatOrNull(numeroPerfilesLongitudinales) || toFloatOrNull(numeroPerfilesTransversales),
+          distancia_margen: toFloatOrNull(distanciaMargen),
+          distancia_paso: toFloatOrNull(distanciaPaso)
         }),
       }
     );
@@ -166,16 +226,27 @@ async function calcular() {
     const data = await response.json();
 
     if (response.ok) {
+        let distancia = data.distancia_paso
+
+        if (distancia === null) {
+            distancia = data.distancia_margen
+        }
       document.getElementById("resultado").innerText =
         `Precio banda: ${data.precio_banda} €
         Precio empalme: ${data.precio_empalme} €
+        Precio perfil: ${data.precio_perfil} €
+        Numero de perfiles: ${data.n_perfiles}
+        Distancia margen: ${data.distancia_margen}
+        Distancia paso: ${data.distancia_paso}
         Precio total: ${data.precio_total} €`;
     } else {
+      console.error("Response error:", data);
       document.getElementById("resultado").innerText =
-        "Error: " + data.detail;
+        "Error: " + JSON.stringify(data);
     }
 
   } catch (err) {
-    console.error("Error cálculo:", err);
+    console.error("Error cálculo:", JSON.stringify(err, null, 2));
+    alert("Error: " + err.message);
   }
 }

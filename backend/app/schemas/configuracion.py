@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Literal
+from typing import Literal, Optional
 
 class CalculoBandaRequest(BaseModel):
     codigo_banda: str
@@ -15,9 +15,18 @@ class CalculoBandaRequest(BaseModel):
 
     codigo_empalme: str
 
+    codigo_perfil: Optional[str] = None
+    n_perfiles: Optional[float] = None
+    distancia_margen: Optional[float] = None
+    distancia_paso: Optional[float] = None
+
 
 class CalculoBandaResponse(BaseModel):
     codigo_banda: str
     precio_banda: float
     precio_empalme: float
+    precio_perfil: float
     precio_total: float
+    n_perfiles: Optional[int] = None
+    distancia_margen: Optional[float] = None
+    distancia_paso: Optional[float] = None
