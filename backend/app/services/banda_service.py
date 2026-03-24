@@ -29,29 +29,10 @@ def obtener_banda_por_codigo(db, codigo: str):
         "precio": row[6]
     }
 
-def obtener_perfil_longitudinal_por_codigo(db, codigo: str):
-    cursor = db.cursor()
-    cursor.execute(
-        "SELECT id, nombre, codigo, precio FROM perfiles_longitudinales WHERE codigo = ?",
-        (codigo,)
-    )
-
-    row = cursor.fetchone()
-
-    if row is None:
-        return None
-    
-    return {
-        "id": row[0],
-        "nombre": row[1],
-        "codigo": row[2],
-        "precio": row[3]
-    }
-
 def obtener_perfil_transversal_por_codigo(db, codigo: str):
     cursor = db.cursor()
     cursor.execute(
-        "SELECT id, nombre, codigo, precio FROM perfiles_transversales WHERE codigo = ?",
+        "SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Lhasta1000, precioSoldar_L1000_1400, precioSoldar_Especial FROM perfiles_transversales WHERE codigo = ?",
         (codigo,)
     )
 
@@ -62,9 +43,41 @@ def obtener_perfil_transversal_por_codigo(db, codigo: str):
     
     return {
         "id": row[0],
-        "nombre": row[1],
-        "codigo": row[2],
-        "precio": row[3]
+        "codigo": row[1],
+        "tipo": row[2],
+        "color": row[3],
+        "proveedor": row[4],
+        "material": row[5],
+        "precio_material": row[6],
+        "precioSoldar_Lhasta1000": row[7],
+        "precioSoldar_L1000_1400": row[8],
+        "precioSoldar_Especial": row[9]
+    }
+    
+
+def obtener_perfil_longitudinal_por_codigo(db, codigo: str):
+    cursor = db.cursor()
+    cursor.execute(
+        "SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Linf1500, precioSoldar_Lsup1500_Ainf2100, precioSoldar_LSup1500_Asup2100 FROM perfiles_longitudinales WHERE codigo = ?",
+        (codigo,)
+    )
+
+    row = cursor.fetchone()
+
+    if row is None:
+        return None
+    
+    return {
+        "id": row[0],
+        "codigo": row[1],
+        "tipo": row[2],
+        "color": row[3],
+        "proveedor": row[4],
+        "material": row[5],
+        "precio_material": row[6],
+        "precioSoldar_Linf1500": row[7],
+        "precioSoldar_Lsup1500_Ainf2100": row[8],
+        "precioSoldar_LSup1500_Asup2100": row[9]
     }
 
 # ------------------------
@@ -130,34 +143,47 @@ def obtener_empalmes(db, tipo_empalme):
 
     return empalmes
 
-def obtener_perfiles_longitudinales(db):
+def obtener_perfiles_transversales(db):
     cursor = db.cursor()
-    cursor.execute("SELECT id, nombre, codigo, precio FROM perfiles_longitudinales")
+    cursor.execute("SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Lhasta1000, precioSoldar_L1000_1400, precioSoldar_Especial FROM perfiles_transversales")
+
     rows = cursor.fetchall()
 
     perfiles = []
     for row in rows:
         perfiles.append({
             "id": row[0],
-            "nombre": row[1],
-            "codigo": row[2],
-            "precio": row[3]
+            "codigo": row[1],
+            "tipo": row[2],
+            "color": row[3],
+            "proveedor": row[4],
+            "material": row[5],
+            "precio_material": row[6],
+            "precioSoldar_Lhasta1000": row[7],
+            "precioSoldar_L1000_1400": row[8],
+            "precioSoldar_Especial": row[9]
         })
 
     return perfiles
 
-def obtener_perfiles_transversales(db):
+def obtener_perfiles_longitudinales(db):
     cursor = db.cursor()
-    cursor.execute("SELECT id, nombre, codigo, precio FROM perfiles_transversales")
+    cursor.execute("SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Linf1500, precioSoldar_Lsup1500_Ainf2100, precioSoldar_LSup1500_Asup2100 FROM perfiles_longitudinales")
     rows = cursor.fetchall()
 
     perfiles = []
     for row in rows:
         perfiles.append({
             "id": row[0],
-            "nombre": row[1],
-            "codigo": row[2],
-            "precio": row[3]
+            "codigo": row[1],
+            "tipo": row[2],
+            "color": row[3],
+            "proveedor": row[4],
+            "material": row[5],
+            "precio_material": row[6],
+            "precioSoldar_Linf1500": row[7],
+            "precioSoldar_Lsup1500_Ainf2100": row[8],
+            "precioSoldar_LSup1500_Asup2100": row[9]
         })
 
     return perfiles

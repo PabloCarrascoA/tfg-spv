@@ -77,8 +77,15 @@ def obtener_perfil_longitudinal(codigo: str, db = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Perfil no encontrado")
     
     return {
-        "tipo": perfil["nombre"],
-        "precio": perfil["precio"]
+        "codigo": perfil["codigo"],
+        "tipo": perfil["tipo"],
+        "color": perfil["color"],
+        "proveedor": perfil["proveedor"],
+        "material": perfil["material"],
+        "precio_material": perfil["precio_material"],
+        "precioSoldar_Linf1500": perfil["precioSoldar_Linf1500"],
+        "precioSoldar_Lsup1500_Ainf2100": perfil["precioSoldar_Lsup1500_Ainf2100"],
+        "precioSoldar_LSup1500_Asup2100": perfil["precioSoldar_LSup1500_Asup2100"]
     }
 
 @router.get('/perfiles/transversales/{codigo}')
@@ -89,8 +96,15 @@ def obtener_perfil_transversal(codigo: str, db = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Perfil no encontrado")
     
     return {
-        "nombre": perfil["nombre"],
-        "precio": perfil["precio"]
+        "codigo": perfil["codigo"],
+        "tipo": perfil["tipo"],
+        "color": perfil["color"],
+        "proveedor": perfil["proveedor"],
+        "material": perfil["material"],
+        "precio_material": perfil["precio_material"],
+        "precioSoldar_Lhasta1000": perfil["precioSoldar_Lhasta1000"],
+        "precioSoldar_L1000_1400": perfil["precioSoldar_L1000_1400"],
+        "precioSoldar_Especial": perfil["precioSoldar_Especial"]
     }
 
 @router.post("/calcular", response_model=CalculoBandaResponse)

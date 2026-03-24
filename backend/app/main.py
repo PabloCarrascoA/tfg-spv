@@ -25,7 +25,7 @@ with get_db_connection() as conn:
 with get_db_connection() as conn:
     cursor = conn.cursor()
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS perfiles_longitudinales (
+        CREATE TABLE IF NOT EXISTS perfiles_transversales (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             codigo TEXT UNIQUE NOT NULL,
             tipo TEXT,
@@ -35,8 +35,7 @@ with get_db_connection() as conn:
             precio_material REAL,
             precioSoldar_Lhasta1000 REAL,
             precioSoldar_L1000_1400 REAL,
-            precioSoldar_Especial REAL,
-            precio REAL NOT NULL
+            precioSoldar_Especial REAL
         )
     """)
     conn.commit()
@@ -44,7 +43,7 @@ with get_db_connection() as conn:
 with get_db_connection() as conn:
     cursor = conn.cursor()
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS perfiles_transversales (
+        CREATE TABLE IF NOT EXISTS perfiles_longitudinales (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             codigo TEXT UNIQUE NOT NULL,
             tipo TEXT,
@@ -54,8 +53,7 @@ with get_db_connection() as conn:
             precio_material REAL,
             precioSoldar_Linf1500 REAL,
             precioSoldar_Lsup1500_Ainf2100 REAL,
-            precioSoldar_LSup1500_Asup2100 REAL,
-            precio REAL NOT NULL
+            precioSoldar_LSup1500_Asup2100 REAL
         )
     """)
     conn.commit()
