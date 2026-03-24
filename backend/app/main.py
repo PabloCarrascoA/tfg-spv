@@ -27,7 +27,6 @@ with get_db_connection() as conn:
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS perfiles_longitudinales (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
             codigo TEXT UNIQUE NOT NULL,
             tipo TEXT,
             color TEXT,
@@ -47,7 +46,6 @@ with get_db_connection() as conn:
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS perfiles_transversales (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
             codigo TEXT UNIQUE NOT NULL,
             tipo TEXT,
             color TEXT,

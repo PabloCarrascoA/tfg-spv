@@ -138,12 +138,11 @@ with get_db_connection() as conn:
 
     for perfil_l in perfiles_longitudinales:
         cursor.execute("""
-            INSERT INTO perfiles_longitudinales (nombre, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Lhasta1000, precioSoldar_L1000_1400, precioSoldar_Especial, precio)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO perfiles_longitudinales (tipo, codigo, color, proveedor, material, precio_material, precioSoldar_Lhasta1000, precioSoldar_L1000_1400, precioSoldar_Especial, precio)
+            VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             perfil_l.get("tipo", ""),
             perfil_l["codigo"],
-            perfil_l.get("tipo", ""),
             perfil_l.get("color", ""),
             perfil_l.get("proveedor", ""),
             perfil_l.get("material", ""),
@@ -164,12 +163,11 @@ with get_db_connection() as conn:
 
     for perfil_t in perfiles_transversales:
         cursor.execute("""
-            INSERT INTO perfiles_transversales (nombre, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Linf1500, precioSoldar_Lsup1500_Ainf2100, precioSoldar_LSup1500_Asup2100, precio)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO perfiles_transversales (tipo, codigo, color, proveedor, material, precio_material, precioSoldar_Linf1500, precioSoldar_Lsup1500_Ainf2100, precioSoldar_LSup1500_Asup2100, precio)
+            VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             perfil_t.get("tipo", ""),
             perfil_t["codigo"],
-            perfil_t.get("tipo", ""),
             perfil_t.get("color", ""),
             perfil_t.get("proveedor", ""),
             perfil_t.get("material", ""),

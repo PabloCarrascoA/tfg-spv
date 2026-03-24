@@ -77,7 +77,7 @@ def obtener_perfil_longitudinal(codigo: str, db = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Perfil no encontrado")
     
     return {
-        "nombre": perfil["nombre"],
+        "tipo": perfil["nombre"],
         "precio": perfil["precio"]
     }
 

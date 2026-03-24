@@ -1,5 +1,9 @@
 import math
 
+# ------------------------
+# OBTENER DATOS POR CÓDIGO
+# ------------------------
+
 def obtener_banda_por_codigo(db, codigo: str):
     """
     Obtiene una banda por su código usando SQL directo.
@@ -62,6 +66,10 @@ def obtener_perfil_transversal_por_codigo(db, codigo: str):
         "codigo": row[2],
         "precio": row[3]
     }
+
+# ------------------------
+# OBTENER TODOS LOS DATOS A LA VEZ
+# ------------------------
 
 def obtener_bandas(db):
     """
@@ -153,6 +161,10 @@ def obtener_perfiles_transversales(db):
         })
 
     return perfiles
+
+# ------------------------
+# OBTENER PRECIOS DE CADA SECCIÓN
+# ------------------------
 
 def calcular_precio_banda(db, codigo, largo, ancho):
 
