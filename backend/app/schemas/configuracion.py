@@ -18,6 +18,7 @@ class CalculoBandaRequest(BaseModel):
     codigo_perfil: Optional[str] = None
     n_perfiles: Optional[float] = None
     distancia_margen: Optional[float] = None
+    ancho_perfil: Optional[float] = None
     distancia_paso: Optional[float] = None
 
 
@@ -29,4 +30,5 @@ class CalculoBandaResponse(BaseModel):
     precio_total: float
     n_perfiles: Optional[int] = None
     distancia_margen: Optional[float] = None
+    ancho_perfil: Optional[float] = None
     distancia_paso: Optional[float] = None

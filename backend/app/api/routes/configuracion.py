@@ -95,6 +95,7 @@ def obtener_perfil_transversal(codigo: str, db = Depends(get_db)):
 
 @router.post("/calcular", response_model=CalculoBandaResponse)
 def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
+    print(f"DEBUG: Endpoint recibió request.ancho_perfil = {request.ancho_perfil}")
     try:
 
         precio_total = calcular_configuracion_completa (
@@ -108,7 +109,8 @@ def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
             request.codigo_perfil,
             request.n_perfiles,
             request.distancia_margen,
-            request.distancia_paso
+            request.distancia_paso,
+            request.ancho_perfil
 
         )
 

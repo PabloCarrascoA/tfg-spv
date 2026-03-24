@@ -5,13 +5,13 @@ from app.db.database import get_db_connection
 # -----------------------
 
 perfiles_transversales = [
-    {"nombre": "Perfil ejemplo 1", "codigo": "PT01", "precio": 25.0},
-    {"nombre": "Perfil ejemplo 2", "codigo": "PT02", "precio": 35.0}
+    {"tipo": "Perfil ejemplo K-6", "color": "Verde", "proveedor": "ProveedorX", "material": "PVC", "codigo": "PT01", "precio_material": 25.0, "precioSoldar_Linf1500": 5.0, "precioSoldar_Lsup1500_Ainf2100": 7.5, "precioSoldar_LSup1500_Asup2100": 10.0},
+    {"tipo": "Perfil ejemplo K-6", "color": "Azul", "proveedor": "ProveedorY", "material": "PVC", "codigo": "PT02", "precio_material": 35.0, "precioSoldar_Linf1500": 5.0, "precioSoldar_Lsup1500_Ainf2100": 7.5, "precioSoldar_LSup1500_Asup2100": 10.0}
 ]
 
 perfiles_longitudinales = [
-    {"nombre": "Perfil ejemplo 1", "codigo": "PL01", "precio": 25.0},
-    {"nombre": "Perfil ejemplo 2", "codigo": "PL02", "precio": 35.0}
+    {"tipo": "Trapezoidal 1", "color": "Verde", "proveedor": "ProveedorX", "material": "PVC", "codigo": "PL01", "precio_material": 25.0, "precioSoldar_Lhasta1000": 5.0, "precioSoldar_L1000_1400": 7.5, "precioSoldar_Especial": 10.0},
+    {"tipo": "Trapezoidal 2", "color": "Azul", "proveedor": "ProveedorY", "material": "PVC", "codigo": "PL02", "precio_material": 35.0, "precioSoldar_Lhasta1000": 5.0, "precioSoldar_L1000_1400": 7.5, "precioSoldar_Especial": 10.0}
 ]
 
 sin_fin = [
@@ -138,12 +138,20 @@ with get_db_connection() as conn:
 
     for perfil_l in perfiles_longitudinales:
         cursor.execute("""
-            INSERT INTO perfiles_longitudinales (nombre, codigo, precio)
-            VALUES (?, ?, ?)
+            INSERT INTO perfiles_longitudinales (nombre, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Lhasta1000, precioSoldar_L1000_1400, precioSoldar_Especial, precio)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            perfil_l["nombre"],
+            perfil_l.get("tipo", ""),
             perfil_l["codigo"],
-            perfil_l["precio"]
+            perfil_l.get("tipo", ""),
+            perfil_l.get("color", ""),
+            perfil_l.get("proveedor", ""),
+            perfil_l.get("material", ""),
+            perfil_l.get("precio_material", 0.0),
+            perfil_l.get("precioSoldar_Lhasta1000", 0.0),
+            perfil_l.get("precioSoldar_L1000_1400", 0.0),
+            perfil_l.get("precioSoldar_Especial", 0.0),
+            perfil_l.get("precio_material", 0.0)
         ))
 
     # =====================
@@ -156,12 +164,20 @@ with get_db_connection() as conn:
 
     for perfil_t in perfiles_transversales:
         cursor.execute("""
-            INSERT INTO perfiles_transversales (nombre, codigo, precio)
-            VALUES (?, ?, ?)
+            INSERT INTO perfiles_transversales (nombre, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Linf1500, precioSoldar_Lsup1500_Ainf2100, precioSoldar_LSup1500_Asup2100, precio)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            perfil_t["nombre"],
+            perfil_t.get("tipo", ""),
             perfil_t["codigo"],
-            perfil_t["precio"]
+            perfil_t.get("tipo", ""),
+            perfil_t.get("color", ""),
+            perfil_t.get("proveedor", ""),
+            perfil_t.get("material", ""),
+            perfil_t.get("precio_material", 0.0),
+            perfil_t.get("precioSoldar_Linf1500", 0.0),
+            perfil_t.get("precioSoldar_Lsup1500_Ainf2100", 0.0),
+            perfil_t.get("precioSoldar_LSup1500_Asup2100", 0.0),
+            perfil_t.get("precio_material", 0.0)
         ))
 
     conn.commit()

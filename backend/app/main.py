@@ -29,6 +29,14 @@ with get_db_connection() as conn:
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
             codigo TEXT UNIQUE NOT NULL,
+            tipo TEXT,
+            color TEXT,
+            proveedor TEXT,
+            material TEXT,
+            precio_material REAL,
+            precioSoldar_Lhasta1000 REAL,
+            precioSoldar_L1000_1400 REAL,
+            precioSoldar_Especial REAL,
             precio REAL NOT NULL
         )
     """)
@@ -41,6 +49,14 @@ with get_db_connection() as conn:
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
             codigo TEXT UNIQUE NOT NULL,
+            tipo TEXT,
+            color TEXT,
+            proveedor TEXT,
+            material TEXT,
+            precio_material REAL,
+            precioSoldar_Linf1500 REAL,
+            precioSoldar_Lsup1500_Ainf2100 REAL,
+            precioSoldar_LSup1500_Asup2100 REAL,
             precio REAL NOT NULL
         )
     """)

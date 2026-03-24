@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       perfilesTransversalesSection.style.display = "none";
       // Limpiar campos transversales
       document.getElementById("selectCodigoPerfilTransversal").value = "";
+      document.getElementById("anchoPerfilTransversal").value = "";
       document.getElementById("nPerfilesTransversal").value = "";
       document.getElementById("pasoTransversal").value = "";
     } else if (tipoSelected === "transversal") {
@@ -187,7 +188,17 @@ async function calcular() {
 
   const numeroPerfilesTransversales = document.getElementById("nPerfilesTransversal").value;
 
+  const anchoPerfilTransversal = document.getElementById("anchoPerfilTransversal").value;
+
   const distanciaPaso = document.getElementById("pasoTransversal").value;
+
+
+  const nBandas = document.getElementById("nBandas").value;
+
+  // Debug: mostrar qué valores se están enviando
+  console.log("=== DEBUG INFO ===");
+  console.log("Input anchoPerfilTransversal:", document.getElementById("anchoPerfilTransversal").value);
+  console.log("===================");
 
   // Helper function to convert empty strings to null
   const toNullIfEmpty = (val) => val === "" || val === null ? null : val;
@@ -218,12 +229,16 @@ async function calcular() {
           codigo_perfil: toNullIfEmpty(codigoPerfilLongitudinal) || toNullIfEmpty(codigoPerfilTransversal),
           n_perfiles: toFloatOrNull(numeroPerfilesLongitudinales) || toFloatOrNull(numeroPerfilesTransversales),
           distancia_margen: toFloatOrNull(distanciaMargen),
+          ancho_perfil: toFloatOrNull(anchoPerfilTransversal),
           distancia_paso: toFloatOrNull(distanciaPaso)
         }),
       }
     );
 
     const data = await response.json();
+
+    console.log("Response data:", data);
+    console.log("data.ancho_perfil:", data.ancho_perfil);
 
     if (response.ok) {
         let distancia = data.distancia_paso
@@ -238,7 +253,8 @@ async function calcular() {
         Numero de perfiles: ${data.n_perfiles}
         Distancia margen: ${data.distancia_margen}
         Distancia paso: ${data.distancia_paso}
-        Precio total: ${data.precio_total} €`;
+        Ancho perfil: ${data.ancho_perfil}
+        Precio total: ${nBandas * data.precio_total} €`;
     } else {
       console.error("Response error:", data);
       document.getElementById("resultado").innerText =
