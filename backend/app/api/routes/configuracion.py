@@ -12,7 +12,9 @@ from app.services.banda_service import (
     obtener_perfil_longitudinal_por_codigo,
     obtener_perfil_transversal_por_codigo,
     obtener_perfiles_longitudinales,
-    obtener_perfiles_transversales
+    obtener_perfiles_transversales,
+    obtener_runners,
+    obtener_runner_por_codigo
 )
 from app.schemas.configuracion import CalculoBandaRequest, CalculoBandaResponse
 
@@ -59,6 +61,15 @@ def listar_perfiles_transversales(db = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No se encontraron perfiles transversales")
 
     return perfiles
+
+@router.get("/runners")
+def listar_runners(db = Depends(get_db)):
+    runners = obtener_runners(db)
+
+    if not runners:
+        raise HTTPException(status_code = 404, detail= "No se encontraton runners")
+    
+    return runners
 
 # ------------------------
 # OBTENER DATOS POR CÓDIGO
@@ -113,6 +124,22 @@ def obtener_perfil_transversal(codigo: str, db = Depends(get_db)):
         "precioSoldar_Lhasta1000": perfil["precioSoldar_Lhasta1000"],
         "precioSoldar_L1000_1400": perfil["precioSoldar_L1000_1400"],
         "precioSoldar_Especial": perfil["precioSoldar_Especial"]
+    }
+
+@router.get('/runners/{codigo}')
+def obtener_runner(codigo: str, db = Depends(get_db)):
+    runner = obtener_runner_por_codigo(db, codigo)
+
+    if not runner:
+        raise HTTPException(status_code=404, detail="Runner no encontrado")
+    
+    return {
+        "tipo": runner["tipo"],
+        "codigo": runner["codigo"],
+        "color": runner["color"],
+        "material": runner["material"],
+        "precio_material": runner["precio_material"],
+
     }
 
 # ------------------------

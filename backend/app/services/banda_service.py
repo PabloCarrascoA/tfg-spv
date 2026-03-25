@@ -211,7 +211,7 @@ def obtener_perfiles_longitudinales(db):
 
 def obtener_runners(db):
     cursor = db.cursor()
-    cursor.execute("SELECT id, tipo, codigo, color, material, precio FROM runners")
+    cursor.execute("SELECT id, tipo, codigo, color, material, precio_material FROM runners")
     rows = cursor.fetchall()
 
     runners = []
@@ -224,6 +224,8 @@ def obtener_runners(db):
             "material": row[4],
             "precio_material": row[5],
         })
+
+    return runners
 
 # ------------------------
 # OBTENER PRECIOS DE CADA SECCIÓN
