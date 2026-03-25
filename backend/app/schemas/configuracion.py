@@ -27,6 +27,8 @@ class CalculoBandaResponse(BaseModel):
     precio_banda: float
     precio_empalme: float
     precio_perfil: float
+    precio_soldadura: float
+    precio_perfil_final: float
     precio_total: float
     n_perfiles: Optional[int] = None
     distancia_margen: Optional[float] = None

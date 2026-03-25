@@ -276,8 +276,6 @@ def calcular_precio_empalme(db, tipo_empalme, codigo):
         "precio_empalme": precio_empalme
     }
 
-
-# lo de los perfiles está para cambiar 
 def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, ancho, n_perfiles, distancia_margen, descuento = 0, preparacion = 0):
 
     # ------ REVISAR ESTA LÍNEA ------- 
@@ -352,9 +350,12 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
     if row is None:
         raise ValueError("Perfil no encontrado")
     
+    if ancho_perfil > ancho:
+        raise ValueError("El ancho del perfil no puede superar el ancho de la banda")
+    
     # - Calculo precio perfil -
 
-    precio_mL = row[0]
+    precio_perfil_mL = row[0]
 
     if ancho <= 0:
         raise ValueError("Ancho debe ser mayor que cero")
@@ -391,14 +392,14 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
     else:
         ancho_m = (ancho + 40) / 1000 # se suman 40mm de banda por el desaprovechamiento en los cortes
 
-    precio_perfil_total = (n_perfiles * ancho_m * precio_mL) - descuento
+    precio_perfil_total = (n_perfiles * ancho_m * precio_perfil_mL) - descuento
 
      # - Calculo soldadura -
 
     if largo <= 1000:
         precio_soldadura_mL = row[1]
 
-    elif largo >= 1500 and largo <= 1400:
+    elif largo >= 1000 and largo <= 1400:
         precio_soldadura_mL = row[2]
 
     else:
@@ -408,11 +409,10 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
 
     precio_final = precio_perfil_total + precio_soldadura_total
 
-
     return {
         "codigo_perfil": codigo_perfil,
-        "precio_perfil": precio_mL,
-        "precio_total": precio_perfil_total,
+        "precio_perfil": precio_perfil_mL,
+        "precio_perfil_total": precio_perfil_total,
         "precio_soldadura": precio_soldadura_mL,
         "precio_soldadura_total": precio_soldadura_total,
         "precio_final": precio_final,
@@ -434,14 +434,25 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
     # - Precio perfiles -
 
     precio_perfil = 0
+    precio_soldadura = 0
+    precio_perfil_final = 0
 
     if distancia_margen is not None:
         resultado_perfil = calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, ancho, n_perfiles, distancia_margen)
-        precio_perfil += resultado_perfil["precio_final"] 
+
+        precio_perfil = resultado_perfil["precio_perfil_total"]
+        precio_soldadura = resultado_perfil["precio_soldadura_total"]
+
+        precio_perfil_final += resultado_perfil["precio_final"] 
 
     elif distancia_paso is not None:
         resultado_perfil = calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles, distancia_paso, ancho_perfil)
-        precio_perfil += resultado_perfil["precio_final"]
+
+        precio_perfil = resultado_perfil["precio_perfil_total"]
+        precio_soldadura = resultado_perfil["precio_soldadura_total"]
+
+        precio_perfil_final += resultado_perfil["precio_final"]
+
         n_perfiles = resultado_perfil["numero_pefiles"]
         distancia_paso = resultado_perfil["distancia_paso"]
         ancho_perfil = resultado_perfil["ancho_perfil"]
@@ -449,13 +460,15 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
 
     # - Precio total -
 
-    precio_total = precio_banda + precio_empalme + precio_perfil
+    precio_total = precio_banda + precio_empalme + precio_perfil_final
 
     return {
         "codigo_banda": codigo_banda,
         "precio_banda": round(precio_banda, 2),
         "precio_empalme": round(precio_empalme, 2),
         "precio_perfil": round(precio_perfil, 2),
+        "precio_soldadura": round(precio_soldadura, 2),
+        "precio_perfil_final": round(precio_perfil_final, 2),
         "precio_total": round(precio_total, 2),
         "n_perfiles": n_perfiles,
         "distancia_margen": distancia_margen,

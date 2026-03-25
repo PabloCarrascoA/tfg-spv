@@ -238,7 +238,7 @@ async function calcular() {
     const data = await response.json();
 
     console.log("Response data:", data);
-    console.log("data.ancho_perfil:", data.ancho_perfil);
+    // console.log("data.ancho_perfil:", data.ancho_perfil);
 
     if (response.ok) {
         let distancia = data.distancia_paso
@@ -250,6 +250,8 @@ async function calcular() {
         `Precio banda: ${data.precio_banda} €
         Precio empalme: ${data.precio_empalme} €
         Precio perfil: ${data.precio_perfil} €
+        Precio soldadura: ${data.precio_soldadura} €
+        Precio perfil total: ${data.precio_perfil_final} €
         Numero de perfiles: ${data.n_perfiles}
         Distancia margen: ${data.distancia_margen}
         Distancia paso: ${data.distancia_paso}
