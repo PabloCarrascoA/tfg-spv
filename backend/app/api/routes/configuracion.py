@@ -23,6 +23,10 @@ router = APIRouter(
     tags=["Configurador"]
 )
 
+# --------------------------------
+# OBTENER TODOS LOS DATOS A LA VEZ
+# --------------------------------
+
 @router.get("/bandas")
 def listar_bandas(db = Depends(get_db)):
     bandas = obtener_bandas(db)
@@ -55,6 +59,10 @@ def listar_perfiles_transversales(db = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No se encontraron perfiles transversales")
 
     return perfiles
+
+# ------------------------
+# OBTENER DATOS POR CÓDIGO
+# ------------------------
 
 @router.get("/banda/{codigo}")
 def obtener_banda(codigo: str, db = Depends(get_db)):
@@ -107,9 +115,13 @@ def obtener_perfil_transversal(codigo: str, db = Depends(get_db)):
         "precioSoldar_Especial": perfil["precioSoldar_Especial"]
     }
 
+# ------------------------
+# CALCULAR
+# ------------------------
+
 @router.post("/calcular", response_model=CalculoBandaResponse)
 def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
-    print(f"DEBUG: Endpoint recibió request.ancho_perfil = {request.ancho_perfil}")
+    # print(f"DEBUG: Endpoint recibió request.ancho_perfil = {request.ancho_perfil}")
     try:
 
         precio_total = calcular_configuracion_completa (

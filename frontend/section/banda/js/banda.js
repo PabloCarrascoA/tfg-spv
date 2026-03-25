@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     perfilesL.forEach(perfilL => {
       const option = document.createElement("option");
       option.value = perfilL.codigo;
-      option.textContent = `${perfilL.codigo} - ${perfilL.nombre}`;
+      option.textContent = `${perfilL.codigo} - ${perfilL.tipo}`;
       selectCodigoPerfilLongitudinal.appendChild(option);
     });
 
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     perfilesT.forEach(perfilT => {
       const option = document.createElement("option");
       option.value = perfilT.codigo;
-      option.textContent = `${perfilT.codigo} - ${perfilT.nombre}`;
+      option.textContent = `${perfilT.codigo} - ${perfilT.tipo}`;
       selectCodigoPerfilTransversal.appendChild(option);
     });
 
