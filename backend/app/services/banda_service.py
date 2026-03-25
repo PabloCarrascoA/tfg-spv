@@ -460,6 +460,46 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
         "distancia_paso": distancia_paso
     }
 
+def calcular_precio_runner(db, codigo_runner, largo, n_perfiles, descuento = 0):
+
+    runner = obtener_runner_por_codigo(db, codigo_runner)
+
+    if runner is None:
+        raise ValueError("Runner no encontrado")
+    
+   # - Calculo precio runner -
+
+    precio_runner_mL = runner["precio_material"]
+
+    if largo <= 0:
+        raise ValueError("Largo debe ser mayor que cero")
+    
+    if n_perfiles <= 0:
+        raise ValueError("El número de perfiles no puede ser 0")
+
+    largo_m = largo / 1000
+
+    precio_runner_total = (n_perfiles * largo_m * precio_runner_mL) - descuento
+
+    # - Calculo soldadura
+
+    precio_soldadura_mL = 0
+
+    precio_final = precio_runner_total + precio_soldadura_mL
+
+    return {
+        "codigo_runner": codigo_runner,
+        "precio_runner": precio_runner_mL,
+        # "precio_runner_total": precio_runner_total,
+        # "precio_soldadura": precio_soldadura_mL,
+        # "precio_soldadura_total": precio_soldadura_total,
+        "precio_final": precio_final
+
+    }
+    
+
+
+
 def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None):
     
     # - Precio banda -
@@ -495,6 +535,8 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
         n_perfiles = resultado_perfil["numero_pefiles"]
         distancia_paso = resultado_perfil["distancia_paso"]
         ancho_perfil = resultado_perfil["ancho_perfil"]
+
+    # - Precio runners -
 
 
     # - Precio total -
