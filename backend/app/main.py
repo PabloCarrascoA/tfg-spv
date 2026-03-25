@@ -63,15 +63,11 @@ with get_db_connection() as conn:
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS runners (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            codigo TEXT UNIQUE NOT NULL,
             tipo TEXT,
+            codigo TEXT UNIQUE NOT NULL,
             color TEXT,
-            proveedor TEXT,
             material TEXT,
-            precio_material REAL,
-            precioSoldar_Linf1500 REAL,
-            precioSoldar_Lsup1500_Ainf2100 REAL,
-            precioSoldar_LSup1500_Asup2100 REAL
+            precio_material REAL
         )
     """)
     conn.commit()

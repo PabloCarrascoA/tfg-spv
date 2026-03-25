@@ -80,6 +80,27 @@ def obtener_perfil_longitudinal_por_codigo(db, codigo: str):
         "precioSoldar_LSup1500_Asup2100": row[9]
     }
 
+def obtener_runner_por_codigo(db, codigo:str):
+    cursor = db.cursor()
+    cursor.execute(
+        "SELECT id, tipo, codigo, color, material, precio_material FROM runners WHERE codigo = ?",
+        (codigo,)
+    )
+
+    row = cursor.fetchone()
+
+    if row is None:
+        return None
+    
+    return {
+        "id": row[0],
+        "tipo": row[1],
+        "codigo": row[2],
+        "color": row[3],
+        "material": row[4],
+        "precio_material": row[5],
+    }
+
 # --------------------------------
 # OBTENER TODOS LOS DATOS A LA VEZ
 # --------------------------------
@@ -187,6 +208,22 @@ def obtener_perfiles_longitudinales(db):
         })
 
     return perfiles
+
+def obtener_runners(db):
+    cursor = db.cursor()
+    cursor.execute("SELECT id, tipo, codigo, color, material, precio FROM runners")
+    rows = cursor.fetchall()
+
+    runners = []
+    for row in rows:
+        runners.append({
+            "id": row[0],
+            "tipo": row[1],
+            "codigo": row[2],
+            "color": row[3],
+            "material": row[4],
+            "precio_material": row[5],
+        })
 
 # ------------------------
 # OBTENER PRECIOS DE CADA SECCIÓN
