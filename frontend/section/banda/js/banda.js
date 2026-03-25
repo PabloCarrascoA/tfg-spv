@@ -1,13 +1,17 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
   const selectBanda = document.getElementById("codigo");
+
   const selectTipoEmpalme = document.getElementById("tipoEmpalme");
   const selectCodigoEmpalme = document.getElementById("codigoEmpalme");
+
   const selectCodigoPerfilLongitudinal = document.getElementById("selectCodigoPerfilLongitudinal");
   const selectCodigoPerfilTransversal = document.getElementById("selectCodigoPerfilTransversal");
   const tipoPerfilSelect = document.getElementById("tipoPerfilSelect");
   const perfilesLongitudinalesSection = document.getElementById("perfilesLongitudinalesSection");
   const perfilesTransversalesSection = document.getElementById("perfilesTransversalesSection");
+
+  const selectRunner = document.getElementById("codigoRunner");
 
   // -------------------------
   // CAMBIO TIPO DE PERFIL
@@ -98,7 +102,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
   } catch (err) {
-    console.error("Error cargando perfiles longitudinales:", err);
+    console.error("Error cargando perfiles transversales:", err);
+  }
+
+  // -------------------------
+  // CARGAR RUNNERS
+  // -------------------------
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/configuracion/runners");
+    const runners = await response.json();
+    console.log(runners);
+
+    runners.forEach(runner => {
+      const option = document.createElement("option");
+      option.value = runner.codigo;
+      option.textContent = `${runner.codigo} - ${runner.tipo}`;
+      selectRunner.appendChild(option);
+    });
+
+    // Habilitar el select si hay runners disponibles
+    if (runners.length > 0) {
+      selectRunner.disabled = false;
+    }
+
+  } catch (err) {
+    console.error("Error cargando runners:", err);
   }
 
   // -------------------------
