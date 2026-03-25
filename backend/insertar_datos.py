@@ -4,6 +4,11 @@ from app.db.database import get_db_connection
 # Datos de prueba
 # -----------------------
 
+runners = [
+    {"tipo": "Runner Ej1", "codigo": "R01", "color": "Blanco", "material": "PVC", "precio_material": 10},
+    {"tipo": "Runner Ej2", "codigo": "R02", "color": "Azul", "material": "Uretano", "precio_material": 15},
+]
+
 perfiles_longitudinales = [
     {"tipo": "Perfil ejemplo K-6", "color": "Verde", "proveedor": "ProveedorX", "material": "PVC", "codigo": "PL01", "precio_material": 25.0, "precioSoldar_Linf1500": 5.0, "precioSoldar_Lsup1500_Ainf2100": 7.5, "precioSoldar_LSup1500_Asup2100": 10.0},
     {"tipo": "Perfil ejemplo K-6", "color": "Azul", "proveedor": "ProveedorY", "material": "PVC", "codigo": "PL02", "precio_material": 35.0, "precioSoldar_Linf1500": 5.0, "precioSoldar_Lsup1500_Ainf2100": 7.5, "precioSoldar_LSup1500_Asup2100": 10.0}
@@ -176,6 +181,26 @@ with get_db_connection() as conn:
             perfil_t.get("precioSoldar_Especial", 0.0),
         ))
 
+    # =====================
+    # RUNNER
+    # =====================
+
+    codigos_runner = [p["codigo"] for p in runners]
+    placeholders = ",".join("?" * len(codigos_runner))
+    cursor.execute(f"DELETE FROM runners WHERE codigo in ({placeholders})", codigos_runner)
+
+    for runner in runners:
+        cursor.execute("""
+            INSERT INTO runners (tipo, codigo, color, material, precio_material)
+            VALUES ( ?, ?, ?, ?, ?)
+        """, (
+            runner.get("tipo", ""),
+            runner["codigo"],
+            runner.get("color", ""),
+            runner.get("material", ""),
+            runner.get("precio_material", 0.0),
+        ))
+
     conn.commit()
 
     print("Datos insertados correctamente:")
@@ -185,5 +210,6 @@ with get_db_connection() as conn:
     print(f"- {len(grapas)} grapas")
     print(f"- {len(perfiles_longitudinales)} perfiles longitudinales")
     print(f"- {len(perfiles_transversales)} perfiles transversales")
+    print(f"- {len(runners)} runners")
 
 

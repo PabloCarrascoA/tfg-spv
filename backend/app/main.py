@@ -6,7 +6,7 @@ from app.api.routes import configuracion
 from app.db.database import get_db_connection
 from app.api.routes import importer
 
-# Crear tabla de bandas si no existe
+# Crear tablas de bandas si no existe
 with get_db_connection() as conn:
     cursor = conn.cursor()
     cursor.execute("""
@@ -44,6 +44,24 @@ with get_db_connection() as conn:
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS perfiles_longitudinales (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            codigo TEXT UNIQUE NOT NULL,
+            tipo TEXT,
+            color TEXT,
+            proveedor TEXT,
+            material TEXT,
+            precio_material REAL,
+            precioSoldar_Linf1500 REAL,
+            precioSoldar_Lsup1500_Ainf2100 REAL,
+            precioSoldar_LSup1500_Asup2100 REAL
+        )
+    """)
+    conn.commit()
+
+with get_db_connection() as conn:
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS runners (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             codigo TEXT UNIQUE NOT NULL,
             tipo TEXT,

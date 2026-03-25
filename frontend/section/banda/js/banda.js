@@ -200,6 +200,10 @@ async function calcular() {
   console.log("Input anchoPerfilTransversal:", document.getElementById("anchoPerfilTransversal").value);
   console.log("===================");
 
+  if (anchoPerfilTransversal > ancho) {
+    alert("El ancho del perfil no puede superar el ancho de la banda");
+  }
+
   // Helper function to convert empty strings to null
   const toNullIfEmpty = (val) => val === "" || val === null ? null : val;
   const toFloatOrNull = (val) => {
