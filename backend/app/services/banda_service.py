@@ -317,24 +317,14 @@ def calcular_precio_empalme(db, tipo_empalme, codigo):
 
 def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, ancho, n_perfiles, distancia_margen, descuento = 0, preparacion = 0):
 
-    # ------ REVISAR ESTA LÍNEA ------- 
-    # ¿Este cursor.execute tiene verdaderamene sentido o mejor usar la función que ya existe que devuelve los datos por código?
+    perfil = obtener_perfil_longitudinal_por_codigo(db, codigo_perfil)
 
-    cursor = db.cursor()
-
-    cursor.execute(
-        "SELECT precio_material, precioSoldar_Linf1500, precioSoldar_Lsup1500_Ainf2100, precioSoldar_LSup1500_Asup2100 FROM perfiles_longitudinales WHERE codigo = ?",
-        (codigo_perfil,)
-    )
-
-    row = cursor.fetchone()
-
-    if row is None:
+    if perfil is None:
         raise ValueError("Perfil no encontrado")
     
     # - Calculo precio perfil -
 
-    precio_perfil_mL = row[0]
+    precio_perfil_mL = perfil["precio_material"]
 
     if largo <= 0:
         raise ValueError("Largo debe ser mayor que cero")
@@ -344,25 +334,22 @@ def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, ancho, n_perfi
 
     largo_m = largo / 1000
 
-    # falta ver si el descuento es un valor fijo o un porcentaje
-
     precio_perfil_total = (n_perfiles * largo_m * precio_perfil_mL) - descuento
 
     # - Calculo soldadura -
 
     if largo < 1500:
-        precio_soldadura_mL = row[1]
+        precio_soldadura_mL = perfil["precioSoldar_Linf1500"]
 
     elif largo >= 1500 and largo < 2100:
-        precio_soldadura_mL = row[2]
+        precio_soldadura_mL = perfil["precioSoldar_Lsup1500_Ainf2100"]
 
     else:
-        precio_soldadura_mL = row[3]
+        precio_soldadura_mL = perfil["precioSoldar_LSup1500_Asup2100"]
 
     precio_soldadura_total = (n_perfiles * largo_m * precio_soldadura_mL) + preparacion - descuento
 
     precio_final = precio_perfil_total + precio_soldadura_total
-
 
     return {
         "codigo_perfil": codigo_perfil,
@@ -376,25 +363,17 @@ def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, ancho, n_perfi
 
 def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles=None, distancia_paso=None, ancho_perfil=None, descuento=0, preparacion=0):
 
-    # print(f"DEBUG: calcular_precio_perfil_transversal recibió ancho_perfil = {ancho_perfil}")
+    perfil = obtener_perfil_transversal_por_codigo(db, codigo_perfil)
 
-    # Aquí revisar lo mismo, ¿Este cursor es necesario existiendo obtener_perfil_por_codigo()?
-    
-    cursor = db.cursor()
-
-    cursor.execute("SELECT precio_material, precioSoldar_Lhasta1000, precioSoldar_L1000_1400, precioSoldar_Especial from perfiles_transversales WHERE codigo = ?", (codigo_perfil,))
-
-    row = cursor.fetchone()
-
-    if row is None:
+    if perfil is None:
         raise ValueError("Perfil no encontrado")
     
-    if ancho_perfil > ancho:
+    if ancho_perfil is not None and ancho_perfil > ancho:
         raise ValueError("El ancho del perfil no puede superar el ancho de la banda")
     
     # - Calculo precio perfil -
 
-    precio_perfil_mL = row[0]
+    precio_perfil_mL = perfil["precio_material"]
 
     if ancho <= 0:
         raise ValueError("Ancho debe ser mayor que cero")
@@ -408,7 +387,7 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
     if distancia_paso <= 0:
         raise ValueError("La distancia entre perfiles no puede ser 0")
     
-    # ajustar el número de perfiles y el paso si el largo no es múltiplo de la distancia entre perfiles (ver esto ya que Esbelt calcula solo el paso según el n_perfiles que se introduzcan)
+    # ajustar el número de perfiles y el paso si el largo no es múltiplo de la distancia entre perfiles
 
     if n_perfiles and not distancia_paso:
         distancia_paso = largo / n_perfiles
@@ -424,7 +403,7 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
     else:
         raise ValueError("Debes indicar n_perfiles o distancia_paso")
 
-    # Usar ancho_perfil si se proporciona, sino usar el ancho de la banda + 40mm (ver lo del ancho mínimo en vez del ancho de la banda)
+    # Usar ancho_perfil si se proporciona, sino usar el ancho de la banda + 40mm
     
     if ancho_perfil is not None and ancho_perfil > 0:
         ancho_m = (ancho_perfil + 40) / 1000
@@ -433,16 +412,16 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
 
     precio_perfil_total = (n_perfiles * ancho_m * precio_perfil_mL) - descuento
 
-     # - Calculo soldadura -
+    # - Calculo soldadura -
 
     if largo <= 1000:
-        precio_soldadura_mL = row[1]
+        precio_soldadura_mL = perfil["precioSoldar_Lhasta1000"]
 
     elif largo >= 1000 and largo <= 1400:
-        precio_soldadura_mL = row[2]
+        precio_soldadura_mL = perfil["precioSoldar_L1000_1400"]
 
     else:
-        precio_soldadura_mL = row[3]
+        precio_soldadura_mL = perfil["precioSoldar_Especial"]
 
     precio_soldadura_total = (n_perfiles * ancho_m * precio_soldadura_mL) + preparacion - descuento
 
