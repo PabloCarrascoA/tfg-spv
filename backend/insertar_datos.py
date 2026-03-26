@@ -177,7 +177,7 @@ with get_db_connection() as conn:
             perfil_t.get("material", ""),
             perfil_t.get("precio_material", 0.0),
             perfil_t.get("precioSoldar_Lhasta1000", 0.0),
-            perfil_t.get("precioSoldar_L1000_1400", 0.0),
+            perfil_t.get("precioSoldar_L1000-1400", 0.0),
             perfil_t.get("precioSoldar_Especial", 0.0),
         ))
 

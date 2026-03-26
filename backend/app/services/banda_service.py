@@ -421,6 +421,8 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
 
     precio_perfil_total = (n_perfiles * ancho_m * precio_perfil_mL) - descuento
 
+    print(f"DEBUG: precio perfil: {precio_perfil_total}, n_perfiles: {n_perfiles}, precio perfil mL: {precio_perfil_mL}, ancho_m: {ancho_m}")
+
     # - Calculo soldadura -
 
     if largo <= 1000:
@@ -433,6 +435,8 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
         precio_soldadura_mL = perfil["precioSoldar_Especial"]
 
     precio_soldadura_total = (n_perfiles * ancho_m * precio_soldadura_mL) + preparacion - descuento
+
+    print(f"DEBUG: precio soldadura: {precio_soldadura_total}, n_perfiles: {n_perfiles}, precio soldadura mL: {precio_soldadura_mL}, ancho_m: {ancho_m}")
 
     precio_final = precio_perfil_total + precio_soldadura_total
 
@@ -499,7 +503,7 @@ def calcular_precio_runner(db, codigo_runner, ancho, largo, n_perfiles, descuent
 
 
 
-def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, codigo_runner = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None):
+def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_runner = None):
     
     # - Precio banda -
 
@@ -534,6 +538,8 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
 
     elif distancia_paso is not None:
 
+        print(f"DEBUG: {codigo_perfil}")
+
         resultado_perfil = calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles, distancia_paso, ancho_perfil)
 
         precio_perfil = resultado_perfil["precio_perfil_total"]
@@ -563,7 +569,7 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
     precio_total = precio_banda + precio_empalme + precio_perfil_final + precio_runner_final
 
     return {
-        
+
         "codigo_banda": codigo_banda,
         "precio_banda": round(precio_banda, 2),
         "precio_empalme": round(precio_empalme, 2),

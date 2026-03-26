@@ -222,6 +222,9 @@ async function calcular() {
   const distanciaPaso = document.getElementById("pasoTransversal").value;
 
 
+  const codigoRunner = document.getElementById("codigoRunner").value;
+
+
   const nBandas = document.getElementById("nBandas").value;
 
   // Debug: mostrar qué valores se están enviando
@@ -262,8 +265,11 @@ async function calcular() {
           codigo_perfil: toNullIfEmpty(codigoPerfilLongitudinal) || toNullIfEmpty(codigoPerfilTransversal),
           n_perfiles: toFloatOrNull(numeroPerfilesLongitudinales) || toFloatOrNull(numeroPerfilesTransversales),
           distancia_margen: toFloatOrNull(distanciaMargen),
+          distancia_paso: toFloatOrNull(distanciaPaso),
           ancho_perfil: toFloatOrNull(anchoPerfilTransversal),
-          distancia_paso: toFloatOrNull(distanciaPaso)
+          codigo_runner: toNullIfEmpty(codigoRunner)
+
+          
         }),
       }
     );

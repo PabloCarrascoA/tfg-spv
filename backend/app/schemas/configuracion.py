@@ -21,9 +21,13 @@ class CalculoBandaRequest(BaseModel):
     ancho_perfil: Optional[float] = None
     distancia_paso: Optional[float] = None
 
+    # Campos para runner
+    codigo_runner: Optional[str] = None
+    # n_perfiles_runner: Optional[float] = None
+
 
 class CalculoBandaResponse(BaseModel):
-    
+
     # [TODO] Revisar si los precios deberían ser opcionales, ya que como está ahora podría dar problemas si solo quieres calcular un apartado sin necesidad de calcular todos los demás
 
     codigo_banda: str
