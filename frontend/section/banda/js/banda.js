@@ -283,8 +283,11 @@ async function calcular() {
         `Precio banda: ${data.precio_banda} €
         Precio empalme: ${data.precio_empalme} €
         Precio perfil: ${data.precio_perfil} €
-        Precio soldadura: ${data.precio_soldadura} €
+        Precio soldadura del perfil: ${data.precio_soldadura} €
         Precio perfil total: ${data.precio_perfil_final} €
+        Precio runner: ${data.precio_runner} €
+        Precio soldadura del runner: ${data.precio_runner_soldadura} €
+        Precio runner total: ${data.precio_runner_final} €
         Numero de perfiles: ${data.n_perfiles}
         Distancia margen: ${data.distancia_margen}
         Distancia paso: ${data.distancia_paso}

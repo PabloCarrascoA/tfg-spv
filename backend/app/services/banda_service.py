@@ -502,7 +502,7 @@ def calcular_precio_runner(db, codigo_runner, ancho, largo, n_perfiles, descuent
 def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, codigo_runner = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None):
     
     # - Precio banda -
-    
+
     precio_banda = 0
 
     if codigo_banda is not None:
@@ -563,6 +563,7 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
     precio_total = precio_banda + precio_empalme + precio_perfil_final + precio_runner_final
 
     return {
+        
         "codigo_banda": codigo_banda,
         "precio_banda": round(precio_banda, 2),
         "precio_empalme": round(precio_empalme, 2),

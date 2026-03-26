@@ -23,12 +23,18 @@ class CalculoBandaRequest(BaseModel):
 
 
 class CalculoBandaResponse(BaseModel):
+    
+    # [TODO] Revisar si los precios deberían ser opcionales, ya que como está ahora podría dar problemas si solo quieres calcular un apartado sin necesidad de calcular todos los demás
+
     codigo_banda: str
     precio_banda: float
     precio_empalme: float
     precio_perfil: float
     precio_soldadura: float
     precio_perfil_final: float
+    precio_runner: float
+    precio_runner_soldadura: float
+    precio_runner_final: float
     precio_total: float
     n_perfiles: Optional[int] = None
     distancia_margen: Optional[float] = None
