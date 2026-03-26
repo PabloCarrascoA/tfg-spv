@@ -83,7 +83,7 @@ def obtener_perfil_longitudinal_por_codigo(db, codigo: str):
 def obtener_runner_por_codigo(db, codigo:str):
     cursor = db.cursor()
     cursor.execute(
-        "SELECT id, tipo, codigo, color, material, precio_material FROM runners WHERE codigo = ?",
+        "SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_Asup1700_PVC, precioSoldar_Ainf1700_PVC, precioSoldar_Uretano FROM runners WHERE codigo = ?",
         (codigo,)
     )
 
@@ -99,6 +99,9 @@ def obtener_runner_por_codigo(db, codigo:str):
         "color": row[3],
         "material": row[4],
         "precio_material": row[5],
+        "precioSoldar_Asup1700_PVC": row[6],
+        "precioSoldar_Ainf1700_PVC": row[7],
+        "precioSoldar_Uretano": row[8]
     }
 
 # --------------------------------
@@ -211,7 +214,7 @@ def obtener_perfiles_longitudinales(db):
 
 def obtener_runners(db):
     cursor = db.cursor()
-    cursor.execute("SELECT id, tipo, codigo, color, material, precio_material FROM runners")
+    cursor.execute("SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_Asup1700_PVC, precioSoldar_Ainf1700_PVC, precioSoldar_Uretano FROM runners")
     rows = cursor.fetchall()
 
     runners = []
@@ -223,6 +226,9 @@ def obtener_runners(db):
             "color": row[3],
             "material": row[4],
             "precio_material": row[5],
+            "precioSoldar_Asup1700_PVC": row[6],
+            "precioSoldar_Ainf1700_PVC": row[7],
+            "precioSoldar_Uretano": row[8]
         })
 
     return runners
@@ -370,6 +376,9 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
     
     if ancho_perfil is not None and ancho_perfil > ancho:
         raise ValueError("El ancho del perfil no puede superar el ancho de la banda")
+    
+    if ancho_perfil is None or ancho_perfil < 250:
+        ancho_perfil = 250
     
     # - Calculo precio perfil -
 

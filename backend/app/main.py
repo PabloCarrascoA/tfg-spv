@@ -67,7 +67,11 @@ with get_db_connection() as conn:
             codigo TEXT UNIQUE NOT NULL,
             color TEXT,
             material TEXT,
-            precio_material REAL
+            precio_material REAL,
+            precioSoldar_Asup1700_PVC REAL,
+            precioSoldar_Ainf1700_PVC REAL,
+            precioSoldar_Uretano REAL
+                   
         )
     """)
     conn.commit()

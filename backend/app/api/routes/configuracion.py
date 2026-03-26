@@ -139,6 +139,9 @@ def obtener_runner(codigo: str, db = Depends(get_db)):
         "color": runner["color"],
         "material": runner["material"],
         "precio_material": runner["precio_material"],
+        "precioSoldar_Asup1700_PVC": runner["precioSoldar_Asup1700_PVC"],
+        "precioSoldar_Ainf1700_PVC": runner["precioSoldar_Ainf1700_PVC"],
+        "precioSoldar_Uretano": runner["precioSoldar_Uretano"]
 
     }
 
