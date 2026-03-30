@@ -223,6 +223,7 @@ async function calcular() {
 
 
   const codigoRunner = document.getElementById("codigoRunner").value;
+  const numeroPerfilesRuner = document.getElementById("nPerfilesRuner").value;
 
 
   const nBandas = document.getElementById("nBandas").value;
@@ -248,6 +249,11 @@ async function calcular() {
     return;
   }
 
+  if (codigoRunner && toFloatOrNull(numeroPerfilesRuner) === null) {
+    alert("Debes indicar el número de perfiles del runner.");
+    return;
+  }
+
   try {
     const response = await fetch(
       "http://127.0.0.1:8000/configuracion/calcular",
@@ -267,9 +273,9 @@ async function calcular() {
           distancia_margen: toFloatOrNull(distanciaMargen),
           distancia_paso: toFloatOrNull(distanciaPaso),
           ancho_perfil: toFloatOrNull(anchoPerfilTransversal),
-          codigo_runner: toNullIfEmpty(codigoRunner)
+          codigo_runner: toNullIfEmpty(codigoRunner),
+          n_perfiles_runer: toFloatOrNull(numeroPerfilesRuner)
 
-          
         }),
       }
     );
@@ -295,6 +301,7 @@ async function calcular() {
         Precio soldadura del runner: ${data.precio_runner_soldadura} €
         Precio runner total: ${data.precio_runner_final} €
         Numero de perfiles: ${data.n_perfiles}
+        Numero de perfiles runner: ${data.n_perfiles_runer}
         Distancia margen: ${data.distancia_margen}
         Distancia paso: ${data.distancia_paso}
         Ancho perfil: ${data.ancho_perfil}

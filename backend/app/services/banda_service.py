@@ -466,8 +466,11 @@ def calcular_precio_runner(db, codigo_runner, ancho, largo, n_perfiles, descuent
     if largo <= 0:
         raise ValueError("Largo debe ser mayor que cero")
     
+    if n_perfiles is None:
+        raise ValueError("Debes indicar n_perfiles_runer para calcular el runner")
+
     if n_perfiles <= 0:
-        raise ValueError("El número de perfiles no puede ser 0")
+        raise ValueError("El número de perfiles del runner no puede ser 0")
 
     largo_m = largo / 1000
 
@@ -489,7 +492,7 @@ def calcular_precio_runner(db, codigo_runner, ancho, largo, n_perfiles, descuent
 
     precio_soldadura_total = (n_perfiles * largo_m * precio_soldadura_mL) + preparacion - descuento
 
-    precio_final = precio_runner_total + precio_soldadura_total
+    precio_final = precio_runner_total + precio_soldadura_total # -2,5 * largo_m ?
 
     return {
         "codigo_runner": codigo_runner,
@@ -497,13 +500,14 @@ def calcular_precio_runner(db, codigo_runner, ancho, largo, n_perfiles, descuent
         "precio_runner_total": precio_runner_total,
         "precio_soldadura": precio_soldadura_mL,
         "precio_soldadura_total": precio_soldadura_total,
-        "precio_final": precio_final
+        "precio_final": precio_final,
+        "numero_perfiles": n_perfiles
     }
     
 
 
 
-def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_runner = None):
+def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_runner = None, n_perfiles_runer = None):
     
     # - Precio banda -
 
@@ -553,11 +557,13 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
 
     # - Precio runners -
 
+    precio_runner = 0
+    precio_soldadura_runner = 0
     precio_runner_final = 0
 
     if codigo_runner is not None:
 
-        resultado_runner = calcular_precio_runner(db, codigo_runner, ancho, largo, n_perfiles)
+        resultado_runner = calcular_precio_runner(db, codigo_runner, ancho, largo, n_perfiles_runer)
 
         precio_runner = resultado_runner["precio_runner_total"]
         precio_soldadura_runner = resultado_runner["precio_soldadura_total"]
@@ -581,6 +587,7 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
         "precio_runner_final": round(precio_runner_final, 2),
         "precio_total": round(precio_total, 2),
         "n_perfiles": n_perfiles,
+        "n_perfiles_runer": n_perfiles_runer,
         "distancia_margen": distancia_margen,
         "ancho_perfil": ancho_perfil,
         "distancia_paso": distancia_paso

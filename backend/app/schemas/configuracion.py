@@ -2,9 +2,14 @@ from pydantic import BaseModel, Field
 from typing import Literal, Optional
 
 class CalculoBandaRequest(BaseModel):
+
+    # Campos para banda
+
     codigo_banda: str
     largo: float = Field(gt=0)
     ancho: float = Field(gt=0)
+
+    # Campos para empalme
 
     tipo_empalme: Literal[
         "banda-abierta",
@@ -15,6 +20,8 @@ class CalculoBandaRequest(BaseModel):
 
     codigo_empalme: str
 
+    # Campos para perfil
+
     codigo_perfil: Optional[str] = None
     n_perfiles: Optional[float] = None
     distancia_margen: Optional[float] = None
@@ -23,7 +30,7 @@ class CalculoBandaRequest(BaseModel):
 
     # Campos para runner
     codigo_runner: Optional[str] = None
-    # n_perfiles_runner: Optional[float] = None
+    n_perfiles_runer: Optional[float] = None
 
 
 class CalculoBandaResponse(BaseModel):
@@ -40,7 +47,8 @@ class CalculoBandaResponse(BaseModel):
     precio_runner_soldadura: float
     precio_runner_final: float
     precio_total: float
-    n_perfiles: Optional[int] = None
+    n_perfiles: Optional[float] = None
+    n_perfiles_runer: Optional[float] = None
     distancia_margen: Optional[float] = None
     ancho_perfil: Optional[float] = None
     distancia_paso: Optional[float] = None
