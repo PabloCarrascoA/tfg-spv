@@ -32,6 +32,11 @@ class CalculoBandaRequest(BaseModel):
     codigo_runer: Optional[str] = None
     n_perfiles_runer: Optional[float] = None
 
+    # Campos para perforaciones
+    agujeros_x_fila: Optional[float] = None
+    filas_x_agujero: Optional[float] = None
+    diametro_perforacion: Optional[float] = None
+
 
 class CalculoBandaResponse(BaseModel):
 
@@ -46,9 +51,11 @@ class CalculoBandaResponse(BaseModel):
     precio_runer: float
     precio_runer_soldadura: float
     precio_runer_final: float
+    precio_perforaciones: float
     precio_total: float
     n_perfiles: Optional[float] = None
     n_perfiles_runer: Optional[float] = None
     distancia_margen: Optional[float] = None
     ancho_perfil: Optional[float] = None
     distancia_paso: Optional[float] = None
+    paso_filas: Optional[float] = None

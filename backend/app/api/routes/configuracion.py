@@ -168,7 +168,10 @@ def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
             request.distancia_paso,
             request.ancho_perfil,
             request.codigo_runer,
-            request.n_perfiles_runer
+            request.n_perfiles_runer,
+            request.agujeros_x_fila,
+            request.filas_x_agujero,
+            request.diametro_perforacion
 
         )
 

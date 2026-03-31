@@ -224,6 +224,9 @@ async function calcular() {
 
   const codigoRuner = document.getElementById("codigoRuner").value;
   const numeroPerfilesRuner = document.getElementById("nPerfilesRuner").value;
+  const agujerosPorFila = document.getElementById("agujerosPorFila").value;
+  const filasDeAgujeros = document.getElementById("filasDeAgujeros").value;
+  const diametroPerforacion = document.getElementById("diametroPerforacion").value;
 
 
   const nBandas = document.getElementById("nBandas").value;
@@ -274,7 +277,10 @@ async function calcular() {
           distancia_paso: toFloatOrNull(distanciaPaso),
           ancho_perfil: toFloatOrNull(anchoPerfilTransversal),
           codigo_runer: toNullIfEmpty(codigoRuner),
-          n_perfiles_runer: toFloatOrNull(numeroPerfilesRuner)
+          n_perfiles_runer: toFloatOrNull(numeroPerfilesRuner),
+          agujeros_x_fila: toFloatOrNull(agujerosPorFila),
+          filas_x_agujero: toFloatOrNull(filasDeAgujeros),
+          diametro_perforacion: toFloatOrNull(diametroPerforacion)
 
         }),
       }
@@ -300,10 +306,12 @@ async function calcular() {
         Precio runer: ${data.precio_runer} €
         Precio soldadura del runer: ${data.precio_runer_soldadura} €
         Precio runer total: ${data.precio_runer_final} €
+        Precio perforaciones: ${data.precio_perforaciones} €
         Numero de perfiles: ${data.n_perfiles}
         Numero de perfiles runer: ${data.n_perfiles_runer}
         Distancia margen: ${data.distancia_margen}
         Distancia paso: ${data.distancia_paso}
+        Paso filas: ${data.paso_filas}
         Ancho perfil: ${data.ancho_perfil}
         Precio total: ${nBandas * data.precio_total} €`;
     } else {

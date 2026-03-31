@@ -503,11 +503,36 @@ def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, descuento 
         "precio_final": precio_final,
         "numero_perfiles": n_perfiles
     }
+
+
+def calcular_precio_perforaciones(agujeros_x_fila, filas_x_agujero, diametro, largo):
+
+    if agujeros_x_fila <= 0 or filas_x_agujero <= 0 or diametro <= 0:
+        raise ValueError("No pueden haber filas sin agujeros y el diámetro debe ser mayor o igual a cero")
+
+    if diametro < 4 or diametro > 30:
+        raise ValueError("Los diámetros inferiores a 4 mm y superiores a 30 mm son imposibles")
+
+    precio_por_agujero = 0.1
+
+    total_agujeros = agujeros_x_fila * filas_x_agujero
+
+    precio_total = precio_por_agujero * total_agujeros
+
+    paso_filas = (largo - agujeros_x_fila * diametro) / filas_x_agujero
+
+    if paso_filas < 0:
+        raise ValueError("La configuración de perforaciones no es válida para el largo indicado")
+
+    return {
+        "precio_total": round(precio_total, 2),
+        "paso_filas": round(paso_filas, 2)
+    }
     
 
 
 
-def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_runer = None, n_perfiles_runer = None):
+def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_runer = None, n_perfiles_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None):
     
     # - Precio banda -
 
@@ -570,9 +595,30 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
 
         precio_runer_final = resultado_runer["precio_final"]
 
+    # - Precio perforaciones -
+    precio_perforaciones_final = 0
+    paso_filas = None
+
+    if agujeros_x_fila is not None or filas_x_agujero is not None or diametro_perforacion is not None:
+        if agujeros_x_fila is None or filas_x_agujero is None:
+            raise ValueError("Debes indicar agujeros_x_fila y filas_x_agujero para calcular perforaciones")
+
+        if diametro_perforacion is None:
+            diametro_perforacion = 10
+
+        resultado_perforaciones = calcular_precio_perforaciones(
+            agujeros_x_fila,
+            filas_x_agujero,
+            diametro_perforacion,
+            largo
+        )
+
+        precio_perforaciones_final = resultado_perforaciones["precio_total"]
+        paso_filas = resultado_perforaciones["paso_filas"]
+
     # - Precio total -
 
-    precio_total = precio_banda + precio_empalme + precio_perfil_final + precio_runer_final
+    precio_total = precio_banda + precio_empalme + precio_perfil_final + precio_runer_final + precio_perforaciones_final
 
     return {
 
@@ -585,10 +631,12 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
         "precio_runer": round(precio_runer, 2),
         "precio_runer_soldadura": round(precio_soldadura_runer, 2),
         "precio_runer_final": round(precio_runer_final, 2),
+        "precio_perforaciones": round(precio_perforaciones_final, 2),
         "precio_total": round(precio_total, 2),
         "n_perfiles": n_perfiles,
         "n_perfiles_runer": n_perfiles_runer,
         "distancia_margen": distancia_margen,
         "ancho_perfil": ancho_perfil,
-        "distancia_paso": distancia_paso
+        "distancia_paso": distancia_paso,
+        "paso_filas": paso_filas
     }
