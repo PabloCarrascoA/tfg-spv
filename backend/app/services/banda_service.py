@@ -80,7 +80,7 @@ def obtener_perfil_longitudinal_por_codigo(db, codigo: str):
         "precioSoldar_LSup1500_Asup2100": row[9]
     }
 
-def obtener_runner_por_codigo(db, codigo:str):
+def obtener_runer_por_codigo(db, codigo:str):
     cursor = db.cursor()
     cursor.execute(
         "SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_Asup1700_PVC, precioSoldar_Ainf1700_PVC, precioSoldar_Uretano FROM runners WHERE codigo = ?",
@@ -212,14 +212,14 @@ def obtener_perfiles_longitudinales(db):
 
     return perfiles
 
-def obtener_runners(db):
+def obtener_runers(db):
     cursor = db.cursor()
     cursor.execute("SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_Asup1700_PVC, precioSoldar_Ainf1700_PVC, precioSoldar_Uretano FROM runners")
     rows = cursor.fetchall()
 
-    runners = []
+    runers = []
     for row in rows:
-        runners.append({
+        runers.append({
             "id": row[0],
             "tipo": row[1],
             "codigo": row[2],
@@ -231,7 +231,7 @@ def obtener_runners(db):
             "precioSoldar_Uretano": row[8]
         })
 
-    return runners
+    return runers
 
 # ------------------------
 # OBTENER PRECIOS DE CADA SECCIÓN
@@ -452,52 +452,52 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
         "distancia_paso": distancia_paso
     }
 
-def calcular_precio_runner(db, codigo_runner, ancho, largo, n_perfiles, descuento = 0, preparacion = 0):
+def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, descuento = 0, preparacion = 0):
 
-    runner = obtener_runner_por_codigo(db, codigo_runner)
+    runer = obtener_runer_por_codigo(db, codigo_runer)
 
-    if runner is None:
-        raise ValueError("Runner no encontrado")
+    if runer is None:
+        raise ValueError("Runer no encontrado")
     
-   # - Calculo precio runner -
+   # - Calculo precio runer -
 
-    precio_runner_mL = runner["precio_material"]
+    precio_runer_mL = runer["precio_material"]
 
     if largo <= 0:
         raise ValueError("Largo debe ser mayor que cero")
     
     if n_perfiles is None:
-        raise ValueError("Debes indicar n_perfiles_runer para calcular el runner")
+        raise ValueError("Debes indicar n_perfiles_runer para calcular el runer")
 
     if n_perfiles <= 0:
-        raise ValueError("El número de perfiles del runner no puede ser 0")
+        raise ValueError("El número de perfiles del runer no puede ser 0")
 
     largo_m = largo / 1000
 
-    precio_runner_total = (n_perfiles * largo_m * precio_runner_mL) - descuento
+    precio_runer_total = (n_perfiles * largo_m * precio_runer_mL) - descuento
 
     # - Calculo soldadura
 
-    if ancho >= 1700 and runner["material"] == "PVC":
+    if ancho >= 1700 and runer["material"] == "PVC":
 
-        precio_soldadura_mL = runner["precioSoldar_Asup1700_PVC"]
+        precio_soldadura_mL = runer["precioSoldar_Asup1700_PVC"]
 
-    elif ancho < 1700 and runner["material"] == "PVC":
+    elif ancho < 1700 and runer["material"] == "PVC":
 
-        precio_soldadura_mL = runner["precioSoldar_Ainf1700_PVC"]
+        precio_soldadura_mL = runer["precioSoldar_Ainf1700_PVC"]
 
     else:
 
-        precio_soldadura_mL = runner["precioSoldar_Uretano"]
+        precio_soldadura_mL = runer["precioSoldar_Uretano"]
 
     precio_soldadura_total = (n_perfiles * largo_m * precio_soldadura_mL) + preparacion - descuento
 
-    precio_final = precio_runner_total + precio_soldadura_total # -2,5 * largo_m ?
+    precio_final = precio_runer_total + precio_soldadura_total # -2,5 * largo_m ?
 
     return {
-        "codigo_runner": codigo_runner,
-        "precio_runner": precio_runner_mL,
-        "precio_runner_total": precio_runner_total,
+        "codigo_runer": codigo_runer,
+        "precio_runer": precio_runer_mL,
+        "precio_runer_total": precio_runer_total,
         "precio_soldadura": precio_soldadura_mL,
         "precio_soldadura_total": precio_soldadura_total,
         "precio_final": precio_final,
@@ -507,7 +507,7 @@ def calcular_precio_runner(db, codigo_runner, ancho, largo, n_perfiles, descuent
 
 
 
-def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_runner = None, n_perfiles_runer = None):
+def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_runer = None, n_perfiles_runer = None):
     
     # - Precio banda -
 
@@ -555,24 +555,24 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
         distancia_paso = resultado_perfil["distancia_paso"]
         ancho_perfil = resultado_perfil["ancho_perfil"]
 
-    # - Precio runners -
+    # - Precio runers -
 
-    precio_runner = 0
-    precio_soldadura_runner = 0
-    precio_runner_final = 0
+    precio_runer = 0
+    precio_soldadura_runer = 0
+    precio_runer_final = 0
 
-    if codigo_runner is not None:
+    if codigo_runer is not None:
 
-        resultado_runner = calcular_precio_runner(db, codigo_runner, ancho, largo, n_perfiles_runer)
+        resultado_runer = calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles_runer)
 
-        precio_runner = resultado_runner["precio_runner_total"]
-        precio_soldadura_runner = resultado_runner["precio_soldadura_total"]
+        precio_runer = resultado_runer["precio_runer_total"]
+        precio_soldadura_runer = resultado_runer["precio_soldadura_total"]
 
-        precio_runner_final = resultado_runner["precio_final"]
+        precio_runer_final = resultado_runer["precio_final"]
 
     # - Precio total -
 
-    precio_total = precio_banda + precio_empalme + precio_perfil_final + precio_runner_final
+    precio_total = precio_banda + precio_empalme + precio_perfil_final + precio_runer_final
 
     return {
 
@@ -582,9 +582,9 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
         "precio_perfil": round(precio_perfil, 2),
         "precio_soldadura": round(precio_soldadura, 2),
         "precio_perfil_final": round(precio_perfil_final, 2),
-        "precio_runner": round(precio_runner, 2),
-        "precio_runner_soldadura": round(precio_soldadura_runner, 2),
-        "precio_runner_final": round(precio_runner_final, 2),
+        "precio_runer": round(precio_runer, 2),
+        "precio_runer_soldadura": round(precio_soldadura_runer, 2),
+        "precio_runer_final": round(precio_runer_final, 2),
         "precio_total": round(precio_total, 2),
         "n_perfiles": n_perfiles,
         "n_perfiles_runer": n_perfiles_runer,

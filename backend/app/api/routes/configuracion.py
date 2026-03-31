@@ -13,8 +13,8 @@ from app.services.banda_service import (
     obtener_perfil_transversal_por_codigo,
     obtener_perfiles_longitudinales,
     obtener_perfiles_transversales,
-    obtener_runners,
-    obtener_runner_por_codigo
+    obtener_runers,
+    obtener_runer_por_codigo
 )
 from app.schemas.configuracion import CalculoBandaRequest, CalculoBandaResponse
 
@@ -62,14 +62,14 @@ def listar_perfiles_transversales(db = Depends(get_db)):
 
     return perfiles
 
-@router.get("/runners")
-def listar_runners(db = Depends(get_db)):
-    runners = obtener_runners(db)
+@router.get("/runers")
+def listar_runers(db = Depends(get_db)):
+    runers = obtener_runers(db)
 
-    if not runners:
-        raise HTTPException(status_code = 404, detail= "No se encontraton runners")
+    if not runers:
+        raise HTTPException(status_code = 404, detail= "No se encontraron runers")
     
-    return runners
+    return runers
 
 # ------------------------
 # OBTENER DATOS POR CÓDIGO
@@ -126,22 +126,22 @@ def obtener_perfil_transversal(codigo: str, db = Depends(get_db)):
         "precioSoldar_Especial": perfil["precioSoldar_Especial"]
     }
 
-@router.get('/runners/{codigo}')
-def obtener_runner(codigo: str, db = Depends(get_db)):
-    runner = obtener_runner_por_codigo(db, codigo)
+@router.get('/runers/{codigo}')
+def obtener_runer(codigo: str, db = Depends(get_db)):
+    runer = obtener_runer_por_codigo(db, codigo)
 
-    if not runner:
-        raise HTTPException(status_code=404, detail="Runner no encontrado")
+    if not runer:
+        raise HTTPException(status_code=404, detail="Runer no encontrado")
     
     return {
-        "tipo": runner["tipo"],
-        "codigo": runner["codigo"],
-        "color": runner["color"],
-        "material": runner["material"],
-        "precio_material": runner["precio_material"],
-        "precioSoldar_Asup1700_PVC": runner["precioSoldar_Asup1700_PVC"],
-        "precioSoldar_Ainf1700_PVC": runner["precioSoldar_Ainf1700_PVC"],
-        "precioSoldar_Uretano": runner["precioSoldar_Uretano"]
+        "tipo": runer["tipo"],
+        "codigo": runer["codigo"],
+        "color": runer["color"],
+        "material": runer["material"],
+        "precio_material": runer["precio_material"],
+        "precioSoldar_Asup1700_PVC": runer["precioSoldar_Asup1700_PVC"],
+        "precioSoldar_Ainf1700_PVC": runer["precioSoldar_Ainf1700_PVC"],
+        "precioSoldar_Uretano": runer["precioSoldar_Uretano"]
 
     }
 
@@ -167,7 +167,7 @@ def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
             request.distancia_margen,
             request.distancia_paso,
             request.ancho_perfil,
-            request.codigo_runner,
+            request.codigo_runer,
             request.n_perfiles_runer
 
         )

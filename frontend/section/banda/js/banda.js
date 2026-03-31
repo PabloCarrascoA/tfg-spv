@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const perfilesLongitudinalesSection = document.getElementById("perfilesLongitudinalesSection");
   const perfilesTransversalesSection = document.getElementById("perfilesTransversalesSection");
 
-  const selectRunner = document.getElementById("codigoRunner");
+  const selectRuner = document.getElementById("codigoRuner");
 
   // -------------------------
   // CAMBIO TIPO DE PERFIL
@@ -106,28 +106,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // -------------------------
-  // CARGAR RUNNERS
+  // CARGAR RUNERS
   // -------------------------
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/configuracion/runners");
-    const runners = await response.json();
-    console.log(runners);
+    const response = await fetch("http://127.0.0.1:8000/configuracion/runers");
+    const runers = await response.json();
+    console.log(runers);
 
-    runners.forEach(runner => {
+    runers.forEach(runer => {
       const option = document.createElement("option");
-      option.value = runner.codigo;
-      option.textContent = `${runner.codigo} - ${runner.tipo}`;
-      selectRunner.appendChild(option);
+      option.value = runer.codigo;
+      option.textContent = `${runer.codigo} - ${runer.tipo}`;
+      selectRuner.appendChild(option);
     });
 
-    // Habilitar el select si hay runners disponibles
-    if (runners.length > 0) {
-      selectRunner.disabled = false;
+    // Habilitar el select si hay runers disponibles
+    if (runers.length > 0) {
+      selectRuner.disabled = false;
     }
 
   } catch (err) {
-    console.error("Error cargando runners:", err);
+    console.error("Error cargando runers:", err);
   }
 
   // -------------------------
@@ -222,7 +222,7 @@ async function calcular() {
   const distanciaPaso = document.getElementById("pasoTransversal").value;
 
 
-  const codigoRunner = document.getElementById("codigoRunner").value;
+  const codigoRuner = document.getElementById("codigoRuner").value;
   const numeroPerfilesRuner = document.getElementById("nPerfilesRuner").value;
 
 
@@ -249,8 +249,8 @@ async function calcular() {
     return;
   }
 
-  if (codigoRunner && toFloatOrNull(numeroPerfilesRuner) === null) {
-    alert("Debes indicar el número de perfiles del runner.");
+  if (codigoRuner && toFloatOrNull(numeroPerfilesRuner) === null) {
+    alert("Debes indicar el número de perfiles del runer.");
     return;
   }
 
@@ -273,7 +273,7 @@ async function calcular() {
           distancia_margen: toFloatOrNull(distanciaMargen),
           distancia_paso: toFloatOrNull(distanciaPaso),
           ancho_perfil: toFloatOrNull(anchoPerfilTransversal),
-          codigo_runner: toNullIfEmpty(codigoRunner),
+          codigo_runer: toNullIfEmpty(codigoRuner),
           n_perfiles_runer: toFloatOrNull(numeroPerfilesRuner)
 
         }),
@@ -297,11 +297,11 @@ async function calcular() {
         Precio perfil: ${data.precio_perfil} €
         Precio soldadura del perfil: ${data.precio_soldadura} €
         Precio perfil total: ${data.precio_perfil_final} €
-        Precio runner: ${data.precio_runner} €
-        Precio soldadura del runner: ${data.precio_runner_soldadura} €
-        Precio runner total: ${data.precio_runner_final} €
+        Precio runer: ${data.precio_runer} €
+        Precio soldadura del runer: ${data.precio_runer_soldadura} €
+        Precio runer total: ${data.precio_runer_final} €
         Numero de perfiles: ${data.n_perfiles}
-        Numero de perfiles runner: ${data.n_perfiles_runer}
+        Numero de perfiles runer: ${data.n_perfiles_runer}
         Distancia margen: ${data.distancia_margen}
         Distancia paso: ${data.distancia_paso}
         Ancho perfil: ${data.ancho_perfil}

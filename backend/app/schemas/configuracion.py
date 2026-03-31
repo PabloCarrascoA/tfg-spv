@@ -28,8 +28,8 @@ class CalculoBandaRequest(BaseModel):
     ancho_perfil: Optional[float] = None
     distancia_paso: Optional[float] = None
 
-    # Campos para runner
-    codigo_runner: Optional[str] = None
+    # Campos para runer
+    codigo_runer: Optional[str] = None
     n_perfiles_runer: Optional[float] = None
 
 
@@ -43,9 +43,9 @@ class CalculoBandaResponse(BaseModel):
     precio_perfil: float
     precio_soldadura: float
     precio_perfil_final: float
-    precio_runner: float
-    precio_runner_soldadura: float
-    precio_runner_final: float
+    precio_runer: float
+    precio_runer_soldadura: float
+    precio_runer_final: float
     precio_total: float
     n_perfiles: Optional[float] = None
     n_perfiles_runer: Optional[float] = None
