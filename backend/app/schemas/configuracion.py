@@ -48,6 +48,8 @@ class CalculoBandaResponse(BaseModel):
 
     # [TODO] Revisar si los precios deberían ser opcionales, ya que como está ahora podría dar problemas si solo quieres calcular un apartado sin necesidad de calcular todos los demás
 
+    ancho: float
+    largo: float
     codigo_banda: str
     precio_banda: float
     precio_empalme: float

@@ -718,7 +718,7 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
         if n_perfiles_inferior is not None:
 
             total_perfiles_longitudinales += n_perfiles_inferior
-            
+
         n_perfiles = total_perfiles_longitudinales if total_perfiles_longitudinales > 0 else n_perfiles
 
     elif distancia_paso is not None:
@@ -778,6 +778,8 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
 
     return {
 
+        "ancho": ancho,
+        "largo": largo,
         "codigo_banda": codigo_banda,
         "precio_banda": round(precio_banda, 2),
         "precio_empalme": round(precio_empalme, 2),

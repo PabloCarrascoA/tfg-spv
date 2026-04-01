@@ -362,7 +362,10 @@ async function calcular() {
             distancia = data.distancia_margen
         }
       document.getElementById("resultado").innerText =
-        `Precio banda: ${data.precio_banda} €
+        `Cantidad bandas: ${nBandas}
+        Ancho banda: ${data.ancho}
+        Largo banda: ${data.largo}
+        Precio banda: ${data.precio_banda} €
         Precio empalme: ${data.precio_empalme} €
         Precio perfil: ${data.precio_perfil} €
         Precio soldadura del perfil: ${data.precio_soldadura} €
