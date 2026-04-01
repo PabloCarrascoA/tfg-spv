@@ -648,7 +648,7 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
 
 
-def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_runer = None, n_perfiles_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None):
+def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None):
     
     # - Precio banda -
 
@@ -680,6 +680,46 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
         precio_soldadura = resultado_perfil["precio_soldadura_total"]
 
         precio_perfil_final += resultado_perfil["precio_final"] 
+
+    elif distancia_margen_superior is not None or distancia_margen_inferior is not None:
+
+        if distancia_margen_superior is not None:
+            resultado_perfil_superior = calcular_precio_perfil_longitudinal(
+                db,
+                codigo_perfil_superior,
+                largo,
+                ancho,
+                n_perfiles_superior,
+                distancia_margen_superior
+            )
+            precio_perfil += resultado_perfil_superior["precio_perfil_total"]
+            precio_soldadura += resultado_perfil_superior["precio_soldadura_total"]
+            precio_perfil_final += resultado_perfil_superior["precio_final"]
+
+        if distancia_margen_inferior is not None:
+            resultado_perfil_inferior = calcular_precio_perfil_longitudinal(
+                db,
+                codigo_perfil_inferior,
+                largo,
+                ancho,
+                n_perfiles_inferior,
+                distancia_margen_inferior
+            )
+            precio_perfil += resultado_perfil_inferior["precio_perfil_total"]
+            precio_soldadura += resultado_perfil_inferior["precio_soldadura_total"]
+            precio_perfil_final += resultado_perfil_inferior["precio_final"]
+
+        total_perfiles_longitudinales = 0
+
+        if n_perfiles_superior is not None:
+
+            total_perfiles_longitudinales += n_perfiles_superior
+
+        if n_perfiles_inferior is not None:
+
+            total_perfiles_longitudinales += n_perfiles_inferior
+            
+        n_perfiles = total_perfiles_longitudinales if total_perfiles_longitudinales > 0 else n_perfiles
 
     elif distancia_paso is not None:
 
@@ -752,7 +792,11 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
         "n_perfiles": n_perfiles,
         "n_perfiles_runer": n_perfiles_runer,
         "distancia_margen": distancia_margen,
+        "distancia_margen_superior": distancia_margen_superior,
+        "distancia_margen_inferior": distancia_margen_inferior,
         "ancho_perfil": ancho_perfil,
         "distancia_paso": distancia_paso,
-        "paso_filas": paso_filas
+        "paso_filas": paso_filas,
+        "n_perfiles_superior": n_perfiles_superior,
+        "n_perfiles_inferior": n_perfiles_inferior
     }

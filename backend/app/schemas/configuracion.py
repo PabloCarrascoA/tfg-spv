@@ -27,6 +27,12 @@ class CalculoBandaRequest(BaseModel):
     distancia_margen: Optional[float] = None
     ancho_perfil: Optional[float] = None
     distancia_paso: Optional[float] = None
+    codigo_perfil_superior: Optional[str] = None
+    n_perfiles_superior: Optional[float] = None
+    distancia_margen_superior: Optional[float] = None
+    codigo_perfil_inferior: Optional[str] = None
+    n_perfiles_inferior: Optional[float] = None
+    distancia_margen_inferior: Optional[float] = None
 
     # Campos para runer
     codigo_runer: Optional[str] = None
@@ -56,6 +62,10 @@ class CalculoBandaResponse(BaseModel):
     n_perfiles: Optional[float] = None
     n_perfiles_runer: Optional[float] = None
     distancia_margen: Optional[float] = None
+    distancia_margen_superior: Optional[float] = None
+    distancia_margen_inferior: Optional[float] = None
     ancho_perfil: Optional[float] = None
     distancia_paso: Optional[float] = None
     paso_filas: Optional[float] = None
+    n_perfiles_superior: Optional[float] = None
+    n_perfiles_inferior: Optional[float] = None

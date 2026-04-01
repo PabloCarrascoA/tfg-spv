@@ -5,10 +5,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const selectTipoEmpalme = document.getElementById("tipoEmpalme");
   const selectCodigoEmpalme = document.getElementById("codigoEmpalme");
 
-  const selectCodigoPerfilLongitudinal = document.getElementById("selectCodigoPerfilLongitudinal");
+  const selectCodigoPerfilLongitudinalSuperior = document.getElementById("selectCodigoPerfilLongitudinalSuperior");
+  const selectCodigoPerfilLongitudinalInferior = document.getElementById("selectCodigoPerfilLongitudinalInferior");
   const selectCodigoPerfilTransversal = document.getElementById("selectCodigoPerfilTransversal");
   const tipoPerfilSelect = document.getElementById("tipoPerfilSelect");
   const perfilesLongitudinalesSection = document.getElementById("perfilesLongitudinalesSection");
+  const perfilesLongitudinalesSuperiores = document.getElementById("perfilesLongitudinalesSuperiores");
+  const perfilesLongitudinalesInferiores = document.getElementById("perfilesLongitudinalesInferiores");
+  const activarPerfilLongitudinalSuperior = document.getElementById("activarPerfilLongitudinalSuperior");
+  const activarPerfilLongitudinalInferior = document.getElementById("activarPerfilLongitudinalInferior");
   const perfilesTransversalesSection = document.getElementById("perfilesTransversalesSection");
 
   const selectRuner = document.getElementById("codigoRuner");
@@ -23,6 +28,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (tipoSelected === "longitudinal") {
       perfilesLongitudinalesSection.style.display = "block";
       perfilesTransversalesSection.style.display = "none";
+      perfilesLongitudinalesSuperiores.style.display = activarPerfilLongitudinalSuperior.checked ? "block" : "none";
+      perfilesLongitudinalesInferiores.style.display = activarPerfilLongitudinalInferior.checked ? "block" : "none";
       // Limpiar campos transversales
       document.getElementById("selectCodigoPerfilTransversal").value = "";
       document.getElementById("anchoPerfilTransversal").value = "";
@@ -32,12 +39,39 @@ document.addEventListener("DOMContentLoaded", async () => {
       perfilesLongitudinalesSection.style.display = "none";
       perfilesTransversalesSection.style.display = "block";
       // Limpiar campos longitudinales
-      document.getElementById("selectCodigoPerfilLongitudinal").value = "";
-      document.getElementById("nPerfilesLongitudinal").value = "";
-      document.getElementById("margenLongitudinal").value = "";
+      activarPerfilLongitudinalSuperior.checked = false;
+      activarPerfilLongitudinalInferior.checked = false;
+      perfilesLongitudinalesSuperiores.style.display = "none";
+      perfilesLongitudinalesInferiores.style.display = "none";
+      document.getElementById("selectCodigoPerfilLongitudinalSuperior").value = "";
+      document.getElementById("nPerfilesLongitudinalSuperior").value = "";
+      document.getElementById("margenLongitudinalSuperior").value = "";
+      document.getElementById("selectCodigoPerfilLongitudinalInferior").value = "";
+      document.getElementById("nPerfilesLongitudinalInferior").value = "";
+      document.getElementById("margenLongitudinalInferior").value = "";
     } else {
       perfilesLongitudinalesSection.style.display = "none";
       perfilesTransversalesSection.style.display = "none";
+      perfilesLongitudinalesSuperiores.style.display = "none";
+      perfilesLongitudinalesInferiores.style.display = "none";
+    }
+  });
+
+  activarPerfilLongitudinalSuperior.addEventListener("change", () => {
+    perfilesLongitudinalesSuperiores.style.display = activarPerfilLongitudinalSuperior.checked ? "block" : "none";
+    if (!activarPerfilLongitudinalSuperior.checked) {
+      document.getElementById("selectCodigoPerfilLongitudinalSuperior").value = "";
+      document.getElementById("nPerfilesLongitudinalSuperior").value = "";
+      document.getElementById("margenLongitudinalSuperior").value = "";
+    }
+  });
+
+  activarPerfilLongitudinalInferior.addEventListener("change", () => {
+    perfilesLongitudinalesInferiores.style.display = activarPerfilLongitudinalInferior.checked ? "block" : "none";
+    if (!activarPerfilLongitudinalInferior.checked) {
+      document.getElementById("selectCodigoPerfilLongitudinalInferior").value = "";
+      document.getElementById("nPerfilesLongitudinalInferior").value = "";
+      document.getElementById("margenLongitudinalInferior").value = "";
     }
   });
 
@@ -76,10 +110,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const perfilesL = await response.json();
 
     perfilesL.forEach(perfilL => {
-      const option = document.createElement("option");
-      option.value = perfilL.codigo;
-      option.textContent = `${perfilL.codigo} - ${perfilL.tipo}`;
-      selectCodigoPerfilLongitudinal.appendChild(option);
+      const optionSuperior = document.createElement("option");
+      optionSuperior.value = perfilL.codigo;
+      optionSuperior.textContent = `${perfilL.codigo} - ${perfilL.tipo}`;
+      selectCodigoPerfilLongitudinalSuperior.appendChild(optionSuperior);
+
+      const optionInferior = document.createElement("option");
+      optionInferior.value = perfilL.codigo;
+      optionInferior.textContent = `${perfilL.codigo} - ${perfilL.tipo}`;
+      selectCodigoPerfilLongitudinalInferior.appendChild(optionInferior);
     });
 
   } catch (err) {
@@ -200,17 +239,21 @@ async function calcular() {
   const codigo = document.getElementById("codigo").value;
   const largo = parseFloat(document.getElementById("largo").value);
   const ancho = parseFloat(document.getElementById("ancho").value);
+  const tipoPerfilSeleccionado = document.getElementById("tipoPerfilSelect").value;
+  const perfilLongitudinalSuperiorActivo = document.getElementById("activarPerfilLongitudinalSuperior").checked;
+  const perfilLongitudinalInferiorActivo = document.getElementById("activarPerfilLongitudinalInferior").checked;
 
 
   const tipoEmpalme = document.getElementById("tipoEmpalme").value;
   const codigoEmpalme = document.getElementById("codigoEmpalme").value;
 
 
-  const codigoPerfilLongitudinal = document.getElementById("selectCodigoPerfilLongitudinal").value;
-
-  const numeroPerfilesLongitudinales = document.getElementById("nPerfilesLongitudinal").value;
-
-  const distanciaMargen = document.getElementById("margenLongitudinal").value;
+  const codigoPerfilLongitudinalSuperior = document.getElementById("selectCodigoPerfilLongitudinalSuperior").value;
+  const numeroPerfilesLongitudinalesSuperior = document.getElementById("nPerfilesLongitudinalSuperior").value;
+  const distanciaMargenSuperior = document.getElementById("margenLongitudinalSuperior").value;
+  const codigoPerfilLongitudinalInferior = document.getElementById("selectCodigoPerfilLongitudinalInferior").value;
+  const numeroPerfilesLongitudinalesInferior = document.getElementById("nPerfilesLongitudinalInferior").value;
+  const distanciaMargenInferior = document.getElementById("margenLongitudinalInferior").value;
 
 
   const codigoPerfilTransversal = document.getElementById("selectCodigoPerfilTransversal").value;
@@ -252,6 +295,21 @@ async function calcular() {
     return;
   }
 
+  if (tipoPerfilSeleccionado === "longitudinal" && !perfilLongitudinalSuperiorActivo && !perfilLongitudinalInferiorActivo) {
+    alert("Debes seleccionar al menos un perfil longitudinal: superior o inferior.");
+    return;
+  }
+
+  if (perfilLongitudinalSuperiorActivo && (!codigoPerfilLongitudinalSuperior || !numeroPerfilesLongitudinalesSuperior || !distanciaMargenSuperior)) {
+    alert("Debes completar código, número de perfiles y distancia de margen para el perfil longitudinal superior.");
+    return;
+  }
+
+  if (perfilLongitudinalInferiorActivo && (!codigoPerfilLongitudinalInferior || !numeroPerfilesLongitudinalesInferior || !distanciaMargenInferior)) {
+    alert("Debes completar código, número de perfiles y distancia de margen para el perfil longitudinal inferior.");
+    return;
+  }
+
   if (codigoRuner && toFloatOrNull(numeroPerfilesRuner) === null) {
     alert("Debes indicar el número de perfiles del runer.");
     return;
@@ -271,11 +329,17 @@ async function calcular() {
           ancho: ancho,
           tipo_empalme: tipoEmpalme,
           codigo_empalme: codigoEmpalme,
-          codigo_perfil: toNullIfEmpty(codigoPerfilLongitudinal) || toNullIfEmpty(codigoPerfilTransversal),
-          n_perfiles: toFloatOrNull(numeroPerfilesLongitudinales) || toFloatOrNull(numeroPerfilesTransversales),
-          distancia_margen: toFloatOrNull(distanciaMargen),
+          codigo_perfil: toNullIfEmpty(codigoPerfilTransversal),
+          n_perfiles: toFloatOrNull(numeroPerfilesTransversales),
+          distancia_margen: null,
           distancia_paso: toFloatOrNull(distanciaPaso),
           ancho_perfil: toFloatOrNull(anchoPerfilTransversal),
+          codigo_perfil_superior: perfilLongitudinalSuperiorActivo ? toNullIfEmpty(codigoPerfilLongitudinalSuperior) : null,
+          n_perfiles_superior: perfilLongitudinalSuperiorActivo ? toFloatOrNull(numeroPerfilesLongitudinalesSuperior) : null,
+          distancia_margen_superior: perfilLongitudinalSuperiorActivo ? toFloatOrNull(distanciaMargenSuperior) : null,
+          codigo_perfil_inferior: perfilLongitudinalInferiorActivo ? toNullIfEmpty(codigoPerfilLongitudinalInferior) : null,
+          n_perfiles_inferior: perfilLongitudinalInferiorActivo ? toFloatOrNull(numeroPerfilesLongitudinalesInferior) : null,
+          distancia_margen_inferior: perfilLongitudinalInferiorActivo ? toFloatOrNull(distanciaMargenInferior) : null,
           codigo_runer: toNullIfEmpty(codigoRuner),
           n_perfiles_runer: toFloatOrNull(numeroPerfilesRuner),
           agujeros_x_fila: toFloatOrNull(agujerosPorFila),
@@ -308,8 +372,12 @@ async function calcular() {
         Precio runer total: ${data.precio_runer_final} €
         Precio perforaciones: ${data.precio_perforaciones} €
         Numero de perfiles: ${data.n_perfiles}
+        Numero de perfiles superior: ${data.n_perfiles_superior}
+        Numero de perfiles inferior: ${data.n_perfiles_inferior}
         Numero de perfiles runer: ${data.n_perfiles_runer}
         Distancia margen: ${data.distancia_margen}
+        Distancia margen superior: ${data.distancia_margen_superior}
+        Distancia margen inferior: ${data.distancia_margen_inferior}
         Distancia paso: ${data.distancia_paso}
         Paso filas: ${data.paso_filas}
         Ancho perfil: ${data.ancho_perfil}

@@ -56,38 +56,50 @@
 
     <!-- SUPERIOR -->
      <div id="perfilesLongitudinalesSection" style="display: none;">
-      <p style="margin-bottom: 20px;">Perfil longitudinal en cobertura superior:</p>
-      <div id="perfilesLongitudinalesSuperiores" style="display: none;">
+      <label>
+        <input type="checkbox" id="activarPerfilLongitudinalSuperior" />
+        Perfil longitudinal en cobertura superior
+      </label>
+
+      <br><br>
+
+      <div id="perfilesLongitudinalesSuperiores" style="display: none; margin-top: 10px;">
       
         <label style="margin-bottom: 20px;">Código perfil longitudinal:</label>
-        <select style="margin-bottom: 20px;" id="selectCodigoPerfilLongitudinal">
+        <select style="margin-bottom: 20px;" id="selectCodigoPerfilLongitudinalSuperior">
           <option value="" disabled selected >- Seleccionar -</option>
         </select>
         
         <br>
 
         <label>Número de perfiles:</label>
-        <input type="number" id="nPerfilesLongitudinal" step="0.01" /><br /><br />
+        <input type="number" id="nPerfilesLongitudinalSuperior" step="0.01" /><br /><br />
 
         <label>Distancia margen lateral:</label>
-        <input type="number" id="margenLongitudinal" step="0.01" /><br /><br />
+        <input type="number" id="margenLongitudinalSuperior" step="0.01" /><br /><br />
       </div>
 
       <!-- INFERIOR-->
-      <p style="margin-bottom: 20px;">Perfil longitudinal en cobertura inferior:</p>
-      <div id="perfilesLongitudinalesInferiores" style="display: none;">
+      <label>
+        <input type="checkbox" id="activarPerfilLongitudinalInferior" />
+        Perfil longitudinal en cobertura inferior
+      </label>
+
+      <br><br>
+
+      <div id="perfilesLongitudinalesInferiores" style="display: none; margin-top: 10px;">
         <label style="margin-bottom: 20px;">Código perfil longitudinal:</label>
-        <select style="margin-bottom: 20px;" id="selectCodigoPerfilLongitudinal">
+        <select style="margin-bottom: 20px;" id="selectCodigoPerfilLongitudinalInferior">
           <option value="" disabled selected >- Seleccionar -</option>
         </select>
         
         <br>
 
         <label>Número de perfiles:</label>
-        <input type="number" id="nPerfilesLongitudinal" step="0.01" /><br /><br />
+        <input type="number" id="nPerfilesLongitudinalInferior" step="0.01" /><br /><br />
 
         <label>Distancia margen lateral:</label>
-        <input type="number" id="margenLongitudinal" step="0.01" /><br /><br />
+        <input type="number" id="margenLongitudinalInferior" step="0.01" /><br /><br />
       </div>
     </div>
 
