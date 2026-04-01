@@ -603,6 +603,11 @@ def calcular_precio_perforaciones(agujeros_x_fila, filas_x_agujero, diametro, la
 
     if diametro < 4 or diametro > 30:
         raise ValueError("Los diámetros inferiores a 4 mm y superiores a 30 mm son imposibles")
+    
+    if diametro % 2 != 0:
+        raise ValueError("El diámetro de las perforaciones debe ser par")
+    
+    
 
     precio_por_agujero = 0.1
 
@@ -630,11 +635,13 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
     
     
     if continuidad == True:
-        desarrollo_total = (desarrollo + pisada) * n_ondas
+        desarrollo_total = ((obtener_desarrollo_ondas(base, altura) + pisada) * n_ondas) + 1000
+        # [TODO] revisar ajuste de la base según si se da el paso o n_ondas
     else:
-        desarrollo_total = (desarrollo + 2 * pisada) * n_ondas
+        desarrollo_total = ((obtener_desarrollo_ondas(base, altura) + 2 * pisada) * n_ondas) + 1000
+        # [TODO] revisar ajuste de la base según si se da el paso o n_ondas
     
-    precio_final = (desarrollo_total * n_ondas) * ancho * precio_onda_mL   
+    precio_final = (desarrollo_total * n_ondas) * ancho * onda["precio_onda_mL"]   
 
 
 
