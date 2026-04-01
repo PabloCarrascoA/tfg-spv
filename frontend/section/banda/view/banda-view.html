@@ -4,7 +4,7 @@
     <title>Calcular Banda</title>
   </head>
 
-  <body>
+  <div>
 
     <!-- SECCION BANDAS Y EMPALMES -->
 
@@ -53,19 +53,42 @@
     <br><br>
 
     <!-- SECCIÓN PERFILES LONGITUDINALES -->
-    <div id="perfilesLongitudinalesSection" style="display: none;">
-      <label style="margin-bottom: 20px;">Código perfil longitudinal:</label>
-      <select style="margin-bottom: 20px;" id="selectCodigoPerfilLongitudinal">
-        <option value="" disabled selected >- Seleccionar -</option>
-      </select>
+
+    <!-- SUPERIOR -->
+     <div id="perfilesLongitudinalesSection" style="display: none;">
+      <p style="margin-bottom: 20px;">Perfil longitudinal en cobertura superior:</p>
+      <div id="perfilesLongitudinalesSuperiores" style="display: none;">
       
-      <br>
+        <label style="margin-bottom: 20px;">Código perfil longitudinal:</label>
+        <select style="margin-bottom: 20px;" id="selectCodigoPerfilLongitudinal">
+          <option value="" disabled selected >- Seleccionar -</option>
+        </select>
+        
+        <br>
 
-      <label>Número de perfiles:</label>
-      <input type="number" id="nPerfilesLongitudinal" step="0.01" /><br /><br />
+        <label>Número de perfiles:</label>
+        <input type="number" id="nPerfilesLongitudinal" step="0.01" /><br /><br />
 
-      <label>Distancia margen lateral:</label>
-      <input type="number" id="margenLongitudinal" step="0.01" /><br /><br />
+        <label>Distancia margen lateral:</label>
+        <input type="number" id="margenLongitudinal" step="0.01" /><br /><br />
+      </div>
+
+      <!-- INFERIOR-->
+      <p style="margin-bottom: 20px;">Perfil longitudinal en cobertura inferior:</p>
+      <div id="perfilesLongitudinalesInferiores" style="display: none;">
+        <label style="margin-bottom: 20px;">Código perfil longitudinal:</label>
+        <select style="margin-bottom: 20px;" id="selectCodigoPerfilLongitudinal">
+          <option value="" disabled selected >- Seleccionar -</option>
+        </select>
+        
+        <br>
+
+        <label>Número de perfiles:</label>
+        <input type="number" id="nPerfilesLongitudinal" step="0.01" /><br /><br />
+
+        <label>Distancia margen lateral:</label>
+        <input type="number" id="margenLongitudinal" step="0.01" /><br /><br />
+      </div>
     </div>
 
     <!-- SECCIÓN PERFILES TRANSVERSALES -->

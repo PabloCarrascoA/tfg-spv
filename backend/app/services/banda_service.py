@@ -550,6 +550,9 @@ def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, descuento 
     if runer is None:
         raise ValueError("Runer no encontrado")
     
+    if n_perfiles > 3:
+        raise ValueError("El número máximo de runers es de 3")
+    
    # - Calculo precio runer -
 
     precio_runer_mL = runer["precio_material"]
@@ -607,7 +610,7 @@ def calcular_precio_perforaciones(agujeros_x_fila, filas_x_agujero, diametro, la
     if diametro % 2 != 0:
         raise ValueError("El diámetro de las perforaciones debe ser par")
     
-    
+
 
     precio_por_agujero = 0.1
 
