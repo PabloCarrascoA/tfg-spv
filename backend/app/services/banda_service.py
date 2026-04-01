@@ -233,6 +233,97 @@ def obtener_runers(db):
 
     return runers
 
+def obtener_desarrollo_ondas(base, altura):
+
+    a,b,c = 0
+
+    if altura > 100 or altura < 10:
+        raise Exception("la altura no puede ser mayor de 100 o inferior a 10")
+    elif altura == 10:
+        a = 0.0002
+        b = 0.9335
+        c = 7.0815
+
+    elif altura == 15:
+        a = 0.0004
+        b = 0.8691
+        c = 14.862
+
+    elif altura == 20:
+        a = 0.0008
+        b = 0.7397
+        c = 26.784
+    elif altura == 25:
+        a = 0.0007
+        b = 0.7164
+        c = 34.99
+    elif altura == 30:
+        a = 0.0009
+        b = 0.6412
+        c = 46.287
+    elif altura == 35:
+        a = 0.0011
+        b = 0.5701
+        c = 58
+    elif altura == 40:
+        a = 0.0012
+        b = 0.5029
+        c = 70.009
+    elif altura == 45:
+        a = 0.0013
+        b = 0.4414
+        c = 82.141
+    elif altura == 50:
+        a = 0.0014
+        b = 0.3856
+        c = 94.327
+    elif altura == 55:
+        a = 0.0013
+        b = 0.3817
+        c = 103.86
+    elif altura == 60:
+        a = 0.0016
+        b = 0.2834
+        c = 119
+    elif altura == 65:
+        a = 0.0014
+        b = 0.3164
+        c = 126.29
+    elif altura == 70:
+        a = 0.0014
+        b = 0.2731
+        c = 138.69
+    elif altura == 75:
+        a = 0.0014
+        b = 0.2669
+        c = 148.74
+    elif altura == 80:
+        a = 0.0013
+        b = 0.2578
+        c = 159.11
+    elif altura == 85:
+        a = 0.0014
+        b = 0.2245
+        c = 171.34
+    elif altura == 90:
+        a = 0.0013
+        b = 0.2134
+        c = 182.06
+    elif altura == 95:
+        a = 0.0014
+        b = 0.182
+        c = 194.47
+    elif altura == 100:
+        a = 0.0012
+        b = 0.2105
+        c = 202.11
+    else:
+        raise Exception("¡La altura debe ser un múltiplo de 5!")
+
+    desarrollo = a * base + b * base + c * base
+
+    return desarrollo
+
 # ------------------------
 # OBTENER PRECIOS DE CADA SECCIÓN
 # ------------------------
@@ -528,7 +619,22 @@ def calcular_precio_perforaciones(agujeros_x_fila, filas_x_agujero, diametro, la
         "precio_total": round(precio_total, 2),
         "paso_filas": round(paso_filas, 2)
     }
+
+
+def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, ancho, pisada):
     
+    onda = obtener_onda_por_codigo(db, codigo_onda)
+
+    if onda is None:
+        raise ValueError("Onda no encontrada")
+    
+    
+    if continuidad == True:
+        desarrollo_total = (desarrollo + pisada) * n_ondas
+    else:
+        desarrollo_total = (desarrollo + 2 * pisada) * n_ondas
+    
+    precio_final = (desarrollo_total * n_ondas) * ancho * precio_onda_mL   
 
 
 
