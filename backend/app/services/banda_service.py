@@ -599,7 +599,7 @@ def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, descuento 
     }
 
 
-def calcular_precio_perforaciones(agujeros_x_fila, filas_x_agujero, diametro, largo):
+def calcular_precio_perforaciones(agujeros_x_fila, filas_x_agujero, diametro, largo, ancho):
 
     if agujeros_x_fila <= 0 or filas_x_agujero <= 0 or diametro <= 0:
         raise ValueError("No pueden haber filas sin agujeros y el diámetro debe ser mayor o igual a cero")
@@ -618,10 +618,11 @@ def calcular_precio_perforaciones(agujeros_x_fila, filas_x_agujero, diametro, la
 
     precio_total = precio_por_agujero * total_agujeros
 
-    paso_filas = (largo - agujeros_x_fila * diametro) / filas_x_agujero
+    paso_filas = (ancho - agujeros_x_fila * diametro) / (agujeros_x_fila + 1)
 
     if paso_filas < 0:
         raise ValueError("La configuración de perforaciones no es válida para el largo indicado")
+        # [TODO] esto funciona para las perforaciones equidistantes, en una malla aleatoria no
 
     return {
         "precio_total": round(precio_total, 2),
@@ -766,7 +767,8 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
             agujeros_x_fila,
             filas_x_agujero,
             diametro_perforacion,
-            largo
+            largo,
+            ancho
         )
 
         precio_perforaciones_final = resultado_perforaciones["precio_total"]
