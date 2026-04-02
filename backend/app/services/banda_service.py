@@ -419,6 +419,9 @@ def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, ancho, n_perfi
     if perfil is None:
         raise ValueError("Perfil no encontrado")
     
+    if n_perfiles > 3:
+        raise ValueError("No se admiten más de 3 perfiles longitudinales")
+    
     # - Calculo precio perfil -
 
     precio_perfil_mL = perfil["precio_material"]
@@ -645,7 +648,11 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
         desarrollo_total = ((obtener_desarrollo_ondas(base, altura) + 2 * pisada) * n_ondas) + 1000
         # [TODO] revisar ajuste de la base según si se da el paso o n_ondas
     
-    precio_final = (desarrollo_total * n_ondas) * ancho * onda["precio_onda_mL"]   
+    precio_onda_total = (desarrollo_total * n_ondas) * ancho * onda["precio_onda_mL"]   
+
+    precio_soldadura_total = 0
+
+    precio_final = precio_onda_total + precio_soldadura_total
 
 
 
