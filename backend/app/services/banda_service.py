@@ -412,7 +412,9 @@ def calcular_precio_empalme(db, tipo_empalme, codigo):
         "precio_empalme": precio_empalme
     }
 
-def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, ancho, n_perfiles, distancia_margen, descuento = 0, preparacion = 0):
+def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, largo, ancho, n_perfiles, distancia_margen, descuento = 0, preparacion = 0):
+
+    print(f"DEBUG: cantidad_bandas: {cantidad_bandas}")
 
     perfil = obtener_perfil_longitudinal_por_codigo(db, codigo_perfil)
 
@@ -449,7 +451,33 @@ def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, ancho, n_perfi
 
     precio_soldadura_total = (n_perfiles * largo_m * precio_soldadura_mL) + preparacion - descuento
 
-    precio_final = precio_perfil_total + precio_soldadura_total
+
+    # - Calculo preparación -
+
+    tarifa_preparacion = 25
+    precio_preparacion = 0
+
+    if cantidad_bandas == 1 and n_perfiles == 1:
+        precio_preparacion = tarifa_preparacion
+
+    elif cantidad_bandas > 1 and n_perfiles == 1:
+        precio_preparacion = (2 * tarifa_preparacion) / cantidad_bandas
+
+    elif n_perfiles > 1 and cantidad_bandas >= 1:
+
+        if n_perfiles % 2 == 0:
+            n_cobros = n_perfiles / 2
+        else:
+            n_cobros = math.ceil(n_perfiles/2) + 1 
+
+        precio_preparacion = (n_cobros * tarifa_preparacion) / cantidad_bandas
+
+    else:
+        raise ValueError("cantidad de bandas o perfiles no válidos para calcular preparación")
+    
+    print(f"DEBUG: precio preparación: {precio_preparacion}, n_cobros: {n_cobros}")
+    
+    precio_final = precio_perfil_total + precio_soldadura_total + precio_preparacion
 
     return {
         "codigo_perfil": codigo_perfil,
@@ -457,6 +485,7 @@ def calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, ancho, n_perfi
         "precio_perfil_total": precio_perfil_total,
         "precio_soldadura": precio_soldadura_mL,
         "precio_soldadura_total": precio_soldadura_total,
+        "precio_preparacion_PL": precio_preparacion,
         "precio_final": precio_final,
         "distancia_margen": distancia_margen
     }
@@ -656,7 +685,7 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
 
 
-def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None):
+def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None):
     
     # - Precio banda -
 
@@ -679,10 +708,11 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
     precio_perfil = 0
     precio_soldadura = 0
     precio_perfil_final = 0
+    precio_preparacion = 0
 
     if distancia_margen is not None:
 
-        resultado_perfil = calcular_precio_perfil_longitudinal(db, codigo_perfil, largo, ancho, n_perfiles, distancia_margen)
+        resultado_perfil = calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, largo, ancho, n_perfiles, distancia_margen)
 
         precio_perfil = resultado_perfil["precio_perfil_total"]
         precio_soldadura = resultado_perfil["precio_soldadura_total"]
@@ -694,6 +724,7 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
         if distancia_margen_superior is not None:
             resultado_perfil_superior = calcular_precio_perfil_longitudinal(
                 db,
+                cantidad_bandas,
                 codigo_perfil_superior,
                 largo,
                 ancho,
@@ -703,10 +734,12 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
             precio_perfil += resultado_perfil_superior["precio_perfil_total"]
             precio_soldadura += resultado_perfil_superior["precio_soldadura_total"]
             precio_perfil_final += resultado_perfil_superior["precio_final"]
+            precio_preparacion += resultado_perfil_superior["precio_preparacion_PL"]
 
         if distancia_margen_inferior is not None:
             resultado_perfil_inferior = calcular_precio_perfil_longitudinal(
                 db,
+                cantidad_bandas,
                 codigo_perfil_inferior,
                 largo,
                 ancho,
@@ -716,6 +749,7 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
             precio_perfil += resultado_perfil_inferior["precio_perfil_total"]
             precio_soldadura += resultado_perfil_inferior["precio_soldadura_total"]
             precio_perfil_final += resultado_perfil_inferior["precio_final"]
+            precio_preparacion += resultado_perfil_inferior["precio_preparacion_PL"]
 
         total_perfiles_longitudinales = 0
 
@@ -787,6 +821,7 @@ def calcular_configuracion_completa(db, codigo_banda, largo, ancho, tipo_empalme
 
     return {
 
+        "cantidad_bandas": cantidad_bandas,
         "ancho": ancho,
         "largo": largo,
         "codigo_banda": codigo_banda,

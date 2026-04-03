@@ -6,6 +6,7 @@ class CalculoBandaRequest(BaseModel):
     # Campos para banda
 
     codigo_banda: str
+    cantidad_bandas: int = Field(gt=0)
     largo: float = Field(gt=0)
     ancho: float = Field(gt=0)
 
@@ -48,6 +49,7 @@ class CalculoBandaResponse(BaseModel):
 
     # [TODO] Revisar si los precios deberían ser opcionales, ya que como está ahora podría dar problemas si solo quieres calcular un apartado sin necesidad de calcular todos los demás
 
+    cantidad_bandas: int
     ancho: float
     largo: float
     codigo_banda: str

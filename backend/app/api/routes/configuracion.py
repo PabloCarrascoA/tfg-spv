@@ -157,6 +157,7 @@ def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
         precio_total = calcular_configuracion_completa (
 
             db,
+            request.cantidad_bandas,
             request.codigo_banda,
             request.largo,
             request.ancho,

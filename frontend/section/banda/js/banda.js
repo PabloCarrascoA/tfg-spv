@@ -325,6 +325,7 @@ async function calcular() {
         },
         body: JSON.stringify({
           codigo_banda: codigo,
+          cantidad_bandas: nBandas,
           largo: largo,
           ancho: ancho,
           tipo_empalme: tipoEmpalme,
