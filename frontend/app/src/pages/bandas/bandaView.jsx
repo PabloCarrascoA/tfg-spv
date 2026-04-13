@@ -47,6 +47,7 @@ const COMPONENTES = [
 ]
 
 function BandaView() {
+
   const navigate = useNavigate()
 
   // el estado inicial marca como seleccionados los obligatorios

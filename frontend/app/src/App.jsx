@@ -4,6 +4,7 @@ import HomeView from './pages/home/HomeView'
 import BandaView from './pages/bandas/BandaView'
 import BandaConfigView from './pages/bandas/configuracion/BandaConfigView'
 import PerfilLConfigView from './pages/bandas/configuracion/PerfilLConfigView'
+import ResumenView from './pages/bandas/ResumenView'
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/banda" element={<BandaView />} />
           <Route path="/banda/configurar/banda" element={<BandaConfigView />} />
           <Route path="/banda/configurar/perfil-longitudinal" element={<PerfilLConfigView />} />
+          <Route path="/resumen" element={<ResumenView />}/>
         </Routes>
       </Layout>
     </BrowserRouter>

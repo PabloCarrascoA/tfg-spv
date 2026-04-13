@@ -1,15 +1,17 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { siguienteRuta, infoPaso } from '../BandaWizard'
 
 function BandaConfigView() {
   const { state } = useLocation()
   const navigate = useNavigate()
   const [cantidad, setCantidad] = useState(1)
 
+  const { actual, total } = infoPaso(state.seleccion, 'banda')
+
   function handleSiguiente() {
-    // aquí navegarás al siguiente paso según la selección
-    // lo implementaremos cuando tengamos el wizard
-    console.log('siguiente paso')
+    const ruta = siguienteRuta(state.seleccion, 'banda')
+    navigate(ruta, { state })  // pasa siempre el state hacia adelante
   }
 
   function handleAtras() {
@@ -25,7 +27,7 @@ function BandaConfigView() {
         {/* mitad izquierda: formulario */}
         <div className="config-form-panel">
           <h2 className="content-title">Panel de Configuración</h2>
-          <p className="content-subtitle">Paso 1 de 6</p>
+          <p className="content-subtitle">Paso {actual} de {total}</p>
           <p className="config-step-label">1. Banda cortada y empalme</p>
 
           <div className="config-form">

@@ -1,15 +1,19 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { siguienteRuta, infoPaso } from '../BandaWizard'
 
 function PerfilLConfigView() {
   const { state } = useLocation()
   const navigate = useNavigate()
 
+  const { actual, total } = infoPaso(state.seleccion, 'perfil-longitudinal')
+
   const [inferior, setInferior] = useState({ activo: true,  cantidad: 1, distancia: '', margen: '' })
   const [superior, setSuperior] = useState({ activo: false, cantidad: 1, distancia: '', margen: '' })
 
   function handleSiguiente() {
-    console.log('siguiente paso')
+    const ruta = siguienteRuta(state.seleccion, 'perfil-longitudinal')
+    navigate(ruta, { state })
   }
 
   function handleAtras() {
@@ -23,7 +27,7 @@ function PerfilLConfigView() {
         {/* mitad izquierda: formulario */}
         <div className="config-form-panel">
           <h2 className="content-title">Panel de Configuración</h2>
-          <p className="content-subtitle">Paso 2 de 6</p>
+          <p className="content-subtitle">Paso {actual} de {total}</p>
           <p className="config-step-label">2. Perfil longitudinal</p>
 
           <div className="config-form">
