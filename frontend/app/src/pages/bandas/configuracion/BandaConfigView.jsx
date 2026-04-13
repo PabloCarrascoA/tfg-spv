@@ -28,7 +28,7 @@ function BandaConfigView() {
         <div className="config-form-panel">
           <h2 className="content-title">Panel de Configuración</h2>
           <p className="content-subtitle">Paso {actual} de {total}</p>
-          <p className="config-step-label">1. Banda cortada y empalme</p>
+          <p className="config-step-label">{actual}. Banda cortada y empalme</p>
 
           <div className="config-form">
 

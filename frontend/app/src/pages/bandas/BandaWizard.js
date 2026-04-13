@@ -1,7 +1,7 @@
 const ORDEN_PASOS = [
   { id: 'banda',              ruta: '/banda/configurar/banda'    },
-  { id: 'perfil-longitudinal', ruta: '/banda/configurar/perfil-l' },
-  { id: 'perfil-transversal',  ruta: '/banda/configurar/perfil-t' },
+  { id: 'perfil-longitudinal', ruta: '/banda/configurar/perfil-longitudinal' },
+  { id: 'perfil-transversal',  ruta: '/banda/configurar/perfil-transversal' },
   { id: 'runer',              ruta: '/banda/configurar/runer'    },
   { id: 'perforaciones',      ruta: '/banda/configurar/perforaciones' },
   { id: 'ondas',              ruta: '/banda/configurar/ondas'    },

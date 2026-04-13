@@ -50,7 +50,7 @@ function BandaView() {
 
   const navigate = useNavigate()
 
-  // el estado inicial marca como seleccionados los obligatorios
+  // el estado inicial marca como seleccionado banda y empalme que es obligatorio
   const [seleccion, setSeleccion] = useState(
     COMPONENTES
       .filter(c => c.obligatorio)
