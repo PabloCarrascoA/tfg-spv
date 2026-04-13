@@ -308,3 +308,163 @@ a {
 .btn-continuar:hover {
   background: #3d5f77;
 }
+
+/* =============================================
+   BANDA CONFIG VIEW
+   ============================================= */
+.config-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.config-row {
+  display: flex;
+  flex: 1;
+  gap: 0;
+  height: 100%;
+}
+
+/* mitad izquierda */
+.config-form-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding-right: 24px;
+}
+
+/* mitad derecha: panel azul reservado */
+.config-side-panel {
+  flex: 1;
+  min-width: 0;
+  background: #d6e4ef;
+  border-radius: 12px;
+}
+
+.config-step-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a6f8a;
+  margin-bottom: 20px;
+}
+
+/* ---- formulario ---- */
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.form-select,
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #1a1a1a;
+  background: #ffffff;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+}
+
+.form-select:focus,
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #4a6f8a;
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+/* ---- counter ---- */
+.counter {
+  display: flex;
+  align-items: center;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 36px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.counter-btn {
+  width: 36px;
+  height: 36px;
+  background: #f5f6f8;
+  border: none;
+  font-size: 16px;
+  color: #4a6f8a;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.counter-btn:hover {
+  background: #e8eef2;
+}
+
+.counter-value {
+  width: 36px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+  border-left: 0.5px solid #e0e0e0;
+  border-right: 0.5px solid #e0e0e0;
+  line-height: 36px;
+}
+
+/* ---- footer botones ---- */
+.config-footer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-atras {
+  background: #ffffff;
+  color: #4a6f8a;
+  border: 0.5px solid #4a6f8a;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-atras:hover {
+  background: #f0f5f8;
+}
