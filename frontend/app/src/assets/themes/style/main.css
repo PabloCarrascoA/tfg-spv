@@ -468,3 +468,29 @@ a {
 .btn-atras:hover {
   background: #f0f5f8;
 }
+
+/* =============================================
+   PERFIL CONFIG — bloques con checkbox
+   ============================================= */
+.perfil-bloque {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.perfil-check-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+  cursor: pointer;
+}
+
+.perfil-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-left: 26px;  /* alineado con el texto del checkbox */
+}
