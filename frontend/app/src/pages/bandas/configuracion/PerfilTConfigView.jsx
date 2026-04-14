@@ -122,6 +122,8 @@ function PerfilTConfigView() {
                   <button className="counter-btn" onClick={() => setHileras(h => h + 1)}>+</button>
                 </div>
               </div>
+              
+              {hileras > 1 && (
               <div className="form-group">
                 <label className="form-label">Luz (mm)</label>
                 <input
@@ -132,6 +134,7 @@ function PerfilTConfigView() {
                   onChange={e => setLuz(e.target.value)}
                 />
               </div>
+              )}
             </div>
 
             <div className="form-group">
