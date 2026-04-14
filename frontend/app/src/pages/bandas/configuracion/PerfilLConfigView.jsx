@@ -51,7 +51,7 @@ function PerfilLConfigView() {
         <div className="config-form-panel">
           <h2 className="content-title">Panel de Configuración</h2>
           <p className="content-subtitle">Paso {actual} de {total}</p>
-          <p className="config-step-label">2. Perfil longitudinal</p>
+          <p className="config-step-label">{actual}. Perfil longitudinal</p>
 
           <div className="config-form">
 
@@ -206,7 +206,9 @@ function PerfilLConfigView() {
           </div>
         </div>
 
+        {/* mitad derecha: panel reservado */}
         <div className="config-side-panel" />
+
       </div>
     </div>
   )

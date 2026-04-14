@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
+import { getPerfilesTransversales } from '../../../services/api'
 
 function PerfilTConfigView() {
   const { state } = useLocation()
@@ -8,13 +9,26 @@ function PerfilTConfigView() {
 
   const { actual, total } = infoPaso(state.seleccion, 'perfil-transversal')
 
-  const [cantidad, setCantidad]       = useState(1)
-  const [hileras, setHileras]         = useState(1)
-  const [distancia, setDistancia]     = useState('')
-  const [ancho, setAncho]             = useState('')
-  const [margen, setMargen]           = useState('')
-  const [luz, setLuz]                 = useState('')
-  const [comentarios, setComentarios] = useState('')
+  const [cantidad, setCantidad]         = useState(1)
+  const [hileras, setHileras]           = useState(1)
+  const [codigoPerfil, setCodigoPerfil] = useState('')
+  const [distancia, setDistancia]       = useState('')
+  const [ancho, setAncho]               = useState('')
+  const [margen, setMargen]             = useState('')
+  const [luz, setLuz]                   = useState('')
+  const [comentarios, setComentarios]   = useState('')
+
+  // --- datos de la API ---
+
+  const [perfilesT, setPerfilesT] = useState([])
+
+  // --- cargar perfiles transversales al montar ---
+
+  useEffect(() => {
+    getPerfilesTransversales()
+      .then(data => setPerfilesT(data))
+      .catch(err => console.error('Error cargando perfiles transversales:', err))
+  }, [])
 
   function handleSiguiente() {
     const ruta = siguienteRuta(state.seleccion, 'perfil-transversal')
@@ -33,15 +47,24 @@ function PerfilTConfigView() {
         <div className="config-form-panel">
           <h2 className="content-title">Panel de Configuración</h2>
           <p className="content-subtitle">Paso {actual} de {total}</p>
-          <p className="config-step-label">3. Perfil transversal</p>
+          <p className="config-step-label">{actual}. Perfil transversal</p>
 
           <div className="config-form">
 
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Código de perfil</label>
-                <select className="form-select">
+                <select 
+                    className="form-select"
+                    value={codigoPerfil}
+                    onChange={e => setCodigoPerfil(e.target.value)}
+                >
                   <option value="">- Seleccione un perfil -</option>
+                  {perfilesT.map(perfil => (
+                    <option key={perfil.codigo} value={perfil.codigo}>
+                      {perfil.codigo} - {perfil.tipo}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="form-group">
@@ -54,6 +77,7 @@ function PerfilTConfigView() {
               </div>
             </div>
 
+            {cantidad > 1 && (
             <div className="form-group">
               <label className="form-label">Distancia de paso (mm)</label>
               <input
@@ -64,6 +88,7 @@ function PerfilTConfigView() {
                 onChange={e => setDistancia(e.target.value)}
               />
             </div>
+            )}
 
             <div className="form-row">
               <div className="form-group">
