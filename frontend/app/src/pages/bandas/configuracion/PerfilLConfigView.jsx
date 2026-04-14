@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
+import { getBandas, getEmpalmesPorTipo } from '../../../services/api'
 
 function PerfilLConfigView() {
   const { state } = useLocation()
