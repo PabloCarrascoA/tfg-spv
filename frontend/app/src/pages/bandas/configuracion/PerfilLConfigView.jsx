@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
-import { getBandas, getEmpalmesPorTipo } from '../../../services/api'
+import { getPerfilesLongitudinales } from '../../../services/api'
 
 function PerfilLConfigView() {
   const { state } = useLocation()
@@ -9,8 +9,32 @@ function PerfilLConfigView() {
 
   const { actual, total } = infoPaso(state.seleccion, 'perfil-longitudinal')
 
-  const [inferior, setInferior] = useState({ activo: true,  cantidad: 1, distancia: '', margen: '' })
-  const [superior, setSuperior] = useState({ activo: false, cantidad: 1, distancia: '', margen: '' })
+  // --- datos de la API ---
+  const [perfiles, setPerfiles] = useState([])
+
+  // --- estado del formulario ---
+  const [inferior, setInferior] = useState({
+    activo: false,
+    codigo: '',
+    cantidad: 1,
+    distancia: '',
+    margen: '',
+  })
+  const [superior, setSuperior] = useState({
+    activo: false,
+    codigo: '',
+    cantidad: 1,
+    distancia: '',
+    margen: '',
+  })
+  const [comentarios, setComentarios] = useState('')
+
+  // --- cargar perfiles al montar ---
+  useEffect(() => {
+    getPerfilesLongitudinales()
+      .then(data => setPerfiles(data))
+      .catch(err => console.error('Error cargando perfiles longitudinales:', err))
+  }, [])
 
   function handleSiguiente() {
     const ruta = siguienteRuta(state.seleccion, 'perfil-longitudinal')
@@ -24,8 +48,6 @@ function PerfilLConfigView() {
   return (
     <div className="config-view">
       <div className="config-row">
-
-        {/* mitad izquierda: formulario */}
         <div className="config-form-panel">
           <h2 className="content-title">Panel de Configuración</h2>
           <p className="content-subtitle">Paso {actual} de {total}</p>
@@ -50,8 +72,17 @@ function PerfilLConfigView() {
                   <div className="form-row">
                     <div className="form-group">
                       <label className="form-label">Código de perfil</label>
-                      <select className="form-select">
+                      <select
+                        className="form-select"
+                        value={inferior.codigo}
+                        onChange={e => setInferior(p => ({ ...p, codigo: e.target.value }))}
+                      >
                         <option value="">- Seleccione un perfil -</option>
+                        {perfiles.map(perfil => (
+                          <option key={perfil.codigo} value={perfil.codigo}>
+                            {perfil.codigo} - {perfil.tipo}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div className="form-group">
@@ -107,8 +138,17 @@ function PerfilLConfigView() {
                   <div className="form-row">
                     <div className="form-group">
                       <label className="form-label">Código de perfil</label>
-                      <select className="form-select">
+                      <select
+                        className="form-select"
+                        value={superior.codigo}
+                        onChange={e => setSuperior(p => ({ ...p, codigo: e.target.value }))}
+                      >
                         <option value="">- Seleccione un perfil -</option>
+                        {perfiles.map(perfil => (
+                          <option key={perfil.codigo} value={perfil.codigo}>
+                            {perfil.codigo} - {perfil.tipo}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div className="form-group">
@@ -147,10 +187,15 @@ function PerfilLConfigView() {
               )}
             </div>
 
-            {/* comentarios — siempre visible */}
             <div className="form-group">
               <label className="form-label">Comentarios</label>
-              <textarea className="form-textarea" placeholder="Comentarios" rows={3} />
+              <textarea
+                className="form-textarea"
+                placeholder="Comentarios"
+                rows={3}
+                value={comentarios}
+                onChange={e => setComentarios(e.target.value)}
+              />
             </div>
 
           </div>
@@ -161,9 +206,7 @@ function PerfilLConfigView() {
           </div>
         </div>
 
-        {/* mitad derecha: panel reservado */}
         <div className="config-side-panel" />
-
       </div>
     </div>
   )
