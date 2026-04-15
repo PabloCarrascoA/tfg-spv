@@ -18,6 +18,7 @@ function PerfilLConfigView() {
     codigo: '',
     cantidad: 1,
     distancia: '',
+    distanciaBordeCentro: '',
     margen: '',
   })
   const [superior, setSuperior] = useState({
@@ -25,6 +26,7 @@ function PerfilLConfigView() {
     codigo: '',
     cantidad: 1,
     distancia: '',
+    distanciaBordeCentro: '',
     margen: '',
   })
   const [comentarios, setComentarios] = useState('')
@@ -96,6 +98,9 @@ function PerfilLConfigView() {
                   </div>
 
                   <div className="form-row">
+
+                    {inferior.cantidad > 1 && (
+
                     <div className="form-group">
                       <label className="form-label">Distancia centros (mm)</label>
                       <input
@@ -106,7 +111,22 @@ function PerfilLConfigView() {
                         onChange={e => setInferior(p => ({ ...p, distancia: e.target.value }))}
                       />
                     </div>
+
+                    )}
+
                     <div className="form-group">
+                      <label className="form-label">Distancia borde - centro (mm)</label>
+                      <input
+                        type="number"
+                        className="form-input"
+                        placeholder="0"
+                        value={inferior.distanciaBordeCentro}
+                        onChange={e => setInferior(p => ({ ...p, distanciaBordeCentro: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group">
                       <label className="form-label">Margen lateral (mm)</label>
                       <input
                         type="number"
@@ -116,7 +136,7 @@ function PerfilLConfigView() {
                         onChange={e => setInferior(p => ({ ...p, margen: e.target.value }))}
                       />
                     </div>
-                  </div>
+
                 </div>
               )}
             </div>
@@ -162,6 +182,7 @@ function PerfilLConfigView() {
                   </div>
 
                   <div className="form-row">
+                    {superior.cantidad > 1 && (
                     <div className="form-group">
                       <label className="form-label">Distancia centros (mm)</label>
                       <input
@@ -172,7 +193,19 @@ function PerfilLConfigView() {
                         onChange={e => setSuperior(p => ({ ...p, distancia: e.target.value }))}
                       />
                     </div>
+                    )}
                     <div className="form-group">
+                      <label className="form-label">Distancia borde - centro (mm)</label>
+                      <input
+                        type="number"
+                        className="form-input"
+                        placeholder="0"
+                        value={inferior.distanciaBordeCentro}
+                        onChange={e => setInferior(p => ({ ...p, distanciaBordeCentro: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
                       <label className="form-label">Margen lateral (mm)</label>
                       <input
                         type="number"
@@ -182,7 +215,6 @@ function PerfilLConfigView() {
                         onChange={e => setSuperior(p => ({ ...p, margen: e.target.value }))}
                       />
                     </div>
-                  </div>
                 </div>
               )}
             </div>
