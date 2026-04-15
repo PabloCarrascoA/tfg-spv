@@ -8,6 +8,7 @@ import BandaConfigView from './pages/bandas/configuracion/BandaConfigView'
 import PerfilLConfigView from './pages/bandas/configuracion/PerfilLConfigView'
 import PerfilTConfigView from './pages/bandas/configuracion/PerfilTConfigView'
 import RunerConfigView from './pages/bandas/configuracion/RunerConfigView'
+import PerforacionesConfigView from './pages/bandas/configuracion/PerforacionesConfigView'
 import OndasConfigView from './pages/bandas/configuracion/OndasConfigView'
 import ResumenView from './pages/bandas/ResumenView'
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/banda/configurar/perfil-longitudinal" element={<PerfilLConfigView />} />
           <Route path="/banda/configurar/perfil-transversal" element={<PerfilTConfigView />} />
           <Route path="/banda/configurar/runer" element={< RunerConfigView/>} />
+          <Route path="/banda/configurar/perforaciones" element={<PerforacionesConfigView />} />
           <Route path="/banda/configurar/ondas" element={<OndasConfigView />} />
           <Route path="/resumen" element={<ResumenView />}/>
           <Route path="/pedidos" element={<PedidosView />}/>
