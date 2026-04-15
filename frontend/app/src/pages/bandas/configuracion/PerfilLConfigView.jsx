@@ -20,6 +20,7 @@ function PerfilLConfigView() {
     distancia: '',
     distanciaBordeCentro: '',
     margen: '',
+    cecntrado: false,
   })
   const [superior, setSuperior] = useState({
     activo: false,
@@ -28,6 +29,7 @@ function PerfilLConfigView() {
     distancia: '',
     distanciaBordeCentro: '',
     margen: '',
+    centrado: false,
   })
   const [comentarios, setComentarios] = useState('')
 
@@ -96,6 +98,33 @@ function PerfilLConfigView() {
                       </div>
                     </div>
                   </div>
+
+                  <div className="form-group">
+                  <label className="form-label">¿Perfil centrado?</label>
+                  <div style={{ display: 'flex', gap: '16px' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', cursor: 'pointer' }}>
+                      <input
+                          type="radio"
+                          name="perfil_centrado_inf"  
+                          value="1"
+                          checked={inferior.centrado === true}   
+                          onChange={() => setInferior(p => ({ ...p, centrado: true }))}   
+                      />
+                      Sí
+                      </label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', cursor: 'pointer' }}>
+                      <input
+                          type="radio"
+                          name="perfil_centrado_inf"   
+                          value="0"
+                          checked={inferior.centrado === false}   
+                          onChange={() => setInferior(p => ({ ...p, centrado: false }))} 
+                      />
+                      No
+                      </label>
+                  </div>
+                  </div>
+                  {console.log('inferior.centrado', inferior.centrado)}
 
                   <div className="form-row">
 
@@ -181,6 +210,33 @@ function PerfilLConfigView() {
                     </div>
                   </div>
 
+
+                <div className="form-group">
+                <label className="form-label">¿Perfil centrado?</label>
+                <div style={{ display: 'flex', gap: '16px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', cursor: 'pointer' }}>
+                    <input
+                        type="radio"
+                        name="perfil_centrado_sup" 
+                        value="1"
+                        checked={superior.centrado === true}   
+                        onChange={() => setSuperior(p => ({ ...p, centrado: true }))}   
+                    />
+                    Sí
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', cursor: 'pointer' }}>
+                    <input
+                        type="radio"
+                        name="perfil_centrado_sup"   
+                        value="0"
+                        checked={superior.centrado === false}   
+                        onChange={() => setSuperior(p => ({ ...p, centrado: false }))}   
+                    />
+                    No
+                    </label>
+                </div>
+                </div>
+
                   <div className="form-row">
                     {superior.cantidad > 1 && (
                     <div className="form-group">
@@ -201,7 +257,7 @@ function PerfilLConfigView() {
                         className="form-input"
                         placeholder="0"
                         value={inferior.distanciaBordeCentro}
-                        onChange={e => setInferior(p => ({ ...p, distanciaBordeCentro: e.target.value }))}
+                        onChange={e => setSuperior(p => ({ ...p, distanciaBordeCentro: e.target.value }))}
                       />
                     </div>
                   </div>
