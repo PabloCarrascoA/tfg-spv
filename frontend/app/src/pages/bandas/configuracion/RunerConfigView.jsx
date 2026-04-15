@@ -32,8 +32,7 @@ function RunerConfigView() {
   }
 
   function handleAtras() {
-    const ruta = siguienteRuta(state.seleccion, 'perfil-transversal') // vuelve al paso anterior seleccionado
-    navigate(ruta, { state })
+    navigate('/banda/configurar/perfil-transversal', { state })
   }
 
   return (
@@ -42,7 +41,7 @@ function RunerConfigView() {
         <div className="config-form-panel">
           <h2 className="content-title">Panel de Configuración</h2>
           <p className="content-subtitle">Paso {actual} de {total}</p>
-          <p className="config-step-label">4. Runer</p>
+          <p className="config-step-label">{actual}. Runer</p>
 
           <div className="config-form">
 
