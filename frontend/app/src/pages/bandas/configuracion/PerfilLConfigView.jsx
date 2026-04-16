@@ -20,7 +20,7 @@ function PerfilLConfigView() {
     distancia: '',
     distanciaBordeCentro: '',
     margen: '',
-    cecntrado: false,
+    centrado: false,
   })
   const [superior, setSuperior] = useState({
     activo: false,
@@ -97,6 +97,7 @@ function PerfilLConfigView() {
                         <button className="counter-btn" onClick={() => setInferior(p => ({ ...p, cantidad: p.cantidad + 1 }))}>+</button>
                       </div>
                     </div>
+                    {/* console.log('inferior.cantidad', inferior.cantidad) */}
                   </div>
 
                   <div className="form-group">

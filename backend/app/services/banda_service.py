@@ -1,4 +1,5 @@
 import math
+from app.utils.descuentos_getter import get_descuento_producto, get_descuento_soldadura
 
 # ------------------------
 # OBTENER DATOS POR CÓDIGO
