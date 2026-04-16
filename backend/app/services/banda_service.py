@@ -331,19 +331,12 @@ def obtener_desarrollo_ondas(base, altura):
 
 def calcular_precio_banda(db, codigo, largo, ancho):
 
-    cursor = db.cursor()
+    banda = obtener_banda_por_codigo(db, codigo)
 
-    cursor.execute(
-        "SELECT precio FROM bandas WHERE codigo = ?",
-        (codigo,)
-    )
-
-    row = cursor.fetchone()
-
-    if row is None:
+    if banda is None:
         raise ValueError("Banda no encontrada")
 
-    precio_unitario = row[0]
+    precio_unitario = banda["precio"]
 
     if largo <= 0 or ancho <= 0:
         raise ValueError("Largo y ancho deben ser mayores que cero")
@@ -361,6 +354,10 @@ def calcular_precio_banda(db, codigo, largo, ancho):
     area_m2 = largo_m * ancho_ajustado_m
 
     precio_total = area_m2 * precio_unitario
+
+    # aplicar descuentos
+
+    precio_total = precio_total * (1 - get_descuento_producto(db, banda["id"], "bandas", codigo))
 
     return {
         "codigo_banda": codigo,
