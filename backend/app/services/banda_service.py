@@ -1,5 +1,5 @@
 import math
-from backend.app.utils.descuentos import get_descuento_producto, get_descuento_soldadura
+from backend.app.utils.descuentos import get_descuento_producto, get_descuento_soldadura, get_cliente_id_por_nombre
 
 # ------------------------
 # OBTENER DATOS POR CÓDIGO
@@ -369,10 +369,6 @@ def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
         "precio_total": precio_total
     }
 
-# ------------------------
-# CALCULAR
-# ------------------------
-
 
 def calcular_precio_empalme(db, tipo_empalme, codigo):
 
@@ -442,7 +438,7 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
 
     if cliente_id is not None:
         
-        descuento = 1 - get_descuento_producto(db, cliente_id, "perfiles_longitudinales", codigo_perfil)
+        descuento = 1 - get_descuento_producto(db, cliente_id, "perfiles_longitudinales", codigo_perfil, perfil["tipo"])
 
         precio_perfil_total = precio_perfil_total * (descuento)
 
@@ -504,7 +500,7 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
         "distancia_margen": distancia_margen
     }
 
-def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles=None, distancia_paso=None, ancho_perfil=None, descuento=0, preparacion=0):
+def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles=None, distancia_paso=None, ancho_perfil=None, cliente_id = None):
 
     perfil = obtener_perfil_transversal_por_codigo(db, codigo_perfil)
 
@@ -556,7 +552,13 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
     else:
         ancho_m = (ancho + 40) / 1000 # se suman 40mm de banda por el desaprovechamiento en los cortes
 
-    precio_perfil_total = (n_perfiles * ancho_m * precio_perfil_mL) - descuento
+    precio_perfil_total = (n_perfiles * ancho_m * precio_perfil_mL)
+
+    if cliente_id is not None:
+
+        descuento = 1 - get_descuento_producto(db, cliente_id, "perfiles_transversales", codigo_perfil, perfil["tipo"])
+
+        precio_perfil_total = precio_perfil_total * (descuento)
 
     print(f"DEBUG: precio perfil: {precio_perfil_total}, n_perfiles: {n_perfiles}, precio perfil mL: {precio_perfil_mL}, ancho_m: {ancho_m}")
 
@@ -571,7 +573,13 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
     else:
         precio_soldadura_mL = perfil["precioSoldar_Especial"]
 
-    precio_soldadura_total = (n_perfiles * ancho_m * precio_soldadura_mL) + preparacion - descuento
+    precio_soldadura_total = (n_perfiles * ancho_m * precio_soldadura_mL)
+
+    if cliente_id is not None:
+        
+        descuento_soldadura = 1 - get_descuento_soldadura(db, cliente_id, "perfiles_transversales")
+
+        precio_soldadura_total = precio_soldadura_total * (descuento_soldadura)
 
     print(f"DEBUG: precio soldadura: {precio_soldadura_total}, n_perfiles: {n_perfiles}, precio soldadura mL: {precio_soldadura_mL}, ancho_m: {ancho_m}")
 
@@ -699,14 +707,15 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
 
 
-def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None):
+def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, nombre_cliente = None):
     
+    cliente_id = get_cliente_id_por_nombre(db, nombre_cliente)
     # - Precio banda -
 
     precio_banda = 0
 
     if codigo_banda is not None:
-        resultado_banda = calcular_precio_banda(db, codigo_banda, largo, ancho)
+        resultado_banda = calcular_precio_banda(db, codigo_banda, largo, ancho, cliente_id)
         precio_banda = resultado_banda["precio_total"]
 
     # - Precio empalme -
@@ -726,7 +735,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
     if distancia_margen is not None:
 
-        resultado_perfil = calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, largo, ancho, n_perfiles, distancia_margen)
+        resultado_perfil = calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, largo, ancho, n_perfiles, distancia_margen, cliente_id)
 
         precio_perfil = resultado_perfil["precio_perfil_total"]
         precio_soldadura = resultado_perfil["precio_soldadura_total"]
