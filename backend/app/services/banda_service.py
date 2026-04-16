@@ -1,5 +1,5 @@
 import math
-from app.utils.descuentos_getter import get_descuento_producto, get_descuento_soldadura
+from backend.app.utils.descuentos import get_descuento_producto, get_descuento_soldadura
 
 # ------------------------
 # OBTENER DATOS POR CÓDIGO
@@ -329,7 +329,7 @@ def obtener_desarrollo_ondas(base, altura):
 # OBTENER PRECIOS DE CADA SECCIÓN
 # ------------------------
 
-def calcular_precio_banda(db, codigo, largo, ancho):
+def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
 
     banda = obtener_banda_por_codigo(db, codigo)
 
@@ -357,7 +357,11 @@ def calcular_precio_banda(db, codigo, largo, ancho):
 
     # aplicar descuentos
 
-    precio_total = precio_total * (1 - get_descuento_producto(db, banda["id"], "bandas", codigo))
+    if cliente_id is not None:
+        
+        descuento = 1 - get_descuento_producto(db, cliente_id, "bandas", codigo)
+
+        precio_total = precio_total * (descuento)
 
     return {
         "codigo_banda": codigo,

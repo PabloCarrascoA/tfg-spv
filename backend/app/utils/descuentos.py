@@ -1,3 +1,18 @@
+# Resolver nombre a ID de cliente
+
+def get_cliente_id_por_nombre(db, nombre_cliente):
+    if nombre_cliente is None:
+        return None
+    
+    row = db.execute(
+        "SELECT id FROM clientes WHERE nombre = ?",
+        (nombre_cliente,)
+    ).fetchone()
+    
+    return row["id"] if row else None
+
+# Obtener descuento correspondiente
+
 def get_descuento_producto(db, cliente_id, tabla, codigo, tipo_familia=None):
     params = [cliente_id, tabla, codigo]
     familia_clause = ""
