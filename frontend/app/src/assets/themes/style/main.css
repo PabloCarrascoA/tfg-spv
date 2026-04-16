@@ -129,6 +129,16 @@ a {
 }
 
 /* =============================================
+   ICONOS
+   ============================================= */
+
+   .nav-icon {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    }
+
+/* =============================================
    HOME VIEW
    ============================================= */
 .home-view {
@@ -183,12 +193,17 @@ a {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  font-size: 18px;
+  color: white;
 }
 
 .card-icon svg {
   width: 18px;
   height: 18px;
-  fill: white;
+  display: block;
+  color: currentColor;
+  fill: none;
+  stroke: currentColor;
 }
 
 .card-text h3 {
