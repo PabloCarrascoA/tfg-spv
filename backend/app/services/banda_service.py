@@ -1,5 +1,5 @@
 import math
-from backend.app.utils.descuentos import get_descuento_producto, get_descuento_soldadura, get_cliente_id_por_nombre
+from app.utils.descuentos import get_descuento_producto, get_descuento_soldadura, get_cliente_id_por_nombre
 
 # ------------------------
 # OBTENER DATOS POR CÓDIGO
