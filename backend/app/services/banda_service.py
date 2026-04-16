@@ -414,7 +414,7 @@ def calcular_precio_empalme(db, tipo_empalme, codigo):
         "precio_empalme": precio_empalme
     }
 
-def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, largo, ancho, n_perfiles, distancia_margen, descuento = 0, preparacion = 0):
+def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, largo, ancho, n_perfiles, distancia_margen, cliente_id = None):
 
     print(f"DEBUG: cantidad_bandas: {cantidad_bandas}")
 
@@ -438,7 +438,13 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
 
     largo_m = largo / 1000
 
-    precio_perfil_total = (n_perfiles * largo_m * precio_perfil_mL) - descuento
+    precio_perfil_total = (n_perfiles * largo_m * precio_perfil_mL)
+
+    if cliente_id is not None:
+        
+        descuento = 1 - get_descuento_producto(db, cliente_id, "perfiles_longitudinales", codigo_perfil)
+
+        precio_perfil_total = precio_perfil_total * (descuento)
 
     # - Calculo soldadura -
 
@@ -451,7 +457,13 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
     else:
         precio_soldadura_mL = perfil["precioSoldar_LSup1500_Asup2100"]
 
-    precio_soldadura_total = (n_perfiles * largo_m * precio_soldadura_mL) + preparacion - descuento
+    precio_soldadura_total = (n_perfiles * largo_m * precio_soldadura_mL) 
+
+    if cliente_id is not None:
+        
+        descuento_soldadura = 1 - get_descuento_soldadura(db, cliente_id, "perfiles_longitudinales")
+
+        precio_soldadura_total = precio_soldadura_total * (descuento_soldadura)
 
 
     # - Calculo preparación -
