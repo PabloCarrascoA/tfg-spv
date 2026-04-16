@@ -50,6 +50,8 @@ function BandaView() {
 
   const navigate = useNavigate()
 
+  const [nombre, setNombre] = useState('')
+
   // el estado inicial marca como seleccionado banda y empalme que es obligatorio
   const [seleccion, setSeleccion] = useState(
     COMPONENTES
@@ -74,6 +76,12 @@ function BandaView() {
     <div className="banda-view">
       <h2 className="content-title">Panel de Configuración</h2>
       <p className="content-subtitle">Cálculo del presupuesto</p>
+
+      <div className="selector-card">
+        <p className="selector-label">Introduzca el nombre del cliente</p>
+        <input type="text" className="form-input" placeholder="nombre"
+               value={nombre} onChange={e => setNombre(e.target.value)} />
+      </div>
 
       <div className="selector-card">
         <p className="selector-label">Seleccione los componentes del pedido</p>
