@@ -1,8 +1,8 @@
 import MenuCard from '../../components/ui/MenuCard'
-import { FiSettings, FiShoppingCart, FiUpload, FiDownload } from 'react-icons/fi'
+import { FiSettings, FiShoppingCart, FiUpload, FiDownload, FiPackage} from 'react-icons/fi'
 
 const cards = [
-  { title: 'Configurar pedido',   description: 'Configuración de cintas personalizadas', to: '/banda', icon: <FiSettings /> },
+  { title: 'Configurar pedido',   description: 'Configuración de cintas personalizadas', to: '/banda', icon: <FiPackage /> },
   { title: 'Pedidos realizados',  description: 'Ver historial de pedidos realizados',     to: '/pedidos', icon: <FiShoppingCart /> },
   { title: 'Importar datos',      description: 'Importar datos de productos',             to: '/importer', icon: <FiUpload /> },
   { title: 'Exportar datos',      description: 'Exportar datos de pedidos',               to: '/exporter', icon: <FiDownload /> },
