@@ -105,6 +105,24 @@ def obtener_runer_por_codigo(db, codigo:str):
         "precioSoldar_Uretano": row[8]
     }
 
+def obtener_onda_por_codigo(db, codigo:str):
+    cursor = db.cursor()
+    cursor.execute("SELECT id, codigo, tipo, color, proveedor, material, precio FROM ondas WHERE codigo = ?", (codigo,))
+    row = cursor.fetchone()
+
+    if row is None:
+        return None
+
+    return {
+        "id": row[0],
+        "codigo": row[1],
+        "tipo": row[2],
+        "color": row[3],
+        "proveedor": row[4],
+        "material": row[5],
+        "precio": row[6]
+    }
+
 # --------------------------------
 # OBTENER TODOS LOS DATOS A LA VEZ
 # --------------------------------
