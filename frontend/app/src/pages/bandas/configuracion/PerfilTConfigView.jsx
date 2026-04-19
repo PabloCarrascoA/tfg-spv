@@ -79,7 +79,7 @@ function PerfilTConfigView() {
 
             {cantidad > 1 && (
             <div className="form-group">
-              <label className="form-label">Distancia de paso (mm)</label>
+              <label className="form-label">Paso entre perfiles (mm)</label>
               <input
                 type="number"
                 className="form-input"
@@ -125,7 +125,7 @@ function PerfilTConfigView() {
               
               {hileras > 1 && (
               <div className="form-group">
-                <label className="form-label">Luz (mm)</label>
+                <label className="form-label">Luz interior (mm)</label>
                 <input
                   type="number"
                   className="form-input"

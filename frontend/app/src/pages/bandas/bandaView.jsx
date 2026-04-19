@@ -68,9 +68,13 @@ function BandaView() {
   }
 
   function handleContinuar() {
-    // pasamos la selección a la siguiente vista con navigate
-    navigate('/banda/configurar/banda', { state: { seleccion } })
-  }
+  navigate('/banda/configurar/banda', { 
+    state: { 
+      seleccion,
+      nombreCliente: nombre
+    } 
+  })
+}
 
   return (
     <div className="banda-view">

@@ -22,7 +22,7 @@ def get_descuento_producto(db, cliente_id, tabla, codigo, tipo_familia=None):
         params.append(tipo_familia)
 
     row = db.execute(f"""
-        SELECT descuento FROM descuentos
+        SELECT descuento FROM descuentos_material
         WHERE cliente_id = ? AND tabla = ?
         AND (
             (nivel = 'producto' AND codigo_producto = ?)

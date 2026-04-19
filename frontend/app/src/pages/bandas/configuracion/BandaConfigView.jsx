@@ -59,7 +59,20 @@ function BandaConfigView() {
 
   function handleSiguiente() {
     const ruta = siguienteRuta(state.seleccion, 'banda')
-    navigate(ruta, { state })
+    navigate(ruta, {
+    state: {
+            ...state,             
+            banda: {               
+                codigoBanda,
+                cantidad,
+                ancho,
+                longitud,
+                tipoEmpalme,
+                codigoEmpalme,
+                comentarios,
+            }
+            }
+        })
   }
 
   function handleAtras() {
