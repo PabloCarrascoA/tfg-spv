@@ -252,6 +252,26 @@ def obtener_runers(db):
 
     return runers
 
+def obtener_ondas(db):
+    cursor = db.cursor()
+    cursor.execute("SELECT id, codigo, tipo, color, proveedor, material, precio FROM ondas")
+
+    rows = cursor.fetchall()
+
+    ondas = []
+    for row in rows:
+        ondas.append({
+            "id": row[0],
+            "codigo": row[1],
+            "tipo": row[2],
+            "color": row[3],
+            "proveedor": row[4],
+            "material": row[5],
+            "precio": row[6]
+        })
+
+    return ondas
+
 def obtener_desarrollo_ondas(base, altura):
 
     a,b,c = 0
