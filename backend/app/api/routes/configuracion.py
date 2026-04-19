@@ -178,7 +178,8 @@ def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
             request.n_perfiles_runer,
             request.agujeros_x_fila,
             request.filas_x_agujero,
-            request.diametro_perforacion
+            request.diametro_perforacion,
+            request.nombre_cliente
 
         )
 

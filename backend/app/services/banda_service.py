@@ -844,6 +844,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
     return {
 
+        "nombre_cliente": nombre_cliente,
         "cantidad_bandas": cantidad_bandas,
         "ancho": ancho,
         "largo": largo,

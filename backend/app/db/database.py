@@ -5,12 +5,17 @@ DATABASE_URL = "test.db"
 
 @contextmanager
 def get_db_connection():
-    db = sqlite3.connect(DATABASE_URL)
+    db = sqlite3.connect(DATABASE_URL, check_same_thread=False)
+    db.row_factory = sqlite3.Row
     try:
         yield db
     finally:
         db.close()
 
 def get_db():
-    with get_db_connection() as db:
+    db = sqlite3.connect(DATABASE_URL, check_same_thread=False)
+    db.row_factory = sqlite3.Row
+    try:
         yield db
+    finally:
+        db.close()

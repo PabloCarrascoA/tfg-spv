@@ -3,6 +3,8 @@ from typing import Literal, Optional
 
 class CalculoBandaRequest(BaseModel):
 
+    nombre_cliente: Optional[str] = None
+    
     # Campos para banda
 
     codigo_banda: str
@@ -49,6 +51,7 @@ class CalculoBandaResponse(BaseModel):
 
     # [TODO] Revisar si los precios deberían ser opcionales, ya que como está ahora podría dar problemas si solo quieres calcular un apartado sin necesidad de calcular todos los demás
 
+    nombre_cliente: Optional[str] = None
     cantidad_bandas: int
     ancho: float
     largo: float
