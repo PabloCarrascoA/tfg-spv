@@ -7,14 +7,15 @@ from app.db.database import get_db
 from app.services.banda_service import (
     calcular_configuracion_completa,
     obtener_banda_por_codigo,
-    calcular_precio_banda,
     obtener_empalmes,
     obtener_perfil_longitudinal_por_codigo,
     obtener_perfil_transversal_por_codigo,
     obtener_perfiles_longitudinales,
     obtener_perfiles_transversales,
     obtener_runers,
-    obtener_runer_por_codigo
+    obtener_runer_por_codigo,
+    obtener_ondas,
+    obtener_onda_por_codigo
 )
 from app.schemas.configuracion import CalculoBandaRequest, CalculoBandaResponse
 
@@ -70,6 +71,15 @@ def listar_runers(db = Depends(get_db)):
         raise HTTPException(status_code = 404, detail= "No se encontraron runers")
     
     return runers
+
+@router.get("/ondas")
+def listar_ondas(db = Depends(get_db)):
+    ondas = obtener_ondas(db)
+
+    if not ondas:
+        raise HTTPException(status_code=404, detail="No se encontraron ondas")
+    
+    return ondas
 
 # ------------------------
 # OBTENER DATOS POR CÓDIGO
@@ -143,6 +153,22 @@ def obtener_runer(codigo: str, db = Depends(get_db)):
         "precioSoldar_Ainf1700_PVC": runer["precioSoldar_Ainf1700_PVC"],
         "precioSoldar_Uretano": runer["precioSoldar_Uretano"]
 
+    }
+
+@router.get('/ondas/{codigo}')
+def obtener_onda(codigo: str, db = Depends(get_db)):
+    onda = obtener_onda_por_codigo(db, codigo)
+
+    if not onda:
+        raise HTTPException(status_code=404, detail="Onda no encontrada")
+
+    return {
+        "codigo": onda["codigo"],
+        "tipo": onda["tipo"],
+        "color": onda["color"],
+        "proveedor": onda["proveedor"],
+        "material": onda["material"],
+        "precio": onda["precio"]
     }
 
 # ------------------------

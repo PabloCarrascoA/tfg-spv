@@ -855,6 +855,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
         precio_runer_final = resultado_runer["precio_final"]
 
     # - Precio perforaciones -
+
     precio_perforaciones_final = 0
     paso_filas = None
 
@@ -875,6 +876,8 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
         precio_perforaciones_final = resultado_perforaciones["precio_total"]
         paso_filas = resultado_perforaciones["paso_filas"]
+
+    # - Precio ondas -
 
     # - Precio total -
 
