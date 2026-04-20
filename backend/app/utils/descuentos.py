@@ -45,3 +45,11 @@ def get_descuento_soldadura(db, cliente_id, tabla):
         (cliente_id, tabla)
     ).fetchone()
     return row["descuento"] if row else 0.0
+
+
+def get_tarifa_preparacion(db, tabla):
+    row = db.execute(
+        "SELECT precio FROM tarifas_preparacion WHERE tabla=?",
+        (tabla,)
+    ).fetchone()
+    return row["precio"] if row else 25.0  # Valor por defecto si no se encuentra tarifa

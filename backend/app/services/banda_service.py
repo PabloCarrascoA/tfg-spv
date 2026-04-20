@@ -1,5 +1,6 @@
 import math
-from app.utils.descuentos import get_descuento_producto, get_descuento_soldadura, get_cliente_id_por_nombre
+from app.utils.descuentos import get_descuento_producto, get_descuento_soldadura, get_cliente_id_por_nombre, get_tarifa_preparacion
+from app.utils.preparacion import calcular_precio_preparacion
 
 # ------------------------
 # OBTENER DATOS POR CÓDIGO
@@ -502,8 +503,9 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
 
     # - Calculo preparación -
 
-    tarifa_preparacion = 25
-    precio_preparacion = 0
+    tarifa_preparacion = get_tarifa_preparacion(db, "perfiles_longitudinales")
+
+    precio_preparacion = calcular_precio_preparacion(tarifa_preparacion, cantidad_bandas, n_perfiles)
 
     if cantidad_bandas == 1 and n_perfiles == 1:
         precio_preparacion = tarifa_preparacion
