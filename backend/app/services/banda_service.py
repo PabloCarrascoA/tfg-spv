@@ -635,7 +635,7 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
         "distancia_paso": distancia_paso
     }
 
-def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, descuento = 0, preparacion = 0):
+def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, cliente_id = None):
 
     runer = obtener_runer_por_codigo(db, codigo_runer)
 
@@ -660,7 +660,13 @@ def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, descuento 
 
     largo_m = largo / 1000
 
-    precio_runer_total = (n_perfiles * largo_m * precio_runer_mL) - descuento
+    precio_runer_total = (n_perfiles * largo_m * precio_runer_mL)
+
+    if cliente_id is not None:
+        
+        descuento = 1 - get_descuento_producto(db, cliente_id, "runners", codigo_runer, runer["tipo"])
+
+        precio_runer_total = precio_runer_total * (descuento)
 
     # - Calculo soldadura
 
@@ -676,9 +682,17 @@ def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, descuento 
 
         precio_soldadura_mL = runer["precioSoldar_Uretano"]
 
-    precio_soldadura_total = (n_perfiles * largo_m * precio_soldadura_mL) + preparacion - descuento
+    precio_soldadura_total = (n_perfiles * largo_m * precio_soldadura_mL)
 
-    precio_final = precio_runer_total + precio_soldadura_total # -2,5 * largo_m ?
+    if cliente_id is not None:  
+        
+        descuento = 1 - get_descuento_soldadura(db, cliente_id, "runners")
+
+        precio_soldadura_total = precio_soldadura_total * (descuento)
+
+    precio_preparacion = 25
+
+    precio_final = precio_runer_total + precio_soldadura_total + precio_preparacion
 
     return {
         "codigo_runer": codigo_runer,
@@ -691,7 +705,7 @@ def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, descuento 
     }
 
 
-def calcular_precio_perforaciones(agujeros_x_fila, filas_x_agujero, diametro, largo, ancho):
+def calcular_precio_perforaciones(db, agujeros_x_fila, filas_x_agujero, diametro, largo, ancho, cliente_id = None):
 
     if agujeros_x_fila <= 0 or filas_x_agujero <= 0 or diametro <= 0:
         raise ValueError("No pueden haber filas sin agujeros y el diámetro debe ser mayor o igual a cero")
@@ -708,6 +722,12 @@ def calcular_precio_perforaciones(agujeros_x_fila, filas_x_agujero, diametro, la
 
     total_agujeros = agujeros_x_fila * filas_x_agujero
 
+    if cliente_id is not None:
+        
+        descuento = 1 - get_descuento_producto(db, cliente_id, "perforaciones", None)
+
+        precio_por_agujero = precio_por_agujero * (descuento)
+
     precio_total = precio_por_agujero * total_agujeros
 
     paso_filas = (ancho - agujeros_x_fila * diametro) / (agujeros_x_fila + 1)
@@ -722,7 +742,7 @@ def calcular_precio_perforaciones(agujeros_x_fila, filas_x_agujero, diametro, la
     }
 
 
-def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, ancho, pisada):
+def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, ancho, pisada, cliente_id = None):
     
     onda = obtener_onda_por_codigo(db, codigo_onda)
 
@@ -737,9 +757,21 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
         desarrollo_total = ((obtener_desarrollo_ondas(base, altura) + 2 * pisada) * n_ondas) + 1000
         # [TODO] revisar ajuste de la base según si se da el paso o n_ondas
     
-    precio_onda_total = (desarrollo_total * n_ondas) * ancho * onda["precio_onda_mL"]   
+    precio_onda_total = (desarrollo_total * n_ondas) * ancho * onda["precio_onda_mL"]
+
+    if cliente_id is not None:
+        
+        descuento = 1 - get_descuento_producto(db, cliente_id, "ondas", codigo_onda, onda["tipo"])
+
+        precio_onda_total = precio_onda_total * (descuento)
 
     precio_soldadura_total = 0
+
+    if cliente_id is not None:
+        
+        descuento_soldadura = 1 - get_descuento_soldadura(db, cliente_id, "ondas")
+
+        precio_soldadura_total = precio_onda_total * (descuento_soldadura)
 
     precio_final = precio_onda_total + precio_soldadura_total
 
@@ -837,7 +869,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
         print(f"DEBUG: {codigo_perfil}")
 
-        resultado_perfil = calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles, distancia_paso, ancho_perfil)
+        resultado_perfil = calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles, distancia_paso, ancho_perfil, cliente_id)
 
         precio_perfil = resultado_perfil["precio_perfil_total"]
         precio_soldadura = resultado_perfil["precio_soldadura_total"]
@@ -856,7 +888,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
     if codigo_runer is not None:
 
-        resultado_runer = calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles_runer)
+        resultado_runer = calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles_runer, cliente_id)
 
         precio_runer = resultado_runer["precio_runer_total"]
         precio_soldadura_runer = resultado_runer["precio_soldadura_total"]
@@ -880,7 +912,8 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
             filas_x_agujero,
             diametro_perforacion,
             largo,
-            ancho
+            ancho,
+            cliente_id
         )
 
         precio_perforaciones_final = resultado_perforaciones["precio_total"]
@@ -892,13 +925,13 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
     if codigo_onda is not None:
         
-        resultado_ondas = calcular_precio_ondas(db, continuidad_onda, codigo_onda, n_ondas, base_onda, altura_onda, ancho, pisada_onda)
+        resultado_ondas = calcular_precio_ondas(db, continuidad_onda, codigo_onda, n_ondas, base_onda, altura_onda, ancho, pisada_onda, cliente_id)
 
-        precio_ondas = resultado_ondas["precio_final"]
+        precio_ondas_final = resultado_ondas["precio_final"]
 
     # - Precio total -
 
-    precio_total = precio_banda + precio_empalme + precio_perfil_final + precio_runer_final + precio_perforaciones_final
+    precio_total = precio_banda + precio_empalme + precio_perfil_final + precio_runer_final + precio_perforaciones_final + precio_ondas_final
 
     return {
 
@@ -928,6 +961,6 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
         "n_perfiles_superior": n_perfiles_superior,
         "n_perfiles_inferior": n_perfiles_inferior,
         "codigo_onda": codigo_onda,
-        "precio_ondas_final": round(precio_ondas, 2),
-        
+        "precio_ondas_final": round(precio_ondas_final, 2),
+
     }
