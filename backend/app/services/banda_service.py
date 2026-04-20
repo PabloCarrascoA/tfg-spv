@@ -743,9 +743,18 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
     precio_final = precio_onda_total + precio_soldadura_total
 
+    return {
+
+        "codigo_onda": codigo_onda,
+        "precio_onda": onda["precio_onda_mL"],
+        "precio_onda_total": precio_onda_total,
+        "precio_soldadura_total": precio_soldadura_total,
+        "precio_final": precio_final,
+    }
 
 
-def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, nombre_cliente = None):
+
+def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfil = None, n_perfiles = None, distancia_margen = None, distancia_paso = None, ancho_perfil = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, nombre_cliente = None, codigo_onda = None, n_ondas = None, base_onda = None, altura_onda = None, continuidad_onda = None, pisada_onda = None):
     
     cliente_id = get_cliente_id_por_nombre(db, nombre_cliente)
     # - Precio banda -
@@ -879,6 +888,14 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
     # - Precio ondas -
 
+    precio_ondas = 0
+
+    if codigo_onda is not None:
+        
+        resultado_ondas = calcular_precio_ondas(db, continuidad_onda, codigo_onda, n_ondas, base_onda, altura_onda, ancho, pisada_onda)
+
+        precio_ondas = resultado_ondas["precio_final"]
+
     # - Precio total -
 
     precio_total = precio_banda + precio_empalme + precio_perfil_final + precio_runer_final + precio_perforaciones_final
@@ -909,5 +926,8 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
         "distancia_paso": distancia_paso,
         "paso_filas": paso_filas,
         "n_perfiles_superior": n_perfiles_superior,
-        "n_perfiles_inferior": n_perfiles_inferior
+        "n_perfiles_inferior": n_perfiles_inferior,
+        "codigo_onda": codigo_onda,
+        "precio_ondas_final": round(precio_ondas, 2),
+        
     }
