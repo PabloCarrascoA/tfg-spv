@@ -85,7 +85,7 @@ def obtener_perfil_longitudinal_por_codigo(db, codigo: str):
 def obtener_runer_por_codigo(db, codigo:str):
     cursor = db.cursor()
     cursor.execute(
-        "SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_Asup1700_PVC, precioSoldar_Ainf1700_PVC, precioSoldar_Uretano FROM runners WHERE codigo = ?",
+        "SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_Asup1700_PVC, precioSoldar_Ainf1700_PVC, precioSoldar_Uretano, ancho FROM runners WHERE codigo = ?",
         (codigo,)
     )
 
@@ -103,7 +103,8 @@ def obtener_runer_por_codigo(db, codigo:str):
         "precio_material": row[5],
         "precioSoldar_Asup1700_PVC": row[6],
         "precioSoldar_Ainf1700_PVC": row[7],
-        "precioSoldar_Uretano": row[8]
+        "precioSoldar_Uretano": row[8],
+        "ancho": row[9]
     }
 
 def obtener_onda_por_codigo(db, codigo:str):
@@ -234,7 +235,7 @@ def obtener_perfiles_longitudinales(db):
 
 def obtener_runers(db):
     cursor = db.cursor()
-    cursor.execute("SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_Asup1700_PVC, precioSoldar_Ainf1700_PVC, precioSoldar_Uretano FROM runners")
+    cursor.execute("SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_Asup1700_PVC, precioSoldar_Ainf1700_PVC, precioSoldar_Uretano, ancho FROM runners")
     rows = cursor.fetchall()
 
     runers = []
@@ -248,7 +249,8 @@ def obtener_runers(db):
             "precio_material": row[5],
             "precioSoldar_Asup1700_PVC": row[6],
             "precioSoldar_Ainf1700_PVC": row[7],
-            "precioSoldar_Uretano": row[8]
+            "precioSoldar_Uretano": row[8],
+            "ancho": row[9]
         })
 
     return runers
