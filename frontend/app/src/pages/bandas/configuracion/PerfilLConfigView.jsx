@@ -12,7 +12,7 @@ function PerfilLConfigView() {
   // --- datos de la API ---
   const [perfiles, setPerfiles] = useState([])
 
-  // --- estado del formulario ---
+
   const [inferior, setInferior] = useState({
     activo: false,
     codigo: '',
@@ -33,7 +33,8 @@ function PerfilLConfigView() {
   })
   const [comentarios, setComentarios] = useState('')
 
-  // --- cargar perfiles al montar ---
+  // cargar perfiles
+
   useEffect(() => {
     getPerfilesLongitudinales()
       .then(data => setPerfiles(data))
@@ -46,7 +47,16 @@ function PerfilLConfigView() {
   }
 
   function handleAtras() {
-    navigate('/banda/configurar/banda', { state })
+    navigate(ruta, {
+    state: {
+      ...state,
+      perfilL: {
+        inferior,
+        superior,
+        comentarios,
+      }
+    }
+  })
   }
 
   return (
@@ -172,6 +182,7 @@ function PerfilLConfigView() {
             </div>
 
             {/* --- bloque superior --- */}
+
             <div className="perfil-bloque">
               <label className="perfil-check-label">
                 <input
@@ -257,7 +268,7 @@ function PerfilLConfigView() {
                         type="number"
                         className="form-input"
                         placeholder="0"
-                        value={inferior.distanciaBordeCentro}
+                        value={superior.distanciaBordeCentro}
                         onChange={e => setSuperior(p => ({ ...p, distanciaBordeCentro: e.target.value }))}
                       />
                     </div>
