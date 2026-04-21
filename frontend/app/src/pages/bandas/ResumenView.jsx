@@ -84,10 +84,18 @@ function construirPayload(state) {
     n_perfiles:      state.perfilT?.cantidad     ?? null,
     ancho_perfil:    toFloat(state.perfilT?.ancho),
     distancia_paso:  toFloat(state.perfilT?.distancia),
+    margen_lateral:   toFloat(state.perfilT?.margen),
+    n_hileras:       state.perfilT?.hileras     ?? null,
+    ancho1:         toFloat(state.perfilT?.ancho1),
+    ancho2:         toFloat(state.perfilT?.ancho2),
+    luz_interior:    toFloat(state.perfilT?.luz),
 
     // runer
     codigo_runer:     state.runer?.codigoRuner ?? null,
     n_perfiles_runer: state.runer?.cantidad    ?? null,
+    margen_runer:     toFloat(state.runer?.margen),
+    luz_runer:        toFloat(state.runer?.luz),
+    ancho_runer:      toFloat(state.runer?.anchoRuner),
 
     // perforaciones
     agujeros_x_fila:      state.perforaciones?.agujerosPorFila ?? null,

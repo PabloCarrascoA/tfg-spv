@@ -46,6 +46,15 @@ class CalculoBandaRequest(BaseModel):
     filas_x_agujero: Optional[float] = None
     diametro_perforacion: Optional[float] = None
 
+    #Campos para la onda
+    codigo_onda:      Optional[str]   = None
+    n_ondas:          Optional[int]   = None
+    continuidad_onda: Optional[bool]  = None
+    base_onda:        Optional[float] = None
+    altura_onda:      Optional[float] = None
+    ancho_onda:       Optional[float] = None
+    pisada_onda:      Optional[float] = None
+
 
 class CalculoBandaResponse(BaseModel):
 
