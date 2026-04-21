@@ -50,7 +50,7 @@ function RunerConfigView() {
   }
 
   editando.current = 'margen'
-  setLuz(luzCalculada >= 0 ? String(luzCalculada) : '')
+  setLuz(luzCalculada)
   setTimeout(() => { editando.current = null }, 0)
 
   }, [margen, cantidad, anchoRuner, anchoBanda])
@@ -74,7 +74,7 @@ function RunerConfigView() {
   }
 
   editando.current = 'luz'
-  setMargen(margenCalculado >= 0 ? String(margenCalculado) : '')
+  setMargen(margenCalculado)
   setTimeout(() => { editando.current = null }, 0)
 
   }, [luz, cantidad, anchoRuner, anchoBanda])
@@ -179,6 +179,13 @@ function RunerConfigView() {
                     La combinación de margen y runers supera el ancho de la banda
                   </p>
                 )}
+
+                {margen && parseFloat(margen) < 0 && (
+                  <p style={{ fontSize: 13, color: '#e57373' }}>
+                    La combinación de luz y runers supera el ancho de la banda
+                  </p>
+                )}
+
               </>
             )}
 
