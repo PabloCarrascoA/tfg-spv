@@ -80,9 +80,9 @@ function construirPayload(state) {
     distancia_margen_inferior: state.perfilL?.inferior?.activo ? toFloat(state.perfilL.inferior.distanciaBordeCentro) : null,
 
     // perfil transversal
-    codigo_perfil:   state.perfilT?.codigoPerfil ?? null,
-    n_perfiles:      state.perfilT?.cantidad     ?? null,
-    ancho_perfil:    toFloat(state.perfilT?.ancho),
+    codigo_perfilT:   state.perfilT?.codigoPerfil ?? null,
+    n_perfilesT:      state.perfilT?.cantidad     ?? null,
+    ancho_perfilT:    toFloat(state.perfilT?.ancho),
     distancia_paso:  toFloat(state.perfilT?.distancia),
     margen_lateral:   toFloat(state.perfilT?.margen),
     n_hileras:       state.perfilT?.hileras     ?? null,

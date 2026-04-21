@@ -25,11 +25,21 @@ class CalculoBandaRequest(BaseModel):
 
     # Campos para perfil
 
-    codigo_perfil: Optional[str] = None
-    n_perfiles: Optional[float] = None
-    distancia_margen: Optional[float] = None
-    ancho_perfil: Optional[float] = None
+    # Perfil transversal
+
+    codigo_perfilT: Optional[str] = None
+    n_perfilesT: Optional[float] = None
     distancia_paso: Optional[float] = None
+    margen_lateral: Optional[float] = None
+    ancho_perfilT: Optional[float] = None
+    distancia_paso: Optional[float] = None
+    n_hileras: Optional[float] = None
+    ancho1: Optional[float] = None
+    ancho2: Optional[float] = None
+    luz_interior: Optional[float] = None
+
+    #perfil longitudinal
+
     codigo_perfil_superior: Optional[str] = None
     n_perfiles_superior: Optional[float] = None
     distancia_margen_superior: Optional[float] = None
@@ -38,15 +48,21 @@ class CalculoBandaRequest(BaseModel):
     distancia_margen_inferior: Optional[float] = None
 
     # Campos para runer
+
     codigo_runer: Optional[str] = None
     n_perfiles_runer: Optional[float] = None
+    margen_runer: Optional[float] = None
+    luz_runer: Optional[float] = None
+    ancho_runer: Optional[float] = None
 
     # Campos para perforaciones
+
     agujeros_x_fila: Optional[float] = None
     filas_x_agujero: Optional[float] = None
     diametro_perforacion: Optional[float] = None
 
     #Campos para la onda
+    
     codigo_onda:      Optional[str]   = None
     n_ondas:          Optional[int]   = None
     continuidad_onda: Optional[bool]  = None
