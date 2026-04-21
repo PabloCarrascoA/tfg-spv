@@ -66,8 +66,8 @@ function construirPayload(state) {
     // banda y empalme
     codigo_banda:    state.banda?.codigoBanda   ?? null,
     cantidad_bandas: state.banda?.cantidad      ?? 1,
-    largo:           toFloat(state.banda?.longitud),
-    ancho:           toFloat(state.banda?.ancho),
+    largo_banda:           toFloat(state.banda?.longitud),
+    ancho_banda:           toFloat(state.banda?.ancho),
     tipo_empalme:    state.banda?.tipoEmpalme   ?? null,
     codigo_empalme:  state.banda?.codigoEmpalme ?? null,
 

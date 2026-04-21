@@ -9,8 +9,8 @@ class CalculoBandaRequest(BaseModel):
 
     codigo_banda: str
     cantidad_bandas: int = Field(gt=0)
-    largo: float = Field(gt=0)
-    ancho: float = Field(gt=0)
+    largo_banda: float = Field(gt=0)
+    ancho_banda: float = Field(gt=0)
 
     # Campos para empalme
 
@@ -62,7 +62,7 @@ class CalculoBandaRequest(BaseModel):
     diametro_perforacion: Optional[float] = None
 
     #Campos para la onda
-    
+
     codigo_onda:      Optional[str]   = None
     n_ondas:          Optional[int]   = None
     continuidad_onda: Optional[bool]  = None
