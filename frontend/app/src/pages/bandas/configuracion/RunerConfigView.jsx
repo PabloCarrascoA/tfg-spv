@@ -1,34 +1,75 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getRuners } from '../../../services/api'
 
 function RunerConfigView() {
+
   const { state } = useLocation()
   const navigate = useNavigate()
 
   const { actual, total } = infoPaso(state.seleccion, 'runer')
 
-  // --- datos de la API ---
-  const [runers, setRuners] = useState([])
-
-  // --- estado del formulario ---
+  const [runers, setRuners]             = useState([])
   const [codigoRuner, setCodigoRuner]   = useState('')
-  const [cantidad, setCantidad]         = useState(1)
+  const [cantidad, setCantidad]         = useState(2)
   const [luz, setLuz]                   = useState('')
   const [margen, setMargen]             = useState('')
   const [comentarios, setComentarios]   = useState('')
 
-  // --- cargar runers al montar ---
+  // ancho del runer
+  const anchoRuner = runers.find(r => r.codigo === codigoRuner)?.ancho ?? null
+
+  // ancho de la banda — viene del state acumulado en BandaConfigView
+  const anchoBanda = parseFloat(state.banda?.ancho) || null
+
   useEffect(() => {
     getRuners()
       .then(data => setRuners(data))
       .catch(err => console.error('Error cargando runers:', err))
   }, [])
 
+  const editando = useRef(null)
+
+  // cuando cambia margen → recalcula luz
+  useEffect(() => {
+
+  if (editando.current === 'luz') return  // lo está editando el otro efecto, ignorar
+  if (!anchoBanda || !anchoRuner || !margen) return
+  const luzCalculada = anchoBanda - 2 * parseFloat(margen) - cantidad * anchoRuner
+  editando.current = 'margen'
+  setLuz(luzCalculada >= 0 ? String(luzCalculada) : '')
+  setTimeout(() => { editando.current = null }, 0)
+
+  }, [margen, cantidad, anchoRuner, anchoBanda])
+
+  // cuando cambia luz → recalcula margen
+  useEffect(() => {
+
+  if (editando.current === 'margen') return  // lo está editando el otro efecto, ignorar
+  if (!anchoBanda || !anchoRuner || !luz) return
+  const margenCalculado = (anchoBanda - parseFloat(luz) - cantidad * anchoRuner) / 2
+  editando.current = 'luz'
+  setMargen(margenCalculado >= 0 ? String(margenCalculado) : '')
+  setTimeout(() => { editando.current = null }, 0)
+
+  }, [luz, cantidad, anchoRuner, anchoBanda])
+
   function handleSiguiente() {
     const ruta = siguienteRuta(state.seleccion, 'runer')
-    navigate(ruta, { state })
+    navigate(ruta, {
+      state: {
+        ...state,
+        runer: {
+          codigoRuner,
+          cantidad,
+          luz,
+          margen,
+          anchoRuner,
+          comentarios,
+        }
+      }
+    })
   }
 
   function handleAtras() {
@@ -51,7 +92,11 @@ function RunerConfigView() {
                 <select
                   className="form-select"
                   value={codigoRuner}
-                  onChange={e => setCodigoRuner(e.target.value)}
+                  onChange={e => {
+                    setCodigoRuner(e.target.value)
+                    setLuz('')
+                    setMargen('')
+                  }}
                 >
                   <option value="">- Seleccione un runer -</option>
                   {runers.map(runer => (
@@ -65,35 +110,65 @@ function RunerConfigView() {
               <div className="form-group">
                 <label className="form-label">Número de Runers</label>
                 <div className="counter">
-                  <button className="counter-btn" onClick={() => setCantidad(c => Math.max(1, c - 1))}>−</button>
+                  <button className="counter-btn" onClick={() => { setCantidad(c => Math.max(1, c - 1)); setLuz(''); setMargen('') }}>−</button>
                   <span className="counter-value">{cantidad}</span>
-                  <button className="counter-btn" onClick={() => setCantidad(c => c + 1)}>+</button>
+                  <button className="counter-btn" onClick={() => { setCantidad(c => c + 1); setLuz(''); setMargen('') }}>+</button>
                 </div>
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Luz (mm)</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  placeholder="0"
-                  value={luz}
-                  onChange={e => setLuz(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Margen lateral (mm)</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  placeholder="0"
-                  value={margen}
-                  onChange={e => setMargen(e.target.value)}
-                />
-              </div>
-            </div>
+            {/* solo muestra los campos si hay runer seleccionado y ancho de banda disponible */}
+
+            {codigoRuner && anchoBanda && (
+              <>
+                {!anchoBanda && (
+                  <p style={{ fontSize: 13, color: '#e57373' }}>
+                    No se encontró el ancho de banda del paso anterior
+                  </p>
+                )}
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label className="form-label">Margen lateral (mm)</label>
+                    <input
+                      type="number"
+                      className="form-input"
+                      placeholder="0"
+                      value={margen}
+                      onChange={e => setMargen(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Luz (mm)</label>
+                    <input
+                      type="number"
+                      className="form-input"
+                      placeholder="0"
+                      value={luz}
+                      onChange={e => setLuz(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {luz && parseFloat(luz) < 0 && (
+                  <p style={{ fontSize: 13, color: '#e57373' }}>
+                    La combinación de margen y runers supera el ancho de la banda
+                  </p>
+                )}
+              </>
+            )}
+
+            {codigoRuner && !anchoBanda && (
+              <p style={{ fontSize: 13, color: '#e57373' }}>
+                No se encontró el ancho de banda — asegúrate de haberlo introducido en el paso anterior
+              </p>
+            )}
+
+            {codigoRuner && !anchoRuner && (
+              <p style={{ fontSize: 13, color: '#e57373' }}>
+                No se encontró el ancho del runer
+              </p>
+            )}
 
             <div className="form-group">
               <label className="form-label">Comentarios</label>
