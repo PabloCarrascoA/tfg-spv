@@ -16,6 +16,9 @@ function PerfilTConfigView() {
   const [ancho, setAncho]               = useState('')
   const [margen, setMargen]             = useState('')
   const [luz, setLuz]                   = useState('')
+  const [identico, setIdentico]         = useState(true)
+  const [ancho1, setAncho1]             = useState('')
+  const [ancho2, setAncho2]             = useState('')
   const [comentarios, setComentarios]   = useState('')
 
   // --- datos de la API ---
@@ -30,13 +33,55 @@ function PerfilTConfigView() {
       .catch(err => console.error('Error cargando perfiles transversales:', err))
   }, [])
 
+  // cuando es idéntico: el usuario controla `luz`, se calculan ancho1 y ancho2
+
+    useEffect(() => {
+    if (!identico) return
+    if (!ancho || !luz) return
+
+    const anchoCalculado = (parseFloat(ancho) - parseFloat(luz)) / 2
+    if (anchoCalculado > 0) {
+        setAncho1(String(anchoCalculado))
+        setAncho2(String(anchoCalculado))
+    }
+    }, [luz, ancho, identico])
+
+    // cuando no es idéntico: el usuario controla ancho1 y ancho2, se calcula luz
+
+    useEffect(() => {
+    if (identico) return
+    if (!ancho || !ancho1 || !ancho2) return
+
+    const luzCalculada = parseFloat(ancho) - parseFloat(ancho1) - parseFloat(ancho2)
+    if (luzCalculada >= 0) {
+        setLuz(String(luzCalculada))
+    }
+    }, [ancho1, ancho2, ancho, identico])
+
   function handleSiguiente() {
     const ruta = siguienteRuta(state.seleccion, 'perfil-transversal')
-    navigate(ruta, { state })
-  }
+    navigate(ruta, {
+        state: {
+        ...state,
+        perfilT: {
+            codigoPerfil,
+            cantidad,
+            distancia,
+            ancho,
+            margen,
+            hileras,
+            identico,
+            ancho1,
+            ancho2,
+            luz,
+            comentarios,
+        }
+        }
+    })
+    }
 
   function handleAtras() {
-    const ruta = siguienteRuta(state.seleccion, 'banda') // vuelve al paso anterior seleccionado
+    const ruta = siguienteRuta(state.seleccion, 'banda')
     navigate(ruta.replace('configurar', 'configurar'), { state })
   }
 
@@ -122,20 +167,111 @@ function PerfilTConfigView() {
                   <button className="counter-btn" onClick={() => setHileras(h => h + 1)}>+</button>
                 </div>
               </div>
-              
-              {hileras > 1 && (
-              <div className="form-group">
-                <label className="form-label">Luz interior (mm)</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  placeholder="0"
-                  value={luz}
-                  onChange={e => setLuz(e.target.value)}
-                />
-              </div>
-              )}
+
             </div>
+
+            {hileras > 1 && ancho &&(
+                <>
+                    <div className="form-row">
+                    <div className="form-group">
+                        <label className="form-label">¿Son los perfiles idénticos?</label>
+                        <div className="radio-group">
+                        <label className="radio-label">
+                            <input type="radio" name="identico" checked={identico === true}
+                            onChange={() => { setIdentico(true); setAncho1(''); setAncho2(''); setLuz('') }} />
+                            Sí
+                        </label>
+                        <label className="radio-label">
+                            <input type="radio" name="identico" checked={identico === false}
+                            onChange={() => { setIdentico(false); setAncho1(''); setAncho2(''); setLuz('') }} />
+                            No
+                        </label>
+                        </div>
+                    </div>
+                    </div>
+
+                    {identico ? (
+
+                    // idéntico: usuario introduce luz, anchos se calculan solos
+                    <>
+                        <div className="form-group">
+                        <label className="form-label">Luz interior (mm)</label>
+                        <input type="number" className="form-input" placeholder="0"
+                            value={luz} onChange={e => setLuz(e.target.value)} />
+                        </div>
+                        {luz && (parseFloat(luz) < parseFloat(ancho)) && (
+                        <div className="form-row">
+                            <div className="form-group">
+                            <label className="form-label">Ancho perfil 1 (mm) — calculado</label>
+                            <input type="number" className="form-input" value={ancho1} readOnly
+                                style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                                {console.log('ancho1 calculado:', ancho1)}
+                            </div>
+                            <div className="form-group">
+                            <label className="form-label">Ancho perfil 2 (mm) — calculado</label>
+                            <input type="number" className="form-input" value={ancho2} readOnly
+                                style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                            </div>
+                        </div>
+                        )}
+
+                        {hileras > 1 && (parseFloat(luz) > parseFloat(ancho)) && (
+                            console.log('luz:', luz, 'ancho:', ancho),
+                        <p style={{ fontSize: 13, color: '#e57373' }}>
+                            El ancho de la luz excede el ancho total del perfil
+                        </p>
+                        )}
+
+                    </>
+                    ) : (
+                    // no idéntico: usuario introduce ancho1 y ancho2, luz se calcula sola
+                    <>
+                        <div className="form-row">
+                        <div className="form-group">
+                            <label className="form-label">Ancho perfil 1 (mm)</label>
+                            <input type="number" className="form-input" placeholder="0"
+                            value={ancho1} onChange={e => setAncho1(e.target.value)} />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Ancho perfil 2 (mm)</label>
+                            <input type="number" className="form-input" placeholder="0"
+                            value={ancho2} onChange={e => setAncho2(e.target.value)} />
+                        </div>
+                        </div>
+                        {ancho1 && ancho2 && ((parseFloat(ancho1) < parseFloat(ancho)) && (parseFloat(ancho2) < parseFloat(ancho))) && ((parseFloat(ancho1) + parseFloat(ancho2)) < parseFloat(ancho)) &&  (
+
+                        <div className="form-group">
+                            <label className="form-label">Luz interior (mm) — calculada</label>
+                            <input type="number" className="form-input" value={luz} readOnly
+                            style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                        </div>
+                        
+                        )}
+
+                        {hileras > 1 && ((parseFloat(ancho1) > parseFloat(ancho)) || (parseFloat(ancho2) > parseFloat(ancho))) && (
+                            console.log('luz:', luz, 'ancho:', ancho),
+                        <p style={{ fontSize: 13, color: '#e57373' }}>
+                            El ancho de los perfiles excede el ancho total del perfil
+                        </p>
+                        )}
+
+                        {hileras > 1 && ((parseFloat(ancho1) + parseFloat(ancho2)) > ancho) && (
+                            console.log('luz:', luz, 'ancho:', ancho),
+                        <p style={{ fontSize: 13, color: '#e57373' }}>
+                            La suma del ancho de los perfiles excede el ancho total del perfil
+                        </p>
+                        )}
+                        
+                    </>
+                    )}
+                </>
+                )}
+
+                {hileras > 1 && !ancho && (
+                    <p style={{ fontSize: 13, color: '#e57373' }}>
+                        Introduce primero el ancho del perfil para calcular las hileras
+                    </p>
+                    )}
 
             <div className="form-group">
               <label className="form-label">Comentarios</label>
