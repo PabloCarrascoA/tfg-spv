@@ -20,7 +20,8 @@ function RunerConfigView() {
   // ancho del runer
   const anchoRuner = runers.find(r => r.codigo === codigoRuner)?.ancho ?? null
 
-  // ancho de la banda — viene del state acumulado en BandaConfigView
+  console.log("ancho runer: " + anchoRuner)
+
   const anchoBanda = parseFloat(state.banda?.ancho) || null
 
   useEffect(() => {
@@ -31,24 +32,47 @@ function RunerConfigView() {
 
   const editando = useRef(null)
 
-  // cuando cambia margen → recalcula luz
+  // cuando cambia margen -> recalcula luz
+
   useEffect(() => {
 
-  if (editando.current === 'luz') return  // lo está editando el otro efecto, ignorar
+  if (editando.current === 'luz') return 
   if (!anchoBanda || !anchoRuner || !margen) return
-  const luzCalculada = anchoBanda - 2 * parseFloat(margen) - cantidad * anchoRuner
+
+  let luzCalculada
+
+   if (cantidad === 2) {
+    luzCalculada = anchoBanda - 2 * parseFloat(margen) - cantidad * anchoRuner
+  }
+
+  else if (cantidad === 3) {
+    luzCalculada = (anchoBanda - 2 * parseFloat(margen) - cantidad * anchoRuner) / 2
+  }
+
   editando.current = 'margen'
   setLuz(luzCalculada >= 0 ? String(luzCalculada) : '')
   setTimeout(() => { editando.current = null }, 0)
 
   }, [margen, cantidad, anchoRuner, anchoBanda])
 
-  // cuando cambia luz → recalcula margen
+  // cuando cambia luz -> recalcula margen
+
   useEffect(() => {
 
-  if (editando.current === 'margen') return  // lo está editando el otro efecto, ignorar
+  if (editando.current === 'margen') return
+
   if (!anchoBanda || !anchoRuner || !luz) return
-  const margenCalculado = (anchoBanda - parseFloat(luz) - cantidad * anchoRuner) / 2
+
+  let margenCalculado
+
+  if (cantidad === 2) {
+    margenCalculado = (anchoBanda - parseFloat(luz) - cantidad * anchoRuner) / 2
+  }
+
+  if (cantidad === 3) {
+    margenCalculado = (anchoBanda - 2 * parseFloat(luz) - cantidad * anchoRuner) / 2
+  }
+
   editando.current = 'luz'
   setMargen(margenCalculado >= 0 ? String(margenCalculado) : '')
   setTimeout(() => { editando.current = null }, 0)
