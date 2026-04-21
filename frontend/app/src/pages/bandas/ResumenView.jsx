@@ -61,23 +61,47 @@ function construirPayload(state) {
 
   return {
 
-    nombre_cliente:   state.nombreCliente ?? null,
+    nombre_cliente:  state.nombreCliente ?? null,
 
-    // bandas
-    codigo_banda:     state.banda?.codigoBanda ?? null,
-    cantidad_bandas:  state.banda?.cantidad ?? 1,
-    largo:            toFloat(state.banda?.longitud),
-    ancho:            toFloat(state.banda?.ancho),
-    tipo_empalme:     state.banda?.tipoEmpalme ?? null,
-    codigo_empalme:   state.banda?.codigoEmpalme ?? null,
+    // banda y empalme
+    codigo_banda:    state.banda?.codigoBanda   ?? null,
+    cantidad_bandas: state.banda?.cantidad      ?? 1,
+    largo:           toFloat(state.banda?.longitud),
+    ancho:           toFloat(state.banda?.ancho),
+    tipo_empalme:    state.banda?.tipoEmpalme   ?? null,
+    codigo_empalme:  state.banda?.codigoEmpalme ?? null,
 
-    // perfiles
-    codigo_perfil_superior:      state.perfilL?.superior?.activo ? state.perfilL.superior.codigo : null,
-    n_perfiles_superior:         state.perfilL?.superior?.activo ? state.perfilL.superior.cantidad : null,
-    distancia_margen_superior:   state.perfilL?.superior?.activo ? toFloat(state.perfilL.superior.margen) : null,
-    codigo_perfil_inferior:      state.perfilL?.inferior?.activo ? state.perfilL.inferior.codigo : null,
-    n_perfiles_inferior:         state.perfilL?.inferior?.activo ? state.perfilL.inferior.cantidad : null,
-    distancia_margen_inferior:   state.perfilL?.inferior?.activo ? toFloat(state.perfilL.inferior.margen) : null,
+    // perfil longitudinal
+    codigo_perfil_superior:    state.perfilL?.superior?.activo ? state.perfilL.superior.codigo                        : null,
+    n_perfiles_superior:       state.perfilL?.superior?.activo ? state.perfilL.superior.cantidad                      : null,
+    distancia_margen_superior: state.perfilL?.superior?.activo ? toFloat(state.perfilL.superior.distanciaBordeCentro) : null,
+    codigo_perfil_inferior:    state.perfilL?.inferior?.activo ? state.perfilL.inferior.codigo                        : null,
+    n_perfiles_inferior:       state.perfilL?.inferior?.activo ? state.perfilL.inferior.cantidad                      : null,
+    distancia_margen_inferior: state.perfilL?.inferior?.activo ? toFloat(state.perfilL.inferior.distanciaBordeCentro) : null,
+
+    // perfil transversal
+    codigo_perfil:   state.perfilT?.codigoPerfil ?? null,
+    n_perfiles:      state.perfilT?.cantidad     ?? null,
+    ancho_perfil:    toFloat(state.perfilT?.ancho),
+    distancia_paso:  toFloat(state.perfilT?.distancia),
+
+    // runer
+    codigo_runer:     state.runer?.codigoRuner ?? null,
+    n_perfiles_runer: state.runer?.cantidad    ?? null,
+
+    // perforaciones
+    agujeros_x_fila:      state.perforaciones?.agujerosPorFila ?? null,
+    filas_x_agujero:      state.perforaciones?.filas           ?? null,
+    diametro_perforacion: toFloat(state.perforaciones?.diametro),
+
+    // ondas
+    codigo_onda:       state.onda?.codigoOnda          ?? null,
+    n_ondas:           state.onda?.cantidad            ?? null,
+    continuidad_onda:  state.onda?.continua            ?? null,
+    base_onda:         toFloat(state.onda?.base),
+    altura_onda:       toFloat(state.onda?.altura),
+    ancho_onda:        toFloat(state.onda?.anchoOnda),
+    pisada_onda:       toFloat(state.onda?.pisada),
   }
 }
 
