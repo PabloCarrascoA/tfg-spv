@@ -25,6 +25,11 @@ export async function getRuners() {
   return res.json()
 }
 
+export async function getOndas() {
+    const res = await fetch(`${BASE_URL}/configuracion/ondas`)
+    return res.json()
+}
+
 // falta tema ondas si esto sería necesario
 
 export async function calcularPedido(datos) {

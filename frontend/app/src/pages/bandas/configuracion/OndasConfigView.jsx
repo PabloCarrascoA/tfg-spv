@@ -1,12 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
+import { getOndas } from '../../../services/api'
+
 
 function OndaConfigView() {
   const { state } = useLocation()
   const navigate = useNavigate()
 
   const { actual, total } = infoPaso(state.seleccion, 'ondas')
+
+  const [ondas, setOndas] = useState([])
 
   const [codigoOnda, setCodigoOnda]     = useState('')
   const [cantidad, setCantidad]         = useState(1)
@@ -16,6 +20,12 @@ function OndaConfigView() {
   const [anchoOnda, setAnchoOnda]       = useState('')
   const [pisada, setPisada]             = useState('')
   const [comentarios, setComentarios]   = useState('')
+
+ useEffect(() => {
+     getOndas()
+       .then(data => setOndas(data))
+       .catch(err => console.error('Error cargando ondas:', err))
+   }, [])
 
   function handleSiguiente() {
     const ruta = siguienteRuta(state.seleccion, 'ondas')
@@ -59,6 +69,11 @@ function OndaConfigView() {
                   onChange={e => setCodigoOnda(e.target.value)}
                 >
                   <option value="">- Seleccione una onda -</option>
+                  {ondas.map(onda => (
+                    <option key={onda.codigo} value={onda.codigo}>
+                      {onda.codigo} - {onda.tipo}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="form-group">
