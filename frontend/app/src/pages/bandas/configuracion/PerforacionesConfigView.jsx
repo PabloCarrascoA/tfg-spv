@@ -22,7 +22,19 @@ function PerforacionesConfigView() {
 
   function handleSiguiente() {
     const ruta = siguienteRuta(state.seleccion, 'perforaciones')
-    navigate(ruta, { state })
+    navigate(ruta, { state:
+        {
+            ...state,
+            perforaciones: {
+                agujerosPorFila,
+                filas,
+                diametro,
+                tipoMalla,
+                distanciaPaso,
+                comentarios
+            }
+        }
+     })
   }
 
   function handleAtras() {

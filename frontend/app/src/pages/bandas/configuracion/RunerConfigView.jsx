@@ -196,6 +196,7 @@ function RunerConfigView() {
             )}
 
             {codigoRuner && !anchoRuner && (
+              // errores = true
               <p style={{ fontSize: 13, color: '#e57373' }}>
                 No se encontró el ancho del runer
               </p>
