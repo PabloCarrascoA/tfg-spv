@@ -33,10 +33,23 @@ export async function getOndas() {
 // falta tema ondas si esto sería necesario
 
 export async function calcularPedido(datos) {
-  const res = await fetch(`${BASE_URL}/configuracion/calcular`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(datos)
-  })
-  return res.json()
+  let res
+
+  try {
+    res = await fetch(`${BASE_URL}/configuracion/calcular`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos)
+    })
+  } catch (error) {
+    throw new Error('No se pudo conectar con el backend')
+  }
+
+  const data = await res.json()
+
+  if (!res.ok) {
+    throw new Error(data.detail || 'Error al calcular el pedido')
+  }
+
+  return data
 }

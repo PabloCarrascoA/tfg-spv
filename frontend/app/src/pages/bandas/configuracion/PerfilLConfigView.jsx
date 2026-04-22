@@ -72,6 +72,14 @@ function PerfilLConfigView() {
   }, [superior.centrado, superior.cantidad, superior.distancia, anchoBanda, superior.activo])
 
   function handleSiguiente() {
+    if (superior.activo && !superior.codigo) {
+      return alert('Debes seleccionar un código para el perfil longitudinal superior')
+    }
+
+    if (inferior.activo && !inferior.codigo) {
+      return alert('Debes seleccionar un código para el perfil longitudinal inferior')
+    }
+
     const ruta = siguienteRuta(state.seleccion, 'perfil-longitudinal')
     navigate(ruta, {
       state: {

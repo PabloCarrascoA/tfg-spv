@@ -7,21 +7,21 @@ class CalculoBandaRequest(BaseModel):
     
     # Campos para banda
 
-    codigo_banda: str
-    cantidad_bandas: int = Field(gt=0)
-    largo_banda: float = Field(gt=0)
-    ancho_banda: float = Field(gt=0)
+    codigo_banda: Optional[str] = None
+    cantidad_bandas: Optional[int] = Field(default=1, gt=0)
+    largo_banda: Optional[float] = Field(default=None, gt=0)
+    ancho_banda: Optional[float] = Field(default=None, gt=0)
 
     # Campos para empalme
 
-    tipo_empalme: Literal[
+    tipo_empalme: Optional[Literal[
         "banda-abierta",
         "banda-sin-fin",
         "extremos-preparados",
         "grapas"
-    ]
+    ]] = None
 
-    codigo_empalme: str
+    codigo_empalme: Optional[str] = None
 
     # Campos para perfil
 
@@ -78,10 +78,10 @@ class CalculoBandaResponse(BaseModel):
 
     nombre_cliente: Optional[str] = None
 
-    cantidad_bandas: int
-    ancho_banda: float
-    largo_banda: float
-    codigo_banda: str
+    cantidad_bandas: Optional[int] = None
+    ancho_banda: Optional[float] = None
+    largo_banda: Optional[float] = None
+    codigo_banda: Optional[str] = None
     precio_banda: float
     precio_empalme: float
 
@@ -95,7 +95,7 @@ class CalculoBandaResponse(BaseModel):
     precio_soldaduraL: Optional[float] = None
     precio_perfilL_final: Optional[float] = None
 
-    codigo_perfilT: Optional[float] = None
+    codigo_perfilT: Optional[str] = None
     n_perfilesT: Optional[float] = None
     margen_lateral: Optional[float] = None
     ancho_perfilT: Optional[float] = None
@@ -108,7 +108,7 @@ class CalculoBandaResponse(BaseModel):
     precio_soldaduraT: Optional[float] = None
     precio_perfilT_final: Optional[float] = None
 
-    codigo_runer: Optional[float] = None
+    codigo_runer: Optional[str] = None
     n_perfiles_runer: Optional[float] = None
     margen_runer: Optional[float] = None
     luz_runer: Optional[float] = None
@@ -132,5 +132,4 @@ class CalculoBandaResponse(BaseModel):
     precio_onda: Optional[float] = None
     precio_onda_total: Optional[float] = None
     precio_ondas_final: Optional[float] = None
-
-    precio_ondas_final: Optional[float] = None
+    precio_total: float
