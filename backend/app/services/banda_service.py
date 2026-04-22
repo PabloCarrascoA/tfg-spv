@@ -360,9 +360,10 @@ def obtener_desarrollo_ondas(base, altura):
         b = 0.2105
         c = 202.11
     else:
-        raise Exception("¡La altura debe ser un múltiplo de 5!")
+        raise Exception("¡La altura de la onda debe ser un múltiplo de 5!")
 
-    desarrollo = a * base + b * base + c * base
+    base_m = base / 1000
+    desarrollo = a * base_m + b * base_m + c * base_m
 
     return desarrollo
 
@@ -745,6 +746,8 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
     else:
         desarrollo_total = ((obtener_desarrollo_ondas(base, altura) + 2 * pisada) * n_ondas) + 1000
         # [TODO] revisar ajuste de la base según si se da el paso o n_ondas
+
+    print(f"DEBUG: valor de desarrollo_ondas -> {desarrollo_total}")
     
     precio_onda_total = (desarrollo_total * n_ondas) * ancho * onda["precio"]
 
@@ -756,11 +759,15 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
     precio_soldadura_total = 0
 
+    # [TODO] calcular la soldadura
+
     if cliente_id is not None:
         
         descuento_soldadura = 1 - get_descuento_soldadura(db, cliente_id, "ondas")
 
         precio_soldadura_total = precio_onda_total * (descuento_soldadura)
+
+    # [TODO] calcular la preparación
 
     precio_final = precio_onda_total + precio_soldadura_total
 

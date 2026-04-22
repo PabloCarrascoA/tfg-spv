@@ -28,6 +28,11 @@ function OndaConfigView() {
    }, [])
 
   function handleSiguiente() {
+
+    if (altura > 100 || altura < 10) {
+      return alert('La altura de la onda no puede ser ni mayor a 100 (mm) ni inferior a 10 (mm)')
+    }
+
     const ruta = siguienteRuta(state.seleccion, 'ondas')
     navigate(ruta, {
       state: {
@@ -125,7 +130,7 @@ function OndaConfigView() {
                   value={altura} onChange={e => setAltura(e.target.value)} />
 
                 {altura % 5 !== 0 && <p style={{ fontSize: 13, color: '#e57373' }}>Recuerda que la altura debe ser múltiplo de 5</p>}
-                
+
               </div>
             </div>
 
