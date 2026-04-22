@@ -3,6 +3,155 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getPerfilesLongitudinales } from '../../../services/api'
 
+function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
+  const distanciaBordeCentro = parseFloat(perfil.distanciaBordeCentro)
+  const distanciaCentros = parseFloat(perfil.distancia)
+
+  const superaBanda =
+    Boolean(anchoBanda) &&
+    !Number.isNaN(distanciaBordeCentro) &&
+    distanciaBordeCentro > anchoBanda / 2
+
+  // Si la distancia entre centros + 2 veces la distancia borde-centro supera el ancho de la banda, muestra alterta
+  
+  const distanciaExcede =
+  Boolean(anchoBanda) &&
+  perfil.cantidad > 1 &&
+  !Number.isNaN(distanciaCentros) &&
+  !Number.isNaN(distanciaBordeCentro) &&
+  ((perfil.cantidad - 1) * distanciaCentros + 2 * distanciaBordeCentro) > anchoBanda
+
+  return (
+    <div className="perfil-bloque">
+      <label className="perfil-check-label">
+        <input
+          type="checkbox"
+          className="componente-checkbox"
+          checked={perfil.activo}
+          onChange={e => setPerfil(p => ({ ...p, activo: e.target.checked }))}
+        />
+        {label}
+      </label>
+
+      {perfil.activo && (
+        <div className="perfil-fields">
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Código de perfil</label>
+              <select
+                className="form-select"
+                value={perfil.codigo}
+                onChange={e => setPerfil(p => ({ ...p, codigo: e.target.value }))}
+              >
+                <option value="">- Seleccione un perfil -</option>
+                {perfiles.map(perf => (
+                  <option key={perf.codigo} value={perf.codigo}>
+                    {perf.codigo} - {perf.tipo}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Número de perfiles</label>
+              <div className="counter">
+                <button
+                  type="button"
+                  className="counter-btn"
+                  onClick={() => setPerfil(p => ({ ...p, cantidad: Math.max(1, p.cantidad - 1), distancia: '' }))}
+                >
+                  −
+                </button>
+                <span className="counter-value">{perfil.cantidad}</span>
+                <button
+                  type="button"
+                  className="counter-btn"
+                  onClick={() => setPerfil(p => ({ ...p, cantidad: p.cantidad + 1, distancia: '' }))}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">¿Perfil centrado?</label>
+            <div className="radio-group">
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  name={`centrado_${label}`}
+                  checked={perfil.centrado === true}
+                  onChange={() => setPerfil(p => ({ ...p, centrado: true, distanciaBordeCentro: '' }))}
+                />
+                Sí
+              </label>
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  name={`centrado_${label}`}
+                  checked={perfil.centrado === false}
+                  onChange={() => setPerfil(p => ({ ...p, centrado: false, distanciaBordeCentro: '' }))}
+                />
+                No
+              </label>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">
+                Distancia borde - centro (mm)
+                {perfil.centrado && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
+              </label>
+              <input
+                type="number"
+                className="form-input"
+                placeholder="0"
+                value={perfil.distanciaBordeCentro}
+                readOnly={perfil.centrado}
+                style={perfil.centrado ? { background: '#f5f6f8', color: '#6b7280' } : {}}
+                onChange={e => !perfil.centrado && setPerfil(p => ({ ...p, distanciaBordeCentro: e.target.value }))}
+              />
+            </div>
+
+            {perfil.cantidad > 1 && (
+              <div className="form-group">
+                <label className="form-label">Distancia entre centros (mm)</label>
+                <input
+                  type="number"
+                  className="form-input"
+                  placeholder="0"
+                  value={perfil.distancia}
+                  onChange={e => setPerfil(p => ({ ...p, distancia: e.target.value }))}
+                />
+              </div>
+            )}
+          </div>
+
+          {superaBanda && (
+            <p style={{ fontSize: 13, color: '#e57373' }}>
+              La distancia borde-centro supera la mitad del ancho de la banda ({anchoBanda / 2} mm)
+            </p>
+          )}
+
+          {distanciaExcede && (
+            <p style={{ fontSize: 13, color: '#e57373' }}>
+              La distribución de perfiles supera el ancho de la banda ({anchoBanda} mm)
+            </p>
+          )}
+
+          {perfil.codigo && !anchoBanda && (
+            <p style={{ fontSize: 13, color: '#e57373' }}>
+              No se encontró el ancho de la banda, asegúrate de haberlo introducido en el paso anterior
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function PerfilLConfigView() {
   const { state } = useLocation()
   const navigate = useNavigate()
@@ -93,139 +242,6 @@ function PerfilLConfigView() {
     navigate('/banda/configurar/banda', { state })
   }
 
-  function BloquePerfilL({ label, perfil, setPerfil }) {
-    const superaBanda = anchoBanda && parseFloat(perfil.distanciaBordeCentro) > anchoBanda / 2
-
-    const distanciaExcede = anchoBanda && perfil.cantidad > 1 &&
-      ((perfil.cantidad - 1) * parseFloat(perfil.distancia) + 2 * parseFloat(perfil.distanciaBordeCentro)) > anchoBanda
-
-    return (
-      <div className="perfil-bloque">
-        <label className="perfil-check-label">
-          <input
-            type="checkbox"
-            className="componente-checkbox"
-            checked={perfil.activo}
-            onChange={e => setPerfil(p => ({ ...p, activo: e.target.checked }))}
-          />
-          {label}
-        </label>
-
-        {perfil.activo && (
-          <div className="perfil-fields">
-
-            {/* código + cantidad */}
-
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Código de perfil</label>
-                <select
-                  className="form-select"
-                  value={perfil.codigo}
-                  onChange={e => setPerfil(p => ({ ...p, codigo: e.target.value }))}
-                >
-                  <option value="">- Seleccione un perfil -</option>
-                  {perfiles.map(perf => (
-                    <option key={perf.codigo} value={perf.codigo}>
-                      {perf.codigo} - {perf.tipo}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Número de perfiles</label>
-                <div className="counter">
-                  <button className="counter-btn" onClick={() => setPerfil(p => ({ ...p, cantidad: Math.max(1, p.cantidad - 1), distancia: '' }))}>−</button>
-                  <span className="counter-value">{perfil.cantidad}</span>
-                  <button className="counter-btn" onClick={() => setPerfil(p => ({ ...p, cantidad: p.cantidad + 1, distancia: '' }))}>+</button>
-                </div>
-              </div>
-            </div>
-
-            {/* centrado */}
-
-            <div className="form-group">
-              <label className="form-label">¿Perfil centrado?</label>
-              <div className="radio-group">
-                <label className="radio-label">
-                  <input type="radio" name={`centrado_${label}`} checked={perfil.centrado === true}
-                    onChange={() => setPerfil(p => ({ ...p, centrado: true, distanciaBordeCentro: '' }))} />
-                  Sí
-                </label>
-                <label className="radio-label">
-                  <input type="radio" name={`centrado_${label}`} checked={perfil.centrado === false}
-                    onChange={() => setPerfil(p => ({ ...p, centrado: false, distanciaBordeCentro: '' }))} />
-                  No
-                </label>
-              </div>
-            </div>
-
-
-            <div className='form-row'>
-
-                <div className="form-group">
-                <label className="form-label">
-                    Distancia borde – centro (mm)
-                    {perfil.centrado && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>— calculada</span>}
-                </label>
-                <input
-                    type="number"
-                    className="form-input"
-                    placeholder="0"
-                    value={perfil.distanciaBordeCentro}
-                    readOnly={perfil.centrado}
-                    style={perfil.centrado ? { background: '#f5f6f8', color: '#6b7280' } : {}}
-                    onChange={e => !perfil.centrado && setPerfil(p => ({ ...p, distanciaBordeCentro: e.target.value }))}
-                />
-                </div>
-
-                {perfil.cantidad > 1 && (
-
-                    <div className="form-group">
-                        <label className="form-label">Distancia entre centros (mm)</label>
-                        <input
-                        type="number"
-                        className="form-input"
-                        placeholder="0"
-                        value={perfil.distancia}
-                        onChange={e => setPerfil(p => ({ ...p, distancia: e.target.value }))}
-                        />
-                    </div>
-                    )}
-            </div>
-            
-            {/* Alertas */}
-
-            {superaBanda && (
-              <p style={{ fontSize: 13, color: '#e57373' }}>
-                La distancia borde–centro supera la mitad del ancho de la banda ({anchoBanda / 2} mm)
-              </p>
-            )}
-
-            {distanciaExcede && (
-              <p style={{ fontSize: 13, color: '#e57373' }}>
-                La distribución de perfiles supera el ancho de la banda ({anchoBanda} mm)
-              </p>
-            )}
-
-            {superior.codigo && !anchoBanda && (
-              <p style={{ fontSize: 13, color: '#e57373' }}>
-                No se encontró el ancho de la banda — asegúrate de haberlo introducido en el paso anterior
-              </p>
-            )}
-
-            {inferior.codigo && !anchoBanda && (
-              <p style={{ fontSize: 13, color: '#e57373' }}>
-                No se encontró el ancho de la banda — asegúrate de haberlo introducido en el paso anterior
-              </p>
-            )}
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
   return (
     <div className="config-view">
       <div className="config-row">
@@ -239,11 +255,15 @@ function PerfilLConfigView() {
               label="Perfil longitudinal en cobertura inferior"
               perfil={inferior}
               setPerfil={setInferior}
+              perfiles={perfiles}
+              anchoBanda={anchoBanda}
             />
             <BloquePerfilL
               label="Perfil longitudinal en cobertura superior"
               perfil={superior}
               setPerfil={setSuperior}
+              perfiles={perfiles}
+              anchoBanda={anchoBanda}
             />
 
             <div className="form-group">
