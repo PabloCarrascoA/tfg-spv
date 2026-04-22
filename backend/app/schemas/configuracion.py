@@ -77,27 +77,60 @@ class CalculoBandaResponse(BaseModel):
     # [TODO] Revisar si los precios deberían ser opcionales, ya que como está ahora podría dar problemas si solo quieres calcular un apartado sin necesidad de calcular todos los demás
 
     nombre_cliente: Optional[str] = None
+
     cantidad_bandas: int
-    ancho: float
-    largo: float
+    ancho_banda: float
+    largo_banda: float
     codigo_banda: str
     precio_banda: float
     precio_empalme: float
-    precio_perfil: float
-    precio_soldadura: float
-    precio_perfil_final: float
-    precio_runer: float
-    precio_runer_soldadura: float
-    precio_runer_final: float
-    precio_perforaciones: float
-    precio_total: float
-    n_perfiles: Optional[float] = None
-    n_perfiles_runer: Optional[float] = None
-    distancia_margen: Optional[float] = None
-    distancia_margen_superior: Optional[float] = None
-    distancia_margen_inferior: Optional[float] = None
-    ancho_perfil: Optional[float] = None
-    distancia_paso: Optional[float] = None
-    paso_filas: Optional[float] = None
+
+    precio_perfil_superior: Optional[float] = None
+    precio_perfil_inferior: Optional[float] = None
     n_perfiles_superior: Optional[float] = None
     n_perfiles_inferior: Optional[float] = None
+    distancia_margen_superior: Optional[float] = None
+    distancia_margen_inferior: Optional[float] = None
+    precio_perfilL: Optional[float] = None
+    precio_soldaduraL: Optional[float] = None
+    precio_perfilL_final: Optional[float] = None
+
+    codigo_perfilT: Optional[float] = None
+    n_perfilesT: Optional[float] = None
+    margen_lateral: Optional[float] = None
+    ancho_perfilT: Optional[float] = None
+    n_hileras: Optional[float] = None
+    ancho1: Optional[float] = None
+    ancho2: Optional[float] = None
+    luz_interior: Optional[float] = None
+    distancia_paso: Optional[float] = None
+    precio_perfilT: Optional[float] = None
+    precio_soldaduraT: Optional[float] = None
+    precio_perfilT_final: Optional[float] = None
+
+    codigo_runer: Optional[float] = None
+    n_perfiles_runer: Optional[float] = None
+    margen_runer: Optional[float] = None
+    luz_runer: Optional[float] = None
+    ancho_runer: Optional[float] = None
+    precio_runer: Optional[float] = None
+    precio_runer_soldadura: Optional[float] = None
+    precio_runer_final: Optional[float] = None
+
+    agujeros_x_fila: Optional[float] = None
+    filas_x_agujero: Optional[float] = None
+    diametro_perforacion: Optional[float] = None
+    precio_perforaciones: Optional[float] = None
+    paso_filas: Optional[float] = None
+
+    codigo_onda: Optional[str] = None
+    n_ondas: Optional[int] = None
+    base_onda: Optional[float] = None
+    altura_onda: Optional[float] = None
+    continuidad_onda: Optional[bool] = None
+    pisada_onda: Optional[float] = None
+    precio_onda: Optional[float] = None
+    precio_onda_total: Optional[float] = None
+    precio_ondas_final: Optional[float] = None
+
+    precio_ondas_final: Optional[float] = None
