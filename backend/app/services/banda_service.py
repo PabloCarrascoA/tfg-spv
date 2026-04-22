@@ -479,6 +479,15 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
     precio_perfil_total = (n_perfiles * largo_m * precio_perfil_mL)
 
     if cliente_id is not None:
+        print(
+            "DEBUG descuento perfil longitudinal:",
+            {
+                "cliente_id": cliente_id,
+                "tabla": "perfiles_longitudinales",
+                "codigo_perfil": codigo_perfil,
+                "tipo_familia": perfil["tipo"],
+            }
+        )
         
         descuento = 1 - get_descuento_producto(db, cliente_id, "perfiles_longitudinales", codigo_perfil, perfil["tipo"])
 
@@ -739,6 +748,7 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
     if onda is None:
         raise ValueError("Onda no encontrada")
     
+    # [TODO] habrá que pasar pisada a mm ?
     
     if continuidad == True:
         desarrollo_total = ((obtener_desarrollo_ondas(base, altura) + pisada) * n_ondas) + 1000
