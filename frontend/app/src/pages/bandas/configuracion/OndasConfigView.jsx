@@ -120,8 +120,12 @@ function OndaConfigView() {
               </div>
               <div className="form-group">
                 <label className="form-label">Altura (mm)</label>
+
                 <input type="number" className="form-input" placeholder="0"
                   value={altura} onChange={e => setAltura(e.target.value)} />
+
+                {altura % 5 !== 0 && <p style={{ fontSize: 13, color: '#e57373' }}>Recuerda que la altura debe ser múltiplo de 5</p>}
+                
               </div>
             </div>
 
