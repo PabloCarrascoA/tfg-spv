@@ -505,29 +505,12 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
 
     # - Calculo preparación -
 
-    tarifa_preparacion = get_tarifa_preparacion(db, "perfiles_longitudinales")
+    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_longitudinales")
 
     precio_preparacion = calcular_precio_preparacion(tarifa_preparacion, cantidad_bandas, n_perfiles)
-
-    if cantidad_bandas == 1 and n_perfiles == 1:
-        precio_preparacion = tarifa_preparacion
-
-    elif cantidad_bandas > 1 and n_perfiles == 1:
-        precio_preparacion = (2 * tarifa_preparacion) / cantidad_bandas
-
-    elif n_perfiles > 1 and cantidad_bandas >= 1:
-
-        if n_perfiles % 2 == 0:
-            n_cobros = n_perfiles / 2
-        else:
-            n_cobros = math.ceil(n_perfiles/2) + 1 
-
-        precio_preparacion = (n_cobros * tarifa_preparacion) / cantidad_bandas
-
-    else:
-        raise ValueError("cantidad de bandas o perfiles no válidos para calcular preparación")
     
-    print(f"DEBUG: precio preparación: {precio_preparacion}, n_cobros: {n_cobros}")
+    
+    print(f"DEBUG: precio preparación: {precio_preparacion}")
     
     precio_final = precio_perfil_total + precio_soldadura_total + precio_preparacion
 
@@ -761,7 +744,7 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
         desarrollo_total = ((obtener_desarrollo_ondas(base, altura) + 2 * pisada) * n_ondas) + 1000
         # [TODO] revisar ajuste de la base según si se da el paso o n_ondas
     
-    precio_onda_total = (desarrollo_total * n_ondas) * ancho * onda["precio_onda_mL"]
+    precio_onda_total = (desarrollo_total * n_ondas) * ancho * onda["precio"]
 
     if cliente_id is not None:
         
@@ -782,7 +765,7 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
     return {
 
         "codigo_onda": codigo_onda,
-        "precio_onda": onda["precio_onda_mL"],
+        "precio_onda": onda["precio"],
         "precio_onda_total": precio_onda_total,
         "precio_soldadura_total": precio_soldadura_total,
         "precio_final": precio_final,

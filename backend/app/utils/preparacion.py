@@ -3,6 +3,7 @@ import math
 def calcular_precio_preparacion(tarifa_preparacion, cantidad_bandas, n_perfiles):
     
     precio_preparacion = 0
+    n_cobros = 0
 
     if cantidad_bandas == 1 and n_perfiles == 1:
         precio_preparacion = tarifa_preparacion
