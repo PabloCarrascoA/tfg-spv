@@ -277,7 +277,7 @@ def obtener_ondas(db):
 
 def obtener_desarrollo_ondas(base, altura):
 
-    a,b,c = 0
+    a, b, c = 0, 0, 0
 
     if altura > 100 or altura < 10:
         raise Exception("la altura no puede ser mayor de 100 o inferior a 10")
