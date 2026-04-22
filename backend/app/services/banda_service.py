@@ -481,6 +481,8 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
         
         descuento = 1 - get_descuento_producto(db, cliente_id, "perfiles_longitudinales", codigo_perfil, perfil["tipo"])
 
+        print(f"DEBUG: descuento aplicado al perfil longitudinal: {descuento}")
+
         precio_perfil_total = precio_perfil_total * (descuento)
 
     # - Calculo soldadura -
