@@ -55,7 +55,7 @@ function BandaConfigView() {
     setSubtipos([])
 
     if (tipoEmpalme === 'banda-abierta') {
-      setPrecioEmpalme(25)  // precio fijo
+      setPrecioEmpalme(0)  // único tipo con precio fijo
       return
     }
 

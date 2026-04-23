@@ -396,7 +396,7 @@ def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
 
 def calcular_precio_empalme(db, tipo_empalme, subtipo, ancho):
     if tipo_empalme == "banda-abierta":
-        return {"tipo_empalme": tipo_empalme, "subtipo": None, "precio_empalme": 25.0}
+        return {"tipo_empalme": tipo_empalme, "subtipo": None, "precio_empalme": 0.0}
 
     precio = obtener_precio_empalme(db, tipo_empalme, subtipo, ancho)
 
