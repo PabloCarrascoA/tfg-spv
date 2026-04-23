@@ -41,9 +41,29 @@ function ResumenView() {
           <span className="resumen-label">Precio empalme </span>
           <span className="resumen-valor">{resultado.precio_empalme} €</span>
         </div>
+        <div className="resumen-item">
+          <span className="resumen-label">Precio perfil L </span>
+          <span className="resumen-valor">{resultado.precio_perfilL_final} €</span>
+        </div>
+        <div className="resumen-item">
+          <span className="resumen-label">Precio perfil T </span>
+          <span className="resumen-valor">{resultado.precio_perfilT_final} €</span>
+        </div>
+        <div className="resumen-item">
+          <span className="resumen-label">Precio perfil T </span>
+          <span className="resumen-valor">{resultado.precio_perfilT_final} €</span>
+        </div>
         <div className="resumen-item resumen-total">
-          <span className="resumen-label">Precio total </span>
-          <span className="resumen-valor">{resultado.precio_total} €</span>
+          <span className="resumen-label">Precio runer </span>
+          <span className="resumen-valor">{resultado.precio_runer_final} €</span>
+        </div>
+        <div className="resumen-item">
+          <span className="resumen-label">Precio perforaciones </span>
+          <span className="resumen-valor">{resultado.precio_perforaciones} €</span>
+        </div>
+        <div className="resumen-item">
+          <span className="resumen-label">Precio ondas </span>
+          <span className="resumen-valor">{resultado.precio_ondas_final} €</span>
         </div>
       </div>
 
