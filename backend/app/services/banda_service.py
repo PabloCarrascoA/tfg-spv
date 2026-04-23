@@ -709,6 +709,7 @@ def calcular_precio_perforaciones(db, agujeros_x_fila, filas_x_agujero, diametro
     if agujeros_x_fila <= 0 or filas_x_agujero <= 0 or diametro <= 0:
         raise ValueError("No pueden haber filas sin agujeros y el diámetro debe ser mayor o igual a cero")
 
+    print(f"DEBUG: diametro -> {diametro}")
     if diametro < 4 or diametro > 30:
         raise ValueError("Los diámetros inferiores a 4 mm y superiores a 30 mm son imposibles")
     
@@ -919,6 +920,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
             diametro_perforacion = 10
 
         resultado_perforaciones = calcular_precio_perforaciones(
+            db,
             agujeros_x_fila,
             filas_x_agujero,
             diametro_perforacion,
