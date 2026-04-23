@@ -50,10 +50,6 @@ function ResumenView() {
           <span className="resumen-valor">{resultado.precio_perfilT_final} €</span>
         </div>
         <div className="resumen-item">
-          <span className="resumen-label">Precio perfil T </span>
-          <span className="resumen-valor">{resultado.precio_perfilT_final} €</span>
-        </div>
-        <div className="resumen-item resumen-total">
           <span className="resumen-label">Precio runer </span>
           <span className="resumen-valor">{resultado.precio_runer_final} €</span>
         </div>
@@ -64,6 +60,11 @@ function ResumenView() {
         <div className="resumen-item">
           <span className="resumen-label">Precio ondas </span>
           <span className="resumen-valor">{resultado.precio_ondas_final} €</span>
+        </div>
+        <br></br>
+        <div className="resumen-item resumen-total">
+          <span className="resumen-label">Precio Total </span>
+          <span className="resumen-valor">{resultado.precio_total} €</span>
         </div>
       </div>
 

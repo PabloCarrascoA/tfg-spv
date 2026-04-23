@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getPerfilesTransversales } from '../../../services/api'
@@ -57,6 +57,35 @@ function PerfilTConfigView() {
         setLuz(String(luzCalculada))
     }
     }, [ancho1, ancho2, ancho, identico])
+
+    const editando = useRef(null)
+    const anchoBanda = parseFloat(state.banda?.ancho) || null
+
+    useEffect(() => {
+      if (editando.current === 'margen') return
+      if (!anchoBanda || !ancho) return
+
+      const margenCalculado = (anchoBanda - parseFloat(ancho)) / 2
+      if (margenCalculado >= 0) {
+        editando.current = 'ancho'
+        setMargen(String(margenCalculado))
+        setTimeout(() => { editando.current = null }, 0)
+      }
+    }, [anchoBanda, ancho])
+
+    useEffect(() => {
+      if (editando.current === 'ancho') return
+      if (!anchoBanda || !margen) return
+
+      const anchoCalculado = (anchoBanda - 2 * parseFloat(margen))
+
+      if (anchoCalculado >= 0) {
+        editando.current = 'margen'
+        setAncho(String(anchoCalculado))
+        setTimeout(() => {editando.current = null}, 0)
+      }
+    }, [anchoBanda, margen])
+
 
   function handleSiguiente() {
     const ruta = siguienteRuta(state.seleccion, 'perfil-transversal')
@@ -157,6 +186,12 @@ function PerfilTConfigView() {
                 />
               </div>
             </div>
+
+            {ancho && anchoBanda && parseFloat(ancho) > anchoBanda && (
+              <p style={{ fontSize: 13, color: '#e57373' }}>
+                El ancho del perfil no puede superar el ancho de la banda ({anchoBanda} mm)
+              </p>
+            )}
 
             <div className="form-row">
               <div className="form-group">

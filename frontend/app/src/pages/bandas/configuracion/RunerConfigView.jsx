@@ -18,6 +18,7 @@ function RunerConfigView() {
   const [comentarios, setComentarios]   = useState('')
 
   // ancho del runer
+  
   const anchoRuner = runers.find(r => r.codigo === codigoRuner)?.ancho ?? null
 
   console.log("ancho runer: " + anchoRuner)

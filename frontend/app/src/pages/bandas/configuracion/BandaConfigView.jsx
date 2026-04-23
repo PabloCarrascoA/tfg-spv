@@ -13,7 +13,7 @@ const TIPOS_EMPALME = [
 const LABELS_SUBTIPO = {
   'sin-fin-z':                  'Banda sin fin Z',
   'sin-fin-solapada':           'Banda sin fin solapada',
-  'sin-fin-doble':              'Banda sin fin doble',
+  'sin-fin-doble':              'Banda sin fin doble Z',
   'sin-fin-biselado':           'Banda sin fin biselado',
 
   'extremos-preparados-z':      'Banda extremos preparados Z',
