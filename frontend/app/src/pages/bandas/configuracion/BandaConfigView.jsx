@@ -10,6 +10,16 @@ const TIPOS_EMPALME = [
   { value: 'grapas',              label: 'Grapas'              },
 ]
 
+const LABELS_SUBTIPO = {
+  'sin-fin-z':                  'Banda sin fin Z',
+  'sin-fin-solapada':           'Banda sin fin solapada',
+  'sin-fin-doble':              'Banda sin fin doble',
+  'sin-fin-biselado':           'Banda sin fin biselado',
+
+  'extremos-preparados-z':      'Banda extremos preparados Z',
+
+}
+
 function BandaConfigView() {
   const { state } = useLocation()
   const navigate = useNavigate()
@@ -54,6 +64,8 @@ function BandaConfigView() {
       .catch(err => console.error('Error cargando subtipos:', err))
 
   }, [tipoEmpalme])
+
+  console.log(subtipos)
 
   // --- buscar precio cuando cambia subtipo o ancho ---
   useEffect(() => {
@@ -153,6 +165,7 @@ function BandaConfigView() {
             </div>
 
             {/* subtipo — oculto si es banda abierta */}
+
             {tipoEmpalme && tipoEmpalme !== 'banda-abierta' && (
               <div className="form-group">
                 <label className="form-label">Subtipo de empalme</label>
@@ -164,13 +177,14 @@ function BandaConfigView() {
                 >
                   <option value="">- Seleccione un subtipo -</option>
                   {subtipos.map(s => (
-                    <option key={s.subtipo} value={s.subtipo}>{s.subtipo}</option>
+                    <option key={s.subtipo} value={s.subtipo}>{LABELS_SUBTIPO[s.subtipo] ?? s.subtipo}</option>
                   ))}
                 </select>
               </div>
             )}
 
             {/* precio calculado automáticamente */}
+
             {precioEmpalme !== null && (
               <p style={{ fontSize: 13, color: '#4a6f8a', fontWeight: 500 }}>
                 Precio empalme: {precioEmpalme} €
