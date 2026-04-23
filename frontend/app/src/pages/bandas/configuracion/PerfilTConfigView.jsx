@@ -193,6 +193,12 @@ function PerfilTConfigView() {
               </p>
             )}
 
+            {margen && anchoBanda && 2 * (parseFloat(margen)) > anchoBanda && (
+              <p style={{ fontSize: 13, color: '#e57373' }}>
+                La suma de ambos márgenes laterales no puede superar el ancho de la banda ({anchoBanda} mm)
+              </p>
+            )}
+
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Número de hileras</label>
