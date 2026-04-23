@@ -21,6 +21,8 @@ class CalculoBandaRequest(BaseModel):
         "grapas"
     ]] = None
 
+    subtipo_empalme: Optional[str] = None
+
     codigo_empalme: Optional[str] = None
 
     # Campos para perfil

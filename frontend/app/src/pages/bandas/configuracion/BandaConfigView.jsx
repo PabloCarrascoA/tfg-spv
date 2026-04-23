@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
-import { getBandas, getEmpalmesPorTipo } from '../../../services/api'
+import { getBandas, getSubtiposEmpalme, getPrecioEmpalme } from '../../../services/api'
 
 const TIPOS_EMPALME = [
-  { value: 'banda-abierta',       label: 'Banda abierta'        },
-  { value: 'banda-sin-fin',       label: 'Banda sin fin'        },
-  { value: 'extremos-preparados', label: 'Extremos preparados'  },
-  { value: 'grapas',              label: 'Grapas'               },
+  { value: 'banda-abierta',       label: 'Banda abierta'       },
+  { value: 'banda-sin-fin',       label: 'Banda sin fin'       },
+  { value: 'extremos-preparados', label: 'Extremos preparados' },
+  { value: 'grapas',              label: 'Grapas'              },
 ]
 
 function BandaConfigView() {
@@ -16,17 +16,18 @@ function BandaConfigView() {
   const { actual, total } = infoPaso(state.seleccion, 'banda')
 
   // --- estado del formulario ---
-  const [cantidad, setCantidad]         = useState(1)
-  const [ancho, setAncho]               = useState('')
-  const [longitud, setLongitud]         = useState('')
-  const [codigoBanda, setCodigoBanda]   = useState('')
-  const [tipoEmpalme, setTipoEmpalme]   = useState('')
-  const [codigoEmpalme, setCodigoEmpalme] = useState('')
-  const [comentarios, setComentarios]   = useState('')
+  const [cantidad, setCantidad]               = useState(1)
+  const [ancho, setAncho]                     = useState('')
+  const [longitud, setLongitud]               = useState('')
+  const [codigoBanda, setCodigoBanda]         = useState('')
+  const [tipoEmpalme, setTipoEmpalme]         = useState('')
+  const [subtipoEmpalme, setSubtipoEmpalme]   = useState('')
+  const [precioEmpalme, setPrecioEmpalme]     = useState(null)
+  const [comentarios, setComentarios]         = useState('')
 
   // --- datos de la API ---
-  const [bandas, setBandas]             = useState([])
-  const [empalmes, setEmpalmes]         = useState([])
+  const [bandas, setBandas]     = useState([])
+  const [subtipos, setSubtipos] = useState([])
 
   // --- cargar bandas al montar ---
   useEffect(() => {
@@ -35,44 +36,52 @@ function BandaConfigView() {
       .catch(err => console.error('Error cargando bandas:', err))
   }, [])
 
-  // --- cargar empalmes cuando cambia el tipo ---
+  // --- cargar subtipos cuando cambia el tipo de empalme ---
   useEffect(() => {
-    if (!tipoEmpalme) return          // si no hay tipo seleccionado, no hace nada
+    if (!tipoEmpalme) return
 
-    setCodigoEmpalme('')              // limpia el código al cambiar el tipo
-    setEmpalmes([])
+    setSubtipoEmpalme('')
+    setPrecioEmpalme(null)
+    setSubtipos([])
 
     if (tipoEmpalme === 'banda-abierta') {
-      // banda abierta no consulta la API, precio fijo
-      setEmpalmes([{ codigo: 'BA', label: 'Banda Abierta (precio fijo)' }])
+      setPrecioEmpalme(25)  // precio fijo
       return
     }
 
-    getEmpalmesPorTipo(tipoEmpalme)
-      .then(data => setEmpalmes(data.map(e => ({
-        codigo: e.codigo,
-        label: `${e.codigo} - ${e.precio} €`
-      }))))
-      .catch(err => console.error('Error cargando empalmes:', err))
+    getSubtiposEmpalme(tipoEmpalme)
+      .then(data => setSubtipos(data))
+      .catch(err => console.error('Error cargando subtipos:', err))
 
-  }, [tipoEmpalme])   // ← se ejecuta cada vez que tipoEmpalme cambia
+  }, [tipoEmpalme])
+
+  // --- buscar precio cuando cambia subtipo o ancho ---
+  useEffect(() => {
+    if (!subtipoEmpalme || !ancho) return
+
+    getPrecioEmpalme(tipoEmpalme, subtipoEmpalme, parseFloat(ancho))
+      .then(data => setPrecioEmpalme(data.precio))
+      .catch(err => console.error('Error cargando precio empalme:', err))
+
+  }, [subtipoEmpalme, ancho])
 
   function handleSiguiente() {
     const ruta = siguienteRuta(state.seleccion, 'banda')
     navigate(ruta, {
-    state: {
-            ...state,             
-            banda: {               
-                codigoBanda,
-                cantidad,
-                ancho,
-                longitud,
-                tipoEmpalme,
-                codigoEmpalme,
-                comentarios,
-            }
-            }
-        })
+      state: {
+        ...state,
+        banda: {
+          codigoBanda,
+          cantidad,
+          ancho,
+          longitud,
+          tipoEmpalme,
+          subtipoEmpalme,
+          precioEmpalme,
+          comentarios,
+        }
+      }
+    })
   }
 
   function handleAtras() {
@@ -143,22 +152,37 @@ function BandaConfigView() {
               </select>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Código de empalme</label>
-              <select
-                className="form-select"
-                value={codigoEmpalme}
-                onChange={e => setCodigoEmpalme(e.target.value)}
-                disabled={!tipoEmpalme || empalmes.length === 0}
-              >
-                <option value="">- Seleccione un empalme -</option>
-                {empalmes.map(empalme => (
-                  <option key={empalme.codigo} value={empalme.codigo}>
-                    {empalme.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* subtipo — oculto si es banda abierta */}
+            {tipoEmpalme && tipoEmpalme !== 'banda-abierta' && (
+              <div className="form-group">
+                <label className="form-label">Subtipo de empalme</label>
+                <select
+                  className="form-select"
+                  value={subtipoEmpalme}
+                  onChange={e => setSubtipoEmpalme(e.target.value)}
+                  disabled={subtipos.length === 0}
+                >
+                  <option value="">- Seleccione un subtipo -</option>
+                  {subtipos.map(s => (
+                    <option key={s.subtipo} value={s.subtipo}>{s.subtipo}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* precio calculado automáticamente */}
+            {precioEmpalme !== null && (
+              <p style={{ fontSize: 13, color: '#4a6f8a', fontWeight: 500 }}>
+                Precio empalme: {precioEmpalme} €
+              </p>
+            )}
+
+            {/* aviso si falta ancho para calcular precio */}
+            {subtipoEmpalme && !ancho && (
+              <p style={{ fontSize: 13, color: '#e57373' }}>
+                Introduce el ancho de la banda para calcular el precio del empalme
+              </p>
+            )}
 
             <div className="form-group">
               <label className="form-label">Comentarios</label>

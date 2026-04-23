@@ -8,6 +8,8 @@ from app.services.banda_service import (
     calcular_configuracion_completa,
     obtener_banda_por_codigo,
     obtener_empalmes,
+    obtener_precio_empalme,
+    obtener_subtipos_empalme,
     obtener_perfil_longitudinal_por_codigo,
     obtener_perfil_transversal_por_codigo,
     obtener_perfiles_longitudinales,
@@ -25,6 +27,17 @@ router = APIRouter(
     prefix="/configuracion",
     tags=["Configurador"]
 )
+
+@router.get("/empalmes/{tipo}/subtipos")
+def get_subtipos_empalme(tipo: str, db=Depends(get_db)):
+    return obtener_subtipos_empalme(db, tipo)
+
+@router.get("/empalmes/{tipo}/{subtipo}/precio")
+def get_precio_empalme(tipo: str, subtipo: str, ancho: int, db=Depends(get_db)):
+    precio = obtener_precio_empalme(db, tipo, subtipo, ancho)
+    if precio is None:
+        raise HTTPException(status_code=404, detail="Precio no encontrado")
+    return {"precio": precio}
 
 # --------------------------------
 # OBTENER TODOS LOS DATOS A LA VEZ

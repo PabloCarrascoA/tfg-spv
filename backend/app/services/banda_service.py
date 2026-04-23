@@ -2,6 +2,50 @@ import math
 from app.utils.descuentos import get_descuento_producto, get_descuento_soldadura, get_cliente_id_por_nombre, get_tarifa_preparacion
 from app.utils.preparacion import calcular_precio_preparacion
 
+def obtener_subtipos_empalme(db, tipo):
+    cursor = db.cursor()
+    cursor.execute(
+        "SELECT DISTINCT subtipo FROM empalmes WHERE tipo = ?", (tipo,)
+    )
+    return [{"subtipo": row[0]} for row in cursor.fetchall()]
+
+def obtener_precio_empalme(db, tipo, subtipo, ancho):
+    cursor = db.cursor()
+    cursor.execute("""
+        SELECT precio FROM empalmes
+        WHERE tipo = ? AND subtipo = ? AND ancho <= ?
+        ORDER BY ancho DESC LIMIT 1
+    """, (tipo, subtipo, ancho))
+    row = cursor.fetchone()
+    return row[0] if row else None
+
+def obtener_empalmes(db, tipo_empalme):
+    if tipo_empalme == "banda-abierta":
+        return [{"codigo": "BA", "precio": 25}]
+
+    cursor = db.cursor()
+    cursor.execute(
+        "SELECT DISTINCT subtipo FROM empalmes WHERE tipo = ?",
+        (tipo_empalme,)
+    )
+    rows = cursor.fetchall()
+    return [{"subtipo": row[0]} for row in rows]
+
+def calcular_precio_empalme(db, tipo_empalme, subtipo, ancho):
+    if tipo_empalme == "banda-abierta":
+        return {"tipo_empalme": tipo_empalme, "subtipo": None, "precio_empalme": 25.0}
+
+    precio = obtener_precio_empalme(db, tipo_empalme, subtipo, ancho)
+
+    if precio is None:
+        raise ValueError(f"No se encontró precio para {tipo_empalme} / {subtipo} / ancho {ancho}")
+
+    return {
+        "tipo_empalme": tipo_empalme,
+        "subtipo": subtipo,
+        "precio_empalme": precio
+    }
+
 # ------------------------
 # OBTENER DATOS POR CÓDIGO
 # ------------------------
@@ -153,40 +197,6 @@ def obtener_bandas(db):
         })
     
     return bandas
-
-def obtener_empalmes(db, tipo_empalme):
-    """Devuelve lista de empalmes para el tipo indicado.
-
-    Retorna diccionarios con campos "codigo" y "precio".
-    Lanza ValueError si el tipo no es válido.
-    """
-    tablas = {
-        "banda-sin-fin": "sin_fin",
-        "extremos-preparados": "extremos_preparados",
-        "grapas": "grapas"
-    }
-
-    # Banda abierta no tiene tabla
-    if tipo_empalme == "banda-abierta":
-        return [{"codigo": "BA", "precio": 25}]
-
-    if tipo_empalme not in tablas:
-        raise ValueError("Tipo de empalme no válido")
-
-    tabla = tablas[tipo_empalme]
-
-    cursor = db.cursor()
-    cursor.execute(f"SELECT codigo, precio FROM {tabla}")
-    rows = cursor.fetchall()
-
-    empalmes = []
-    for row in rows:
-        empalmes.append({
-            "codigo": row[0],
-            "precio": row[1]
-        })
-
-    return empalmes
 
 def obtener_perfiles_transversales(db):
     cursor = db.cursor()
@@ -411,46 +421,6 @@ def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
         "precio_total": precio_total
     }
 
-
-def calcular_precio_empalme(db, tipo_empalme, codigo):
-
-    if tipo_empalme == "banda-abierta":
-        return {
-            "tipo_empalme": tipo_empalme,
-            "codigo_empalme": codigo,
-            "precio_empalme": 25.0
-        }
-
-    tablas = {
-        "banda-sin-fin": "sin_fin",
-        "extremos-preparados": "extremos_preparados",
-        "grapas": "grapas"
-    }
-
-    if tipo_empalme not in tablas:
-        raise ValueError("Tipo de empalme no válido")
-
-    tabla = tablas[tipo_empalme]
-
-    cursor = db.cursor()
-    cursor.execute(
-        f"SELECT precio FROM {tabla} WHERE codigo = ?",
-        (codigo,)
-    )
-
-    row = cursor.fetchone()
-
-    if row is None:
-        raise ValueError("Empalme no encontrado")
-    
-    precio_empalme = row[0]
-
-    return {
-
-        "tipo_empalme": tipo_empalme,
-        "codigo_empalme": codigo,
-        "precio_empalme": precio_empalme
-    }
 
 def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, largo, ancho, n_perfiles, distancia_margen, cliente_id = None):
 
@@ -793,7 +763,7 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
 
 
-def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, ancho, tipo_empalme, codigo_empalme, codigo_perfilT = None, n_perfilesT = None, margen_lateral = None, distancia_paso = None, ancho_perfilT = None, n_hileras = None, ancho1 = None, ancho2 = None, luz_interior = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, nombre_cliente = None, codigo_onda = None, n_ondas = None, base_onda = None, altura_onda = None, continuidad_onda = None, pisada_onda = None):
+def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, ancho, tipo_empalme, subtipo_empalme, codigo_empalme, codigo_perfilT = None, n_perfilesT = None, margen_lateral = None, distancia_paso = None, ancho_perfilT = None, n_hileras = None, ancho1 = None, ancho2 = None, luz_interior = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, nombre_cliente = None, codigo_onda = None, n_ondas = None, base_onda = None, altura_onda = None, continuidad_onda = None, pisada_onda = None):
     
     cliente_id = get_cliente_id_por_nombre(db, nombre_cliente)
     # - Precio banda -
@@ -809,7 +779,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
     precio_empalme = 0
 
     if tipo_empalme is not None and codigo_empalme is not None:
-        resultado_empalme = calcular_precio_empalme(db, tipo_empalme, codigo_empalme)
+        resultado_empalme = calcular_precio_empalme(db, tipo_empalme, subtipo_empalme, ancho)
         precio_empalme = resultado_empalme["precio_empalme"]
 
     # - Precio perfiles -

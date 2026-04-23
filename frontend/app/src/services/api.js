@@ -5,8 +5,13 @@ export async function getBandas() {
   return res.json()
 }
 
-export async function getEmpalmesPorTipo(tipo) {
-  const res = await fetch(`${BASE_URL}/configuracion/empalmes/${tipo}`)
+export async function getSubtiposEmpalme(tipo) {
+  const res = await fetch(`${BASE_URL}/configuracion/empalmes/${tipo}/subtipos`)
+  return res.json()
+}
+
+export async function getPrecioEmpalme(tipo, subtipo, ancho) {
+  const res = await fetch(`${BASE_URL}/configuracion/empalmes/${tipo}/${subtipo}/precio?ancho=${ancho}`)
   return res.json()
 }
 
