@@ -7,7 +7,6 @@ from app.db.database import get_db
 from app.services.banda_service import (
     calcular_configuracion_completa,
     obtener_banda_por_codigo,
-    obtener_empalmes,
     obtener_precio_empalme,
     obtener_subtipos_empalme,
     obtener_perfil_longitudinal_por_codigo,
@@ -28,6 +27,15 @@ router = APIRouter(
     tags=["Configurador"]
 )
 
+# --------------------------------
+# OBTENER TODOS LOS DATOS A LA VEZ
+# --------------------------------
+
+@router.get("/bandas")
+def listar_bandas(db = Depends(get_db)):
+    bandas = obtener_bandas(db)
+    return bandas
+
 @router.get("/empalmes/{tipo}/subtipos")
 def get_subtipos_empalme(tipo: str, db=Depends(get_db)):
     return obtener_subtipos_empalme(db, tipo)
@@ -38,25 +46,6 @@ def get_precio_empalme(tipo: str, subtipo: str, ancho: int, db=Depends(get_db)):
     if precio is None:
         raise HTTPException(status_code=404, detail="Precio no encontrado")
     return {"precio": precio}
-
-# --------------------------------
-# OBTENER TODOS LOS DATOS A LA VEZ
-# --------------------------------
-
-@router.get("/bandas")
-def listar_bandas(db = Depends(get_db)):
-    bandas = obtener_bandas(db)
-    return bandas
-
-@router.get("/empalmes/{tipo}")
-def listar_empalmes(tipo: str, db = Depends(get_db)):
-
-    empalmes = obtener_empalmes(db, tipo)
-
-    if not empalmes:
-        raise HTTPException(status_code=404, detail="Tipo de empalme no encontrado")
-
-    return empalmes
 
 @router.get("/perfiles/longitudinales")
 def listar_perfiles_longitudinales(db = Depends(get_db)):
@@ -201,7 +190,7 @@ def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
             request.largo_banda,
             request.ancho_banda,
             request.tipo_empalme,
-            request.codigo_empalme,
+            request.subtipo_empalme,
             request.codigo_perfilT,
             request.n_perfilesT,
             request.margen_lateral,

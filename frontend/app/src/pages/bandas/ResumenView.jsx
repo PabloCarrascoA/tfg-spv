@@ -69,8 +69,7 @@ function construirPayload(state) {
     largo_banda:           toFloat(state.banda?.longitud),
     ancho_banda:           toFloat(state.banda?.ancho),
     tipo_empalme:    state.banda?.tipoEmpalme   ?? null,
-    subtipo_empalme: state.banda?.tipoEmpalme  ?? null,
-    codigo_empalme:  state.banda?.codigoEmpalme ?? null,
+    subtipo_empalme: state.banda?.subtipoEmpalme  ?? null,
 
     // perfil longitudinal
     codigo_perfil_superior:    state.perfilL?.superior?.activo ? state.perfilL.superior.codigo                        : null,
