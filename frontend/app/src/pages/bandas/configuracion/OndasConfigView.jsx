@@ -142,8 +142,16 @@ function OndaConfigView() {
               </div>
               <div className="form-group">
                 <label className="form-label">Pisada (mm)</label>
-                <input type="number" className="form-input" placeholder="0"
-                  value={pisada} onChange={e => setPisada(e.target.value)} />
+                <select
+                  className="form-select"
+                  value={pisada}
+                  onChange={e => setPisada(e.target.value)}
+                >
+                  <option value="">- Seleccione una pisada -</option>
+                  <option value="12">12</option>
+                  <option value="16">16</option>
+                  <option value="18">18</option>
+                </select>
               </div>
             </div>
 
