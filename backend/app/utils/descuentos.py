@@ -25,12 +25,12 @@ def get_descuento_producto(db, cliente_id, tabla, codigo, tipo_familia=None):
         SELECT descuento FROM descuentos_material
         WHERE cliente_id = ? AND tabla = ?
         AND (
-            (nivel = 'producto' AND codigo_producto = ?)
+            (nivel = 'individual' AND codigo_producto = ?)
             {familia_clause}
             OR nivel = 'global'
         )
         ORDER BY CASE nivel 
-            WHEN 'producto' THEN 1 
+            WHEN 'individual' THEN 1 
             WHEN 'familia'  THEN 2 
             WHEN 'global'   THEN 3 
         END

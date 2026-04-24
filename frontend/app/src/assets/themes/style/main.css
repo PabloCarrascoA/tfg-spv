@@ -533,3 +533,99 @@ a {
   height: 15px;
   cursor: pointer;
 }
+
+/* =============================================
+   RESUMEN VIEW
+   ============================================= */
+.resumen-view {
+  max-width: 860px;
+}
+
+.resumen-card {
+  background: #ffffff;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.resumen-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.resumen-cabecera-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+.resumen-pedido-titulo {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.resumen-fecha {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.resumen-precio-total {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.resumen-cliente {
+  font-size: 13px;
+  color: #4a6f8a;
+  font-weight: 500;
+}
+
+.resumen-divider {
+  border: none;
+  height: 0.5px;
+  background: #e0e0e0;
+  margin-bottom: 16px;
+}
+
+.resumen-secciones-label {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.resumen-secciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 32px;
+}
+
+.resumen-seccion-titulo {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.resumen-lista {
+  list-style: disc;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.resumen-lista li {
+  font-size: 12px;
+  color: #374151;
+}
+
+.resumen-no-configurado {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+}

@@ -345,9 +345,9 @@ def obtener_desarrollo_ondas(base, altura):
     else:
         raise Exception("¡La altura de la onda debe ser un múltiplo de 5!")
 
-    base_m = base / 1000
-    desarrollo = a * base_m + b * base_m + c * base_m
+    desarrollo = a * math.pow(base, 2) + b * base + c
 
+    # desarollo está en (mm)
     return desarrollo
 
 # ------------------------
@@ -363,11 +363,15 @@ def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
 
     precio_unitario = banda["precio"]
 
+    print(f"DEBUG -> precio_unitario: {precio_unitario}")
+
     if largo <= 0 or ancho <= 0:
         raise ValueError("Largo y ancho deben ser mayores que cero")
 
     largo_m = largo / 1000
     ancho_m = ancho / 1000
+
+    print(f"DEBUG -> largo_m: {largo_m}")
 
     if (ancho % 50) != 0:
         ancho_ajustado = ((math.trunc(ancho / 50)) + 1) * 50
@@ -376,9 +380,13 @@ def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
 
     ancho_ajustado_m = ancho_ajustado / 1000
 
+    print(f"DEBUG -> ancho_ajustado_m: {ancho_ajustado_m}")
+
     area_m2 = largo_m * ancho_ajustado_m
 
     precio_total = area_m2 * precio_unitario
+
+    print(f"DEBUG -> precio_total: {precio_total}")
 
     # aplicar descuentos
 
@@ -388,17 +396,27 @@ def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
 
         precio_total = precio_total * (descuento)
 
+        print(f"DEBUG -> descuento aplicado a la banda: {descuento}")
+
+        print(f"DEBUG -> precio_total con descuento: {precio_total}")
+
     return {
         "codigo_banda": codigo,
         "precio_unitario": precio_unitario,
         "precio_total": precio_total
     }
 
-def calcular_precio_empalme(db, tipo_empalme, subtipo, ancho):
+def calcular_precio_empalme(db, tipo_empalme, subtipo, ancho, cliente_id = None):
     if tipo_empalme == "banda-abierta":
         return {"tipo_empalme": tipo_empalme, "subtipo": None, "precio_empalme": 0.0}
 
     precio = obtener_precio_empalme(db, tipo_empalme, subtipo, ancho)
+
+    descuento = 1 - get_descuento_soldadura(db, cliente_id, "sin_fin") if cliente_id is not None else 1
+
+    precio = precio * descuento
+
+    print(f"DEBUG -> precio empalme con descuento: {descuento}")
 
     if precio is None:
         raise ValueError(f"No se encontró precio para {tipo_empalme} / {subtipo} / ancho {ancho}")
@@ -426,6 +444,8 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
 
     precio_perfil_mL = perfil["precio_material"]
 
+    print(f"DEBUG: precio_perfil_mL: {precio_perfil_mL}")
+
     if largo <= 0:
         raise ValueError("Largo debe ser mayor que cero")
     
@@ -433,6 +453,8 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
         raise ValueError("El número de perfiles no puede ser 0")
 
     largo_m = largo / 1000
+    print(f"DEBUG: largo_m: {largo_m}")
+    print(f"DEBUG: n_perfiles: {n_perfiles}")
 
     precio_perfil_total = (n_perfiles * largo_m * precio_perfil_mL)
 
@@ -716,7 +738,13 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
         desarrollo_total = ((obtener_desarrollo_ondas(base, altura) + 2 * pisada) * n_ondas) + 1000
         # [TODO] revisar ajuste de la base según si se da el paso o n_ondas
 
-    print(f"DEBUG: valor de desarrollo_ondas -> {desarrollo_total}")
+    print(f"DEBUG: valor de base -> {base}")
+
+    print(f"DEBUG: valor de altura -> {altura}")
+
+    print(f"DEBUG: valor desarrollo onda -> {obtener_desarrollo_ondas(base, altura)}")
+
+    print(f"DEBUG: valor de desarrollo total -> {desarrollo_total}")
     
     precio_onda_total = (desarrollo_total * n_ondas) * ancho * onda["precio"]
 
@@ -767,7 +795,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
     precio_empalme = 0
 
     if tipo_empalme is not None and subtipo_empalme is not None:
-        resultado_empalme = calcular_precio_empalme(db, tipo_empalme, subtipo_empalme, ancho)
+        resultado_empalme = calcular_precio_empalme(db, tipo_empalme, subtipo_empalme, ancho, cliente_id)
         precio_empalme = resultado_empalme["precio_empalme"]
 
     # - Precio perfiles -
