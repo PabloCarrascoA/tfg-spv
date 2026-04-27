@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { calcularPedido } from '../../services/api'
+import { guardarPedido } from '../../services/api'
 
 function ResumenView() {
   const { state } = useLocation()
@@ -8,6 +9,19 @@ function ResumenView() {
   const [resultado, setResultado] = useState(null)
   const [cargando, setCargando]   = useState(true)
   const [error, setError]         = useState(null)
+
+  const [guardando, setGuardando] = useState(false)
+
+  async function handleConfirmar() {
+  setGuardando(true)
+  try {
+      await guardarPedido(resultado, state)
+      navigate('/pedidos')
+  } catch (err) {
+      console.error('Error guardando pedido:', err)
+      setGuardando(false)
+  }
+  }
 
   useEffect(() => {
     const datos = construirPayload(state)
@@ -160,8 +174,8 @@ function ResumenView() {
       {/* footer -> el botón de confirmar está pendiente*/}
       <div className="config-footer">
         <button className="btn-atras" onClick={() => navigate(-1)}>‹ Atrás</button>
-        <button className="btn-continuar" onClick={() => console.log('confirmar — pendiente')}>
-          Confirmar ›
+        <button className="btn-continuar" onClick={handleConfirmar} disabled={guardando}>
+        {guardando ? 'Guardando...' : 'Confirmar ›'}
         </button>
       </div>
     </div>
