@@ -35,7 +35,6 @@ export async function getOndas() {
     return res.json()
 }
 
-// falta tema ondas si esto sería necesario
 
 export async function calcularPedido(datos) {
   let res
@@ -57,4 +56,34 @@ export async function calcularPedido(datos) {
   }
 
   return data
+}
+
+// Funciones de pedidos
+
+export async function guardarPedido(resultado, stateFrontend) {
+  const res = await fetch(`${BASE_URL}/configuracion/pedidos`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ resultado, state_frontend: stateFrontend })
+  })
+  return res.json()
+}
+
+export async function getPedidos() {
+  const res = await fetch(`${BASE_URL}/configuracion/pedidos`)
+  return res.json()
+}
+
+export async function getDetallePedido(id) {
+  const res = await fetch(`${BASE_URL}/configuracion/pedidos/${id}`)
+  return res.json()
+}
+
+export async function actualizarEstadoPedido(id, estado) {
+  const res = await fetch(`${BASE_URL}/configuracion/pedidos/${id}/estado`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ estado })
+  })
+  return res.json()
 }
