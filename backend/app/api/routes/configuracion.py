@@ -27,6 +27,8 @@ router = APIRouter(
     tags=["Configurador"]
 )
 
+
+
 # --------------------------------
 # OBTENER TODOS LOS DATOS A LA VEZ
 # --------------------------------
