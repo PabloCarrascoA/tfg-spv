@@ -84,6 +84,8 @@ class CalculoBandaResponse(BaseModel):
     ancho_banda: Optional[float] = None
     largo_banda: Optional[float] = None
     codigo_banda: Optional[str] = None
+    tipo_empalme: Optional[str] = None
+    subtipo_empalme: Optional[str] = None
     precio_banda: float
     precio_empalme: float
 

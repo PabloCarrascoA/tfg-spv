@@ -119,7 +119,7 @@ function ModalDetalle({ pedido, onClose }) {
             <p className="modal-seccion-titulo">Bandas</p>
             <p>Ancho: {pedido.banda.ancho} mm</p>
             <p>Largo: {pedido.banda.largo} mm</p>
-            <p>Tipo empalme: {pedido.banda.tipo_empalme}{pedido.banda.subtipo_empalme ? ` — ${pedido.banda.subtipo_empalme}` : ''}</p>
+            <p>Empalme: {pedido.banda.tipo_empalme}{pedido.banda.subtipo_empalme ? ` — ${pedido.banda.subtipo_empalme}` : ''}</p>
             {pedido.banda.comentarios && <p>Comentarios: {pedido.banda.comentarios}</p>}
           </div>
         )}

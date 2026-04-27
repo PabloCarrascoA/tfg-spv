@@ -78,6 +78,8 @@ function ResumenView() {
             ) : <NoConfigurado />}
           </div>
 
+          {console.log('DEBUG tipo_empalme:', resultado.tipo_empalme)}
+
           {/* 2. Perfiles Longitudinales */}
           <div className="resumen-seccion">
             <p className="resumen-seccion-titulo">2. Perfiles Longitudinales</p>

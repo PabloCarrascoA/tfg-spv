@@ -9,6 +9,7 @@ def get_siguiente_numero_pedido(db):
 def guardar_pedido(db, resultado, state_frontend):
     numero = get_siguiente_numero_pedido(db)
     fecha  = date.today().isoformat()
+    banda_state = state_frontend.get('banda', {})
 
     cursor = db.cursor()
 
@@ -32,11 +33,11 @@ def guardar_pedido(db, resultado, state_frontend):
             resultado.get('cantidad_bandas'),
             resultado.get('largo_banda'),
             resultado.get('ancho_banda'),
-            resultado.get('tipo_empalme'),
-            resultado.get('subtipo_empalme'),
+            resultado.get('tipo_empalme') or banda_state.get('tipoEmpalme'),
+            resultado.get('subtipo_empalme') or banda_state.get('subtipoEmpalme'),
             resultado.get('precio_banda'),
             resultado.get('precio_empalme'),
-            state_frontend.get('banda', {}).get('comentarios'),
+            banda_state.get('comentarios'),
         ))
 
     # perfil longitudinal

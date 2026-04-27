@@ -794,7 +794,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
     precio_empalme = 0
 
-    if tipo_empalme is not None and subtipo_empalme is not None:
+    if tipo_empalme is not None and (subtipo_empalme is not None or tipo_empalme == "banda-abierta"):
         resultado_empalme = calcular_precio_empalme(db, tipo_empalme, subtipo_empalme, ancho, cliente_id)
         precio_empalme = resultado_empalme["precio_empalme"]
 
@@ -943,6 +943,8 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
         "ancho_banda": ancho,
         "largo_banda": largo,
         "codigo_banda": codigo_banda,
+        "tipo_empalme": tipo_empalme,
+        "subtipo_empalme": subtipo_empalme,
         "precio_banda": round(precio_banda, 2),
         "precio_empalme": round(precio_empalme, 2),
         "codigo_perfil_superior": codigo_perfil_superior,
