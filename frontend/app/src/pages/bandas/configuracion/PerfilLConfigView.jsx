@@ -6,6 +6,8 @@ import { getPerfilesLongitudinales } from '../../../services/api'
 function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
   const distanciaBordeCentro = parseFloat(perfil.distanciaBordeCentro)
   const distanciaCentros = parseFloat(perfil.distancia)
+  const perfilSeleccionado = perfiles.find(perf => perf.codigo === perfil.codigo)
+  const anchoPerfil = parseFloat(perfilSeleccionado?.ancho)
 
   const superaBanda =
     Boolean(anchoBanda) &&
@@ -20,6 +22,13 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
   !Number.isNaN(distanciaCentros) &&
   !Number.isNaN(distanciaBordeCentro) &&
   ((perfil.cantidad - 1) * distanciaCentros + 2 * distanciaBordeCentro) > anchoBanda
+
+  const distanciaIncompatible =
+    Boolean(anchoBanda) &&
+    perfil.cantidad > 1 &&
+    !Number.isNaN(distanciaCentros) &&
+    !Number.isNaN(anchoPerfil) &&
+    distanciaCentros < (anchoBanda - anchoPerfil)
 
   return (
     <div className="perfil-bloque">
@@ -138,6 +147,12 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
           {distanciaExcede && (
             <p style={{ fontSize: 13, color: '#e57373' }}>
               La distribución de perfiles supera el ancho de la banda ({anchoBanda} mm)
+            </p>
+          )}
+
+          {distanciaIncompatible && (
+            <p style={{ fontSize: 13, color: '#e57373' }}>
+              La distancia entre centros seleccionada es incompatible: no puede ser inferior a {anchoBanda - anchoPerfil} mm
             </p>
           )}
 

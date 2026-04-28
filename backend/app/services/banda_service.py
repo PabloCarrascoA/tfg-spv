@@ -196,7 +196,7 @@ def obtener_perfiles_transversales(db):
 
 def obtener_perfiles_longitudinales(db):
     cursor = db.cursor()
-    cursor.execute("SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Linf1500, precioSoldar_Lsup1500_Ainf2100, precioSoldar_LSup1500_Asup2100 FROM perfiles_longitudinales")
+    cursor.execute("SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Linf1500, precioSoldar_Lsup1500_Ainf2100, precioSoldar_LSup1500_Asup2100, ancho FROM perfiles_longitudinales")
     rows = cursor.fetchall()
 
     perfiles = []
@@ -211,7 +211,8 @@ def obtener_perfiles_longitudinales(db):
             "precio_material": row[6],
             "precioSoldar_Linf1500": row[7],
             "precioSoldar_Lsup1500_Ainf2100": row[8],
-            "precioSoldar_LSup1500_Asup2100": row[9]
+            "precioSoldar_LSup1500_Asup2100": row[9],
+            "ancho": row[10]
         })
 
     return perfiles
