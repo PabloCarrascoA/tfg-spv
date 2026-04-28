@@ -23,12 +23,14 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
   !Number.isNaN(distanciaBordeCentro) &&
   ((perfil.cantidad - 1) * distanciaCentros + 2 * distanciaBordeCentro) > anchoBanda
 
+  // distancia borde centro siempre hay 2
+
   const distanciaIncompatible =
     Boolean(anchoBanda) &&
     perfil.cantidad > 1 &&
     !Number.isNaN(distanciaCentros) &&
     !Number.isNaN(anchoPerfil) &&
-    distanciaCentros < (anchoBanda - anchoPerfil)
+    distanciaCentros > (anchoBanda - anchoPerfil)
 
   return (
     <div className="perfil-bloque">
@@ -152,7 +154,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
 
           {distanciaIncompatible && (
             <p style={{ fontSize: 13, color: '#e57373' }}>
-              La distancia entre centros seleccionada es incompatible: no puede ser inferior a {anchoBanda - anchoPerfil} mm
+              La distancia entre centros seleccionada es incompatible: no puede ser superior a {anchoBanda - anchoPerfil} mm
             </p>
           )}
 
