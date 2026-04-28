@@ -89,6 +89,8 @@ class CalculoBandaResponse(BaseModel):
     precio_banda: float
     precio_empalme: float
 
+    codigo_perfil_superior: Optional[str] = None
+    codigo_perfil_inferior: Optional[str] = None
     precio_perfil_superior: Optional[float] = None
     precio_perfil_inferior: Optional[float] = None
     n_perfiles_superior: Optional[float] = None
