@@ -18,7 +18,7 @@ function RunerConfigView() {
   const [comentarios, setComentarios]   = useState('')
 
   // ancho del runer
-  
+
   const anchoRuner = runers.find(r => r.codigo === codigoRuner)?.ancho ?? null
 
   console.log("ancho runer: " + anchoRuner)
@@ -81,6 +81,10 @@ function RunerConfigView() {
   }, [luz, cantidad, anchoRuner, anchoBanda])
 
   function handleSiguiente() {
+
+    if (!codigoRuner) {
+        return alert('Asegúrese de haber elegido un código de runer')
+    }
     const ruta = siguienteRuta(state.seleccion, 'runer')
     navigate(ruta, {
       state: {

@@ -238,6 +238,11 @@ function PerfilLConfigView() {
   }, [superior.centrado, superior.cantidad, superior.distancia, anchoBanda, superior.activo])
 
   function handleSiguiente() {
+
+    if (distanciaIncompatible || distanciaExcede || superaBanda) {
+      return alert('Revisa las alertas de configuración, hay parámetros incompatibles')
+    }
+    
     if (superior.activo && !superior.codigo) {
       return alert('Debes seleccionar un código para el perfil longitudinal superior')
     }

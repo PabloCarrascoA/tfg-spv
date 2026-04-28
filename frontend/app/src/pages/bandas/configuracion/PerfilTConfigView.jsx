@@ -88,6 +88,11 @@ function PerfilTConfigView() {
 
 
   function handleSiguiente() {
+
+    if (!codigoPerfil) {
+      return alert('Asegúrese de haber seleccionado un código de perfil')
+    }
+
     const ruta = siguienteRuta(state.seleccion, 'perfil-transversal')
     navigate(ruta, {
         state: {

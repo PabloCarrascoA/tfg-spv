@@ -78,6 +78,15 @@ function BandaConfigView() {
   }, [subtipoEmpalme, ancho])
 
   function handleSiguiente() {
+
+    if (!ancho || !longitud) {
+      return alert('Introduce el ancho y la longitud de la banda antes de continuar')
+    }
+
+    if (!codigoBanda) {
+      return alert('Selecciona un código de banda antes de continuar')
+    }
+
     const ruta = siguienteRuta(state.seleccion, 'banda')
     navigate(ruta, {
       state: {
