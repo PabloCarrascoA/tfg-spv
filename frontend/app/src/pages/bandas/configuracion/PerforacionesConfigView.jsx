@@ -81,6 +81,18 @@ function PerforacionesConfigView() {
               />
             </div>
 
+            {(diametro > 30 || diametro < 4) && (
+            <p style={{ fontSize: 13, color: '#e57373' }}>
+              Los diámetros inferiores a 4 mm y superiores a 30 mm son imposibles 
+            </p>
+            )}
+
+            {diametro % 2 != 0 && (
+            <p style={{ fontSize: 13, color: '#e57373' }}>
+              El diámetro de las perforaciones debe ser par 
+            </p>
+            )}
+
             <div className="form-group">
               <label className="form-label">Tipo de malla</label>
               <select
