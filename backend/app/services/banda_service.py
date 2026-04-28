@@ -414,7 +414,17 @@ def calcular_precio_empalme(db, tipo_empalme, subtipo, ancho, cliente_id = None)
 
     precio = obtener_precio_empalme(db, tipo_empalme, subtipo, ancho)
 
-    descuento = 1 - get_descuento_soldadura(db, cliente_id, "sin_fin") if cliente_id is not None else 1
+    if tipo_empalme == "banda-sin-fin":
+        
+        descuento = 1 - get_descuento_soldadura(db, cliente_id, "sin_fin") if cliente_id is not None else 1
+
+    elif tipo_empalme == "extremos-preparados":
+
+        descuento = 1 - get_descuento_soldadura(db, cliente_id, "extremos_preparados") if cliente_id is not None else 1
+
+    elif tipo_empalme == "grapas":
+        
+        descuento = 1 - get_descuento_soldadura(db, cliente_id, "grapas") if cliente_id is not None else 1
 
     precio = precio * descuento
 
@@ -789,7 +799,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
     precio_banda = 0
 
     if codigo_banda is not None:
-        
+
         resultado_banda = calcular_precio_banda(db, codigo_banda, largo, ancho, cliente_id)
         precio_banda = resultado_banda["precio_total"]
 
