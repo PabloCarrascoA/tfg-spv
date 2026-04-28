@@ -466,7 +466,7 @@ a {
   justify-content: center;
   gap: 12px;
   margin-top: 24px;
-  margin-bottom: 12px;
+  padding-bottom: 12px;
 }
 
 .btn-atras {
