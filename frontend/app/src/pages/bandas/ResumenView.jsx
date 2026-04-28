@@ -83,6 +83,7 @@ function ResumenView() {
           {/* 2. Perfiles Longitudinales */}
           <div className="resumen-seccion">
             <p className="resumen-seccion-titulo">2. Perfiles Longitudinales</p>
+            {console.log(resultado.codigo_perfil_superior)}
             {resultado.codigo_perfil_superior || resultado.codigo_perfil_inferior ? (
               <ul className="resumen-lista">
                 {resultado.codigo_perfil_superior && <>

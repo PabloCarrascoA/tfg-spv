@@ -256,10 +256,10 @@ function PerfilTConfigView() {
                         </div>
                         )}
 
-                        {hileras > 1 && (parseFloat(luz) > parseFloat(ancho)) && (
+                        {hileras > 1 && (parseFloat(luz) >= parseFloat(ancho)) && (
                             console.log('luz:', luz, 'ancho:', ancho),
                         <p style={{ fontSize: 13, color: '#e57373' }}>
-                            El ancho de la luz excede el ancho total del perfil
+                            El ancho de la luz excede o es igual al ancho total del perfil
                         </p>
                         )}
 
