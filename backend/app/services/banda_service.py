@@ -404,7 +404,8 @@ def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
     return {
         "codigo_banda": codigo,
         "precio_unitario": precio_unitario,
-        "precio_total": precio_total
+        "precio_total": precio_total,
+        "ancho_ajustado": ancho_ajustado
     }
 
 def calcular_precio_empalme(db, tipo_empalme, subtipo, ancho, cliente_id = None):
@@ -788,8 +789,12 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
     precio_banda = 0
 
     if codigo_banda is not None:
+        
         resultado_banda = calcular_precio_banda(db, codigo_banda, largo, ancho, cliente_id)
         precio_banda = resultado_banda["precio_total"]
+
+        if resultado_banda["ancho_ajustado"] is not None:
+            ancho = resultado_banda["ancho_ajustado"]
 
     # - Precio empalme -
 
