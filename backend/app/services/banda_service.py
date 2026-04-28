@@ -423,7 +423,7 @@ def calcular_precio_empalme(db, tipo_empalme, subtipo, ancho, cliente_id = None)
         descuento = 1 - get_descuento_soldadura(db, cliente_id, "extremos_preparados") if cliente_id is not None else 1
 
     elif tipo_empalme == "grapas":
-        
+
         descuento = 1 - get_descuento_soldadura(db, cliente_id, "grapas") if cliente_id is not None else 1
 
     precio = precio * descuento
@@ -529,7 +529,7 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
         "distancia_margen": distancia_margen
     }
 
-def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfiles=None, distancia_paso=None, ancho_perfil=None, cliente_id = None):
+def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho, largo, n_perfiles=None, distancia_paso=None, ancho_perfil=None, cliente_id = None):
 
     perfil = obtener_perfil_transversal_por_codigo(db, codigo_perfil)
 
@@ -612,7 +612,14 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
 
     print(f"DEBUG: precio soldadura: {precio_soldadura_total}, n_perfiles: {n_perfiles}, precio soldadura mL: {precio_soldadura_mL}, ancho_m: {ancho_m}")
 
-    precio_final = precio_perfil_total + precio_soldadura_total
+    # - Calculo preparación -
+
+    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_longitudinales")
+
+    precio_preparacion = calcular_precio_preparacion(tarifa_preparacion, cantidad_bandas, n_perfiles)
+
+
+    precio_final = precio_perfil_total + precio_soldadura_total + precio_preparacion
 
     return {
         "codigo_perfil": codigo_perfil,
@@ -626,7 +633,7 @@ def calcular_precio_perfil_transversal(db, codigo_perfil, ancho, largo, n_perfil
         "distancia_paso": distancia_paso
     }
 
-def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, cliente_id = None):
+def calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_perfiles, cliente_id = None):
 
     runer = obtener_runer_por_codigo(db, codigo_runer)
 
@@ -682,6 +689,13 @@ def calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles, cliente_id
         precio_soldadura_total = precio_soldadura_total * (descuento)
 
     precio_preparacion = 25
+
+    # - Cálculo preparación -
+
+    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_longitudinales")
+
+    precio_preparacion = calcular_precio_preparacion(tarifa_preparacion, cantidad_bandas, n_perfiles)
+
 
     precio_final = precio_runer_total + precio_soldadura_total + precio_preparacion
 
@@ -883,7 +897,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
         print(f"DEBUG: {codigo_perfilT}")
 
-        resultado_perfil = calcular_precio_perfil_transversal(db, codigo_perfilT, ancho, largo, n_perfilesT, distancia_paso, ancho_perfilT, cliente_id)
+        resultado_perfil = calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfilT, ancho, largo, n_perfilesT, distancia_paso, ancho_perfilT, cliente_id)
 
         precio_perfilT = resultado_perfil["precio_perfil_total"]
         precio_soldaduraT = resultado_perfil["precio_soldadura_total"]
@@ -902,7 +916,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
     if codigo_runer is not None:
 
-        resultado_runer = calcular_precio_runer(db, codigo_runer, ancho, largo, n_perfiles_runer, cliente_id)
+        resultado_runer = calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_perfiles_runer, cliente_id)
 
         precio_runer = resultado_runer["precio_runer_total"]
         precio_soldadura_runer = resultado_runer["precio_soldadura_total"]
