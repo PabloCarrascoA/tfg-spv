@@ -30,7 +30,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
     perfil.cantidad > 1 &&
     !Number.isNaN(distanciaCentros) &&
     !Number.isNaN(anchoPerfil) &&
-    distanciaCentros > (anchoBanda - anchoPerfil)
+    distanciaCentros > (anchoBanda - (perfil.cantidad * anchoPerfil))
 
   return (
     <div className="perfil-bloque">
@@ -146,11 +146,11 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
             </p>
           )}
 
-          {distanciaExcede && (
+          {/*distanciaExcede && (
             <p style={{ fontSize: 13, color: '#e57373' }}>
-              La distribución de perfiles supera el ancho de la banda ({anchoBanda} mm)
+              La distribución de los perfiles supera el ancho de la banda ({anchoBanda} mm)
             </p>
-          )}
+          )*/}
 
           {distanciaIncompatible && (
             <p style={{ fontSize: 13, color: '#e57373' }}>
