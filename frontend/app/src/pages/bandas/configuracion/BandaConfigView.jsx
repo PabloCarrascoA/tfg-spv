@@ -185,9 +185,17 @@ function BandaConfigView() {
 
             {/* precio calculado automáticamente */}
 
-            {precioEmpalme !== null && (
+            {precioEmpalme !== null && precioEmpalme !== undefined && (
               <p style={{ fontSize: 13, color: '#4a6f8a', fontWeight: 500 }}>
                 Precio empalme: {precioEmpalme} €
+              </p>
+            )}
+
+            {console.log('ancho:', ancho, 'precioEmpalme:', precioEmpalme)}
+
+            {precioEmpalme === undefined && (
+            <p style={{ fontSize: 13, color: '#e57373' }}>
+                El ancho introducido no es compatible
               </p>
             )}
 
