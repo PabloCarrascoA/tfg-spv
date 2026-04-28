@@ -128,7 +128,11 @@ function ModalDetalle({ pedido, onClose }) {
           <div className="modal-seccion">
             <p className="modal-seccion-titulo">Perfiles longitudinales</p>
             {pedido.perfil_longitudinal.codigo_perfil_superior && <p>Perfil superior: {pedido.perfil_longitudinal.codigo_perfil_superior} ({pedido.perfil_longitudinal.n_perfiles_superior} uds)</p>}
+            {pedido.perfil_longitudinal.distancia_margen_sup != null && <p>Distancia borde-centro superior: {pedido.perfil_longitudinal.distancia_margen_sup} mm</p>}
+            
             {pedido.perfil_longitudinal.codigo_perfil_inferior && <p>Perfil inferior: {pedido.perfil_longitudinal.codigo_perfil_inferior} ({pedido.perfil_longitudinal.n_perfiles_inferior} uds)</p>}
+            {pedido.perfil_longitudinal.distancia_margen_inf != null && <p>Distancia borde-centro inferior: {pedido.perfil_longitudinal.distancia_margen_inf} mm</p>}
+            
             {pedido.perfil_longitudinal.comentarios && <p>Comentarios: {pedido.perfil_longitudinal.comentarios}</p>}
           </div>
         )}
