@@ -827,3 +827,31 @@ a {
   padding-left: 0 !important;
   margin-bottom: 6px !important;
 }
+
+/* Botón de eliminar pedido */
+
+.pedido-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pedido-borrar-btn {
+  width: 110px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 12px 8px;
+  background: #fde8e8;
+  color: #e57373;
+  transition: opacity 0.15s;
+}
+
+.pedido-borrar-btn:hover {
+  opacity: 0.85;
+}
