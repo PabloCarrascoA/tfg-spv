@@ -28,7 +28,7 @@ function PedidosView() {
   }
 
   async function handleEliminar(pedido) {
-  if (!window.confirm(`¿Eliminar el pedido #${pedido.numero_pedido}? Esta acción no se puede deshacer.`)) return
+  if (!window.confirm(`¿Eliminar el pedido #${pedido.numero_pedido} para ${pedido.nombre_cliente}? Esta acción no se puede deshacer.`)) return
   await eliminarPedido(pedido.id)
   setPedidos(prev => prev.filter(p => p.id !== pedido.id))
 }
@@ -82,6 +82,13 @@ function PedidosView() {
                 ? <><MdCheckBox size={18} /> COMPLETADO</>
                 : <><MdCheckBoxOutlineBlank size={18} /> EN PROCESO</>
               }
+            </button>
+
+            <button
+                className="pedido-borrar-btn"
+                onClick={() => handleEliminar(pedido)}
+                >
+                Eliminar
             </button>
 
           </div>
