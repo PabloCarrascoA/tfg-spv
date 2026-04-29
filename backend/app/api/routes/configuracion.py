@@ -28,7 +28,7 @@ router = APIRouter(
 )
 
 from app.services.pedidos_service import (
-    guardar_pedido, listar_pedidos, get_detalle_pedido, actualizar_estado_pedido
+    guardar_pedido, listar_pedidos, get_detalle_pedido, actualizar_estado_pedido, eliminar_pedido
 )
 from pydantic import BaseModel
 
@@ -57,6 +57,10 @@ def get_pedido(pedido_id: int, db=Depends(get_db)):
 @router.patch("/pedidos/{pedido_id}/estado")
 def cambiar_estado(pedido_id: int, body: ActualizarEstadoRequest, db=Depends(get_db)):
     return actualizar_estado_pedido(db, pedido_id, body.estado)
+
+@router.delete("/pedidos/{pedido_id}")
+def borrar_pedido(pedido_id: int, db=Depends(get_db)):
+    return eliminar_pedido(db, pedido_id)
 
 # --------------------------------
 # OBTENER TODOS LOS DATOS A LA VEZ

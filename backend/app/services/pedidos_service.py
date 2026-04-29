@@ -242,3 +242,15 @@ def actualizar_estado_pedido(db, pedido_id, nuevo_estado):
     )
     db.commit()
     return {"ok": True}
+
+def eliminar_pedido(db, pedido_id):
+    cursor = db.cursor()
+
+    # se borran primero las tablas hijas por las foreign keys
+
+    for tabla in ['pedido_banda', 'pedido_perfil_longitudinal', 'pedido_perfil_transversal',
+                  'pedido_runer', 'pedido_perforaciones', 'pedido_onda']:
+        cursor.execute(f"DELETE FROM {tabla} WHERE pedido_id = ?", (pedido_id,))
+        cursor.execute("DELETE FROM pedidos WHERE id = ?", (pedido_id,))
+        db.commit()
+        return {"ok": True}

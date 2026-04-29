@@ -87,3 +87,10 @@ export async function actualizarEstadoPedido(id, estado) {
   })
   return res.json()
 }
+
+export async function eliminarPedido(id) {
+  const res = await fetch(`${BASE_URL}/configuracion/pedidos/${id}`, {
+    method: 'DELETE'
+  })
+  return res.json()
+}

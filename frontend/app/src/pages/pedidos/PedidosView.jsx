@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getPedidos, getDetallePedido, actualizarEstadoPedido } from '../../services/api'
+import { getPedidos, getDetallePedido, actualizarEstadoPedido, eliminarPedido } from '../../services/api'
 import { FiShoppingCart, FiCalendar, FiEye } from 'react-icons/fi'
 import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md'
 
@@ -26,6 +26,12 @@ function PedidosView() {
       p.id === pedido.id ? { ...p, estado: nuevoEstado } : p
     ))
   }
+
+  async function handleEliminar(pedido) {
+  if (!window.confirm(`¿Eliminar el pedido #${pedido.numero_pedido}? Esta acción no se puede deshacer.`)) return
+  await eliminarPedido(pedido.id)
+  setPedidos(prev => prev.filter(p => p.id !== pedido.id))
+}
 
   if (cargando) return <div className="home-view"><p>Cargando pedidos...</p></div>
 
