@@ -16,6 +16,8 @@ import PedidosView from './pages/pedidos/PedidosView'
 
 import ImporterView from './pages/importer/ImporterView'
 
+import ExporterView from './pages/exporter/ExporterView'
+
 function App() {
   return (
     <BrowserRouter>
@@ -32,6 +34,7 @@ function App() {
           <Route path="/resumen" element={<ResumenView />}/>
           <Route path="/pedidos" element={<PedidosView />}/>
           <Route path="/importer" element={<ImporterView />}/>
+          <Route path="/exporter" element={<ExporterView />}/>
         </Routes>
       </Layout>
     </BrowserRouter>
