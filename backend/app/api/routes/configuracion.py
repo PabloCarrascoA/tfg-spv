@@ -27,6 +27,84 @@ router = APIRouter(
     tags=["Configurador"]
 )
 
+# cosas del exporter
+
+from fastapi.responses import StreamingResponse
+import openpyxl
+from io import BytesIO
+from datetime import date
+
+TABLAS_EXPORTABLES = {
+    'bandas':                  'bandas',
+    'perfiles_longitudinales': 'perfiles_longitudinales',
+    'perfiles_transversales':  'perfiles_transversales',
+    'runners':                 'runners',
+    'ondas':                   'ondas',
+}
+
+@router.get("/exportar/{tabla}")
+def exportar_tabla(tabla: str, db=Depends(get_db)):
+    if tabla not in TABLAS_EXPORTABLES:
+        raise HTTPException(status_code=400, detail="Tabla no válida")
+
+    nombre_tabla = TABLAS_EXPORTABLES[tabla]
+    cursor = db.cursor()
+
+    # obtener columnas con PRAGMA
+    cursor.execute(f"PRAGMA table_info({nombre_tabla})")
+    columnas_info = cursor.fetchall()
+    columnas = [row[1] for row in columnas_info]  # row[1] = nombre columna
+
+    # obtener todos los datos
+    cursor.execute(f"SELECT * FROM {nombre_tabla}")
+    filas = cursor.fetchall()
+
+    # construir excel
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = nombre_tabla
+
+    # cabecera
+    ws.append(columnas)
+
+    # datos
+    for fila in filas:
+        ws.append(list(fila))
+
+    # devolver como stream
+    buffer = BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+
+    fecha = date.today().isoformat()
+    filename = f"tabla_{nombre_tabla}_{fecha}.xlsx"
+
+    return StreamingResponse(
+        buffer,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )
+
+@router.get("/exportar/{tabla}/info")
+def info_tabla(tabla: str, db=Depends(get_db)):
+    if tabla not in TABLAS_EXPORTABLES:
+        raise HTTPException(status_code=400, detail="Tabla no válida")
+
+    nombre_tabla = TABLAS_EXPORTABLES[tabla]
+    cursor = db.cursor()
+
+    # esquema
+    cursor.execute(f"PRAGMA table_info({nombre_tabla})")
+    columnas = [{"nombre": row[1].upper(), "tipo": row[2].upper()} for row in cursor.fetchall()]
+
+    # contar registros
+    cursor.execute(f"SELECT COUNT(*) FROM {nombre_tabla}")
+    total = cursor.fetchone()[0]
+
+    return {"columnas": columnas, "total": total, "nombre_tabla": nombre_tabla}
+
+# Cosas de pedidos
+
 from app.services.pedidos_service import (
     guardar_pedido, listar_pedidos, get_detalle_pedido, actualizar_estado_pedido, eliminar_pedido
 )
