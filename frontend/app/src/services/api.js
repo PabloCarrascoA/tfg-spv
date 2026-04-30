@@ -94,3 +94,29 @@ export async function eliminarPedido(id) {
   })
   return res.json()
 }
+
+// Funciones de exportar
+
+export async function getInfoTabla(tabla) {
+    
+  const res = await fetch(`${BASE_URL}/configuracion/exportar/${tabla}/info`)
+  return res.json()
+}
+
+export async function exportarTabla(tabla) {
+
+  const res = await fetch(`${BASE_URL}/configuracion/exportar/${tabla}`)
+  const blob = await res.blob()
+  const fecha = new Date().toISOString().split('T')[0]
+  const filename = `tabla_${tabla}_${fecha}.xlsx`
+
+  // descarga en el navegador
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
+
+  return filename
+}
