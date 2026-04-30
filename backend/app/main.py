@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import configuracion
 from app.db.database import get_db_connection
 from app.api.routes import importer
+from app.api.routes import exporter
 
 # Crear tablas de bandas si no existe
 with get_db_connection() as conn:
@@ -95,6 +96,8 @@ app.add_middleware(
 app.include_router(configuracion.router)
 
 app.include_router(importer.router)
+
+app.include_router(exporter.router)
 
 @app.get("/")
 def read_root():

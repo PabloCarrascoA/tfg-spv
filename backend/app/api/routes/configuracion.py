@@ -27,31 +27,6 @@ router = APIRouter(
     tags=["Configurador"]
 )
 
-# cosas del exporter
-
-from fastapi.responses import StreamingResponse
-from app.services.exporter_service import get_info_tabla, exportar_tabla_excel, TABLAS_EXPORTABLES
-
-@router.get("/exportar/{tabla}/info")
-def info_tabla(tabla: str, db=Depends(get_db)):
-    try:
-        return get_info_tabla(db, tabla)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@router.get("/exportar/{tabla}")
-def exportar_tabla(tabla: str, db=Depends(get_db)):
-    try:
-        buffer, filename = exportar_tabla_excel(db, tabla)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-    return StreamingResponse(
-        buffer,
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": f"attachment; filename={filename}"}
-    )
-
 # Cosas de pedidos
 
 from app.services.pedidos_service import (

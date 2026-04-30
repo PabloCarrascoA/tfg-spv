@@ -98,14 +98,14 @@ export async function eliminarPedido(id) {
 // Funciones de exportar
 
 export async function getInfoTabla(tabla) {
-    
-  const res = await fetch(`${BASE_URL}/configuracion/exportar/${tabla}/info`)
+
+  const res = await fetch(`${BASE_URL}/exportar/${tabla}/info`)
   return res.json()
 }
 
 export async function exportarTabla(tabla) {
 
-  const res = await fetch(`${BASE_URL}/configuracion/exportar/${tabla}`)
+  const res = await fetch(`${BASE_URL}/exportar/${tabla}`)
   const blob = await res.blob()
   const fecha = new Date().toISOString().split('T')[0]
   const filename = `tabla_${tabla}_${fecha}.xlsx`
