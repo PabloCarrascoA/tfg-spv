@@ -6,6 +6,7 @@ from app.api.routes import configuracion
 from app.db.database import get_db_connection
 from app.api.routes import importer
 from app.api.routes import exporter
+from app.api.routes import pedidos
 
 # Crear tablas de bandas si no existe
 with get_db_connection() as conn:
@@ -98,6 +99,8 @@ app.include_router(configuracion.router)
 app.include_router(importer.router)
 
 app.include_router(exporter.router)
+
+app.include_router(pedidos.router)
 
 @app.get("/")
 def read_root():

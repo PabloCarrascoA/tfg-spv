@@ -61,7 +61,7 @@ export async function calcularPedido(datos) {
 // Funciones de pedidos
 
 export async function guardarPedido(resultado, stateFrontend) {
-  const res = await fetch(`${BASE_URL}/configuracion/pedidos`, {
+  const res = await fetch(`${BASE_URL}/pedidos`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ resultado, state_frontend: stateFrontend })
@@ -70,17 +70,17 @@ export async function guardarPedido(resultado, stateFrontend) {
 }
 
 export async function getPedidos() {
-  const res = await fetch(`${BASE_URL}/configuracion/pedidos`)
+  const res = await fetch(`${BASE_URL}/pedidos`)
   return res.json()
 }
 
 export async function getDetallePedido(id) {
-  const res = await fetch(`${BASE_URL}/configuracion/pedidos/${id}`)
+  const res = await fetch(`${BASE_URL}/pedidos/${id}`)
   return res.json()
 }
 
 export async function actualizarEstadoPedido(id, estado) {
-  const res = await fetch(`${BASE_URL}/configuracion/pedidos/${id}/estado`, {
+  const res = await fetch(`${BASE_URL}/pedidos/${id}/estado`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ estado })
@@ -89,7 +89,7 @@ export async function actualizarEstadoPedido(id, estado) {
 }
 
 export async function eliminarPedido(id) {
-  const res = await fetch(`${BASE_URL}/configuracion/pedidos/${id}`, {
+  const res = await fetch(`${BASE_URL}/pedidos/${id}`, {
     method: 'DELETE'
   })
   return res.json()
