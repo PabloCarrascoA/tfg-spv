@@ -855,3 +855,122 @@ a {
 .pedido-borrar-btn:hover {
   opacity: 0.85;
 }
+
+/* Cosas del exporte r*/
+
+/* =============================================
+   EXPORTER VIEW
+   ============================================= */
+.exporter-view {
+  max-width: 560px;
+}
+
+.exporter-paso {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.exporter-paso-titulo {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.exporter-select {
+  max-width: 240px;
+}
+
+.exporter-columnas-label {
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+.exporter-seccion-nombre {
+  color: #4a6f8a;
+  font-weight: 500;
+}
+
+.exporter-tabla {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 400px;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.exporter-tabla tr {
+  border-bottom: 0.5px solid #e0e0e0;
+}
+
+.exporter-tabla tr:last-child {
+  border-bottom: none;
+}
+
+.exporter-col-nombre {
+  padding: 8px 16px;
+  font-size: 13px;
+  color: #1a1a1a;
+  width: 50%;
+}
+
+.exporter-col-tipo {
+  padding: 8px 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.exporter-botones {
+  display: flex;
+  gap: 8px;
+}
+
+.exporter-desc {
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+.exporter-archivos-preview {
+  list-style: disc;
+  padding-left: 16px;
+  font-size: 13px;
+  color: #4a6f8a;
+}
+
+.exporter-archivo-info {
+  color: #6b7280;
+  margin-left: 4px;
+}
+
+.exporter-archivos-generados {
+  background: #f5f6f8;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.exporter-archivo-fila {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.exporter-archivo-icono {
+  font-size: 15px;
+}
+
+.exporter-archivo-nombre {
+  flex: 1;
+  color: #1a1a1a;
+}
+
+.exporter-descargado {
+  color: #4a6f8a;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+
