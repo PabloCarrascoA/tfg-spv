@@ -1,9 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.db.database import get_db
-from app.services.pedidos_service import (
-    guardar_pedido, listar_pedidos, get_detalle_pedido, actualizar_estado_pedido, eliminar_pedido
-)
-from pydantic import BaseModel
 
 router = APIRouter(
     prefix="/clientes",

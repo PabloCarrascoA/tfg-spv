@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getClientes } from '../../services/api'
 
 const COMPONENTES = [
   {
@@ -46,6 +47,82 @@ const COMPONENTES = [
   },
 ]
 
+// Componente para el nombre del cliente
+
+function AutocompleteCliente({ value, onChange }) {
+  const [clientes, setClientes]         = useState([])
+  const [sugerencias, setSugerencias]   = useState([])
+  const [abierto, setAbierto]           = useState(false)
+  const ref = useRef(null)
+
+  // cargar clientes al montar
+  useEffect(() => {
+    getClientes()
+      .then(data => setClientes(data))
+      .catch(err => console.error('Error cargando clientes:', err))
+  }, [])
+
+  // cerrar al hacer click fuera
+  useEffect(() => {
+    function handleClickFuera(e) {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setAbierto(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickFuera)
+    return () => document.removeEventListener('mousedown', handleClickFuera)
+  }, [])
+
+  function handleInput(e) {
+    const texto = e.target.value
+    onChange(texto)
+
+    if (texto.length === 0) {
+      setSugerencias([])
+      setAbierto(false)
+      return
+    }
+
+    const filtrados = clientes.filter(c =>
+      c.toLowerCase().includes(texto.toLowerCase())
+    )
+    setSugerencias(filtrados)
+    setAbierto(filtrados.length > 0)
+  }
+
+  function handleSeleccionar(nombre) {
+    onChange(nombre)
+    setSugerencias([])
+    setAbierto(false)
+  }
+
+  return (
+    <div className="autocomplete-wrapper" ref={ref}>
+      <input
+        type="text"
+        className="form-input"
+        placeholder="Nombre del cliente (opcional)"
+        value={value}
+        onChange={handleInput}
+        onFocus={() => sugerencias.length > 0 && setAbierto(true)}
+      />
+      {abierto && (
+        <ul className="autocomplete-lista">
+          {sugerencias.map(nombre => (
+            <li
+              key={nombre}
+              className="autocomplete-item"
+              onMouseDown={() => handleSeleccionar(nombre)}
+            >
+              {nombre}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 function BandaView() {
 
   const navigate = useNavigate()
@@ -83,8 +160,7 @@ function BandaView() {
 
       <div className="selector-card">
         <p className="selector-label">Introduzca el nombre del cliente</p>
-        <input type="text" className="form-input" placeholder="nombre"
-               value={nombre} onChange={e => setNombre(e.target.value)} />
+        <AutocompleteCliente value={nombre} onChange={setNombre} />
       </div>
 
       <div className="selector-card">

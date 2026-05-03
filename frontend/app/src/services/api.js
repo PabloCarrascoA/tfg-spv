@@ -120,3 +120,10 @@ export async function exportarTabla(tabla) {
 
   return filename
 }
+
+// Funciones de clientes
+
+export async function getClientes() {
+  const res = await fetch(`${BASE_URL}/clientes`)
+  return res.json()
+}
