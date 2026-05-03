@@ -6,7 +6,7 @@ router = APIRouter(
     tags=["Clientes"]
 )
 
-@router.get("/clientes")
+@router.get("")
 def listar_clientes(db=Depends(get_db)):
     cursor = db.cursor()
     cursor.execute("SELECT nombre FROM clientes ORDER BY nombre")

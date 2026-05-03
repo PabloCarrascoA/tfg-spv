@@ -973,4 +973,40 @@ a {
   font-size: 12px;
 }
 
+/* =============================================
+   AUTOCOMPLETE
+   ============================================= */
+.autocomplete-wrapper {
+  position: relative;
+}
+
+.autocomplete-lista {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  list-style: none;
+  padding: 4px 0;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.autocomplete-item {
+  padding: 8px 14px;
+  font-size: 13px;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.autocomplete-item:hover {
+  background: #f0f5f8;
+  color: #4a6f8a;
+}
+
 
