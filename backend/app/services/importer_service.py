@@ -95,15 +95,18 @@ def _columnas_tabla(db, nombre_tabla):
 def _clave_duplicado(db, tabla, fila=None):
     nombre_tabla = validar_tabla(tabla)
     columnas_existentes = set(_columnas_tabla(db, nombre_tabla))
+
+    # prioridad -> id_import
+    if 'id_import' in columnas_existentes:
+        if fila is None or fila.get('id_import') not in (None, ''):
+            return ['id_import']
+
+    # fallback a que la clave sea el código
     candidatas = CLAVES_DUPLICADOS.get(tabla, [])
 
     if candidatas and set(candidatas).issubset(columnas_existentes):
         if fila is None or all(fila.get(col) not in (None, '') for col in candidatas):
             return candidatas
-
-    if 'id_import' in columnas_existentes:
-        if fila is None or fila.get('id_import') not in (None, ''):
-            return ['id_import']
 
     return []
 
