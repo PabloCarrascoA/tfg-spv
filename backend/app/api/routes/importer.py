@@ -1,56 +1,77 @@
-from fastapi import APIRouter, UploadFile, File
-from app.utils.excel_reader import leer_excel, leer_csv
-from app.services import importer_service
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from fastapi.responses import JSONResponse
 from app.db.database import get_db
-from fastapi import Depends
+from app.services.importer_service import (
+    get_columnas_tabla, parsear_archivo, aplicar_mapeo,
+    detectar_duplicados, importar_filas, TABLAS_IMPORTABLES
+)
+import json
 
-import os
+router = APIRouter(prefix="/importar", tags=["Importador"])
 
-router = APIRouter(
-    prefix="/importer",
-    tags=["Importador"]
-    )
+@router.get("/tablas")
+def listar_tablas():
+    return list(TABLAS_IMPORTABLES.keys())
 
-@router.post("/upload")
-async def upload_file(file: UploadFile = File(...)):
+@router.get("/tablas/{tabla}/columnas")
+def columnas_tabla(tabla: str, db=Depends(get_db)):
+    try:
+        return get_columnas_tabla(db, tabla)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
-    path = f"temp_{file.filename}"
+@router.post("/parsear")
+async def parsear(
+    archivo: UploadFile = File(...),
+    separador: str = Form(',')
+):
+    contenido = await archivo.read()
+    try:
+        encabezados, primera_linea, todas_filas = parsear_archivo(
+            contenido, archivo.filename, separador
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error al parsear: {str(e)}")
 
-    with open(path, "wb") as buffer:
-        buffer.write(await file.read())
+    return {
+        "encabezados":   encabezados,
+        "primera_linea": primera_linea,
+        "total_filas":   len(todas_filas),
+        # guardamos filas en base64 para no perderlas entre requests
+        "filas":         todas_filas
+    }
 
-    if file.filename.endswith(".csv"):
-        data = leer_csv(path)
+@router.post("/previsualizar")
+def previsualizar(body: dict, db=Depends(get_db)):
+    encabezados = body.get("encabezados", [])
+    filas       = body.get("filas", [])
+    mapeo       = body.get("mapeo", {})
 
-    else:
-        data = leer_excel(path)
+    filas_mapeadas = aplicar_mapeo(encabezados, filas, mapeo)
+    primeras_10    = filas_mapeadas[:10]
+    duplicados     = detectar_duplicados(db, body["tabla"], filas_mapeadas)
 
-    os.remove(path)
+    return {
+        "preview":    primeras_10,
+        "duplicados": duplicados,
+        "total":      len(filas_mapeadas)
+    }
 
-    return data
+@router.post("/ejecutar")
+def ejecutar(body: dict, db=Depends(get_db)):
+    tabla      = body.get("tabla")
+    encabezados = body.get("encabezados", [])
+    filas      = body.get("filas", [])
+    mapeo      = body.get("mapeo", {})
+    modo       = body.get("modo", "solo_nuevos")  # 'solo_nuevos' | 'actualizar'
 
-@router.get("/campos/{tabla}")
-def obtener_campos(tabla: str, db=Depends(get_db)):
+    filas_mapeadas = aplicar_mapeo(encabezados, filas, mapeo)
 
-    campos = importer_service.obtener_campos_tabla(db, tabla)
-
-    return campos
-
-@router.post("/procesar")
-def procesar_importacion(data: dict, db=Depends(get_db)):
-
-    tabla = data["tabla"]
-    archivo = data["archivo"]
-    mapeo = data["mapeo"]
-
-    campos = importer_service.obtener_campos_tabla(db, tabla)
-
-    resultado = importer_service.guardar_mapeo(
-        db,
-        tabla,
-        archivo,
-        mapeo,
-        campos
-    )
+    try:
+        resultado = importar_filas(db, tabla, filas_mapeadas, modo)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
     return resultado

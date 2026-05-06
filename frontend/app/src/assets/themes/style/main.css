@@ -1009,4 +1009,110 @@ a {
   color: #4a6f8a;
 }
 
+/* =============================================
+   IMPORTER VIEW
+   ============================================= */
+   
+.importer-view {
+  max-width: 640px;
+}
+
+.importer-paso {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.importer-paso-titulo {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.importer-select {
+  max-width: 300px;
+}
+
+.importer-columnas-label {
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+.importer-seccion-nombre {
+  color: #4a6f8a;
+  font-weight: 500;
+}
+
+.importer-botones {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.importer-file-input {
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+.importer-tabla-preview {
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.importer-tabla-preview th,
+.importer-tabla-preview td {
+  border: 0.5px solid #e0e0e0;
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.importer-tabla-preview th {
+  background: #f5f6f8;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.importer-tabla-preview td {
+  color: #374151;
+}
+
+/* mapeo */
+.mapeo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+  align-items: center;
+  max-width: 480px;
+}
+
+.mapeo-header {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.mapeo-origen {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+  background: #f5f6f8;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 7px 12px;
+}
+
+.mapeo-select {
+  font-size: 13px;
+}
+
+.importer-duplicados-aviso {
+  background: #fff5f5;
+  border: 0.5px solid #fca5a5;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
 

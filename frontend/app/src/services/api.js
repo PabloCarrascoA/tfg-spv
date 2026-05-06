@@ -127,3 +127,44 @@ export async function getClientes() {
   const res = await fetch(`${BASE_URL}/clientes`)
   return res.json()
 }
+
+// Funciones importar
+
+export async function getTablasImportables() {
+  const res = await fetch(`${BASE_URL}/importar/tablas`)
+  return res.json()
+}
+
+export async function getColumnasTabla(tabla) {
+  const res = await fetch(`${BASE_URL}/importar/tablas/${tabla}/columnas`)
+  return res.json()
+}
+
+export async function parsearArchivo(archivo, separador) {
+  const form = new FormData()
+  form.append('archivo', archivo)
+  form.append('separador', separador)
+  const res = await fetch(`${BASE_URL}/importar/parsear`, {
+    method: 'POST',
+    body: form
+  })
+  return res.json()
+}
+
+export async function previsualizarImportacion(tabla, encabezados, filas, mapeo) {
+  const res = await fetch(`${BASE_URL}/importar/previsualizar`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tabla, encabezados, filas, mapeo })
+  })
+  return res.json()
+}
+
+export async function ejecutarImportacion(tabla, encabezados, filas, mapeo, modo) {
+  const res = await fetch(`${BASE_URL}/importar/ejecutar`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tabla, encabezados, filas, mapeo, modo })
+  })
+  return res.json()
+}
