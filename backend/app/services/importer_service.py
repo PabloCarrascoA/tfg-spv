@@ -12,7 +12,7 @@ TABLAS_IMPORTABLES = {
     'ondas':                   'ondas',
     # Gestión
     'clientes':                'clientes',
-    'descuentos':              'descuentos',
+    'descuentos_material':              'descuentos_material',
     'descuentos_soldadura':    'descuentos_soldadura',
 }
 
@@ -24,6 +24,9 @@ CLAVES_DUPLICADOS = {
     'ondas': ['codigo'],
     'clientes': ['codigo'],
     'empalmes': ['tipo', 'subtipo', 'ancho'],
+    'clientes': ['codigo'],
+    'descuentos_material': ['codigo'],
+    'descuentos_soldadura': ['codigo'],
 }
 
 def validar_tabla(tabla):
