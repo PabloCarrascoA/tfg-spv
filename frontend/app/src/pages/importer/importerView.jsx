@@ -108,9 +108,9 @@ function ImporterView() {
     }
   }
 
-  // cuando hay duplicados el backend los devuelve en el resultado
-  // el usuario elige modo desde el paso 4
   async function handleGestionarDuplicados(modo) {
+    setResultado(null) 
+    setModoDuplicados(modo)
     await handleImportar(modo)
   }
 
@@ -331,25 +331,25 @@ function ImporterView() {
 
           {/* caso: hay duplicados omitidos → preguntar qué hacer */}
           {hayDuplicados && modoDuplicados === null && !hayErrores && (
-            <div className="importer-duplicados-aviso">
+          <div className="importer-duplicados-aviso">
               <p style={{ fontSize: 13, color: '#e57373', fontWeight: 500 }}>
-                Se encontraron <strong>{resultado.omitidos}</strong> registros duplicados.
-                ¿Cómo desea proceder?
+              Se encontraron <strong>{resultado.omitidos}</strong> registros duplicados.
+              ¿Cómo desea proceder?
               </p>
               <div className="importer-botones" style={{ marginTop: 10 }}>
-                <button className="btn-continuar"
-                  onClick={() => { setModoDuplicados('actualizar'); handleGestionarDuplicados('actualizar') }}>
+              <button className="btn-continuar"
+                  onClick={() => handleGestionarDuplicados('actualizar')}>
                   Insertar nuevos + actualizar existentes
-                </button>
-                <button className="btn-atras"
-                  onClick={() => { setModoDuplicados('solo_nuevos'); setPaso(3) }}>
+              </button>
+              <button className="btn-atras"
+                  onClick={() => handleGestionarDuplicados('solo_nuevos')}>
                   Solo insertar nuevos (ignorar duplicados)
-                </button>
-                <button className="pedido-borrar-btn" onClick={handleCancelar}>
+              </button>
+              <button className="pedido-borrar-btn" onClick={handleCancelar}>
                   Cancelar importación
-                </button>
+              </button>
               </div>
-            </div>
+          </div>
           )}
 
           {/* caso: errores */}

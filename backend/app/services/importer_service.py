@@ -37,12 +37,13 @@ def get_columnas_tabla(db, tabla):
     cursor.execute(f"PRAGMA table_info({nombre_tabla})")
     return [
         {
-            "nombre": row[1],
-            "tipo":   row[2].upper(),
+            "nombre":   row[1],
+            "tipo":     row[2].upper(),
             "not_null": bool(row[3]),
-            "pk":     bool(row[5]),
+            "pk":       bool(row[5]),
         }
         for row in cursor.fetchall()
+        if not (bool(row[5]) and row[2].upper() in ('INTEGER', 'INT'))
     ]
 
 def parsear_archivo(contenido_bytes, nombre_archivo, separador=','):
