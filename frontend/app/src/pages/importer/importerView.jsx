@@ -5,50 +5,41 @@ import {
 } from '../../services/api'
 
 const SECCIONES = [
-  { group: 'Material',  value: 'bandas',                  label: 'Banda — Material'           },
-  { group: 'Material',  value: 'empalmes',                label: 'Empalmes — Material'         },
-  { group: 'Material',  value: 'perfiles_longitudinales', label: 'PerfilL — Material'          },
-  { group: 'Material',  value: 'perfiles_transversales',  label: 'PerfilT — Material'          },
-  { group: 'Material',  value: 'runners',                 label: 'Runer — Material'            },
-  { group: 'Material',  value: 'ondas',                   label: 'Onda — Material'             },
-  { group: 'Gestión',   value: 'clientes',                label: 'Clientes'                    },
-  { group: 'Gestión',   value: 'descuentos',              label: 'Descuentos — Material'       },
-  { group: 'Gestión',   value: 'descuentos_soldadura',    label: 'Descuentos — Soldadura'      },
+  { group: 'Material', value: 'bandas',                  label: 'Banda — Material'        },
+  { group: 'Material', value: 'empalmes',                label: 'Empalmes — Material'     },
+  { group: 'Material', value: 'perfiles_longitudinales', label: 'PerfilL — Material'      },
+  { group: 'Material', value: 'perfiles_transversales',  label: 'PerfilT — Material'      },
+  { group: 'Material', value: 'runners',                 label: 'Runer — Material'        },
+  { group: 'Material', value: 'ondas',                   label: 'Onda — Material'         },
+  { group: 'Gestión',  value: 'clientes',                label: 'Clientes'                },
+  { group: 'Gestión',  value: 'descuentos',              label: 'Descuentos — Material'   },
+  { group: 'Gestión',  value: 'descuentos_soldadura',    label: 'Descuentos — Soldadura'  },
 ]
 
 const SEPARADORES = [
-  { value: ',',  label: 'Coma (,)'          },
-  { value: ';',  label: 'Punto y coma (;)'  },
-  { value: '|',  label: 'Barra vertical (|)'},
-  { value: '\t', label: 'Tabulador'         },
+  { value: ',',  label: 'Coma (,)'           },
+  { value: ';',  label: 'Punto y coma (;)'   },
+  { value: '|',  label: 'Barra vertical (|)' },
+  { value: '\t', label: 'Tabulador'          },
 ]
 
 function ImporterView() {
-  const [paso, setPaso]               = useState(1)
-
-  // paso 1
-  const [tabla, setTabla]             = useState('')
-  const [columnas, setColumnas]       = useState([])
-
-  // paso 2
-  const [archivo, setArchivo]         = useState(null)
-  const [separador, setSeparador]     = useState(',')
-  const [encabezados, setEncabezados] = useState([])
-  const [primeraLinea, setPrimeraLinea] = useState([])
-  const [todasFilas, setTodasFilas]   = useState([])
+  const [paso, setPaso]                   = useState(1)
+  const [tabla, setTabla]                 = useState('')
+  const [columnas, setColumnas]           = useState([])
+  const [archivo, setArchivo]             = useState(null)
+  const [separador, setSeparador]         = useState(',')
+  const [encabezados, setEncabezados]     = useState([])
+  const [primeraLinea, setPrimeraLinea]   = useState([])
+  const [todasFilas, setTodasFilas]       = useState([])
   const [archivoNombre, setArchivoNombre] = useState('')
   const [cargandoArchivo, setCargandoArchivo] = useState(false)
-
-  // paso 3
-  const [mapeo, setMapeo]             = useState({})
-  const [preview, setPreview]         = useState([])
-  const [duplicados, setDuplicados]   = useState([])
+  const [mapeo, setMapeo]                 = useState({})
+  const [preview, setPreview]             = useState([])
   const [mostrandoPreview, setMostrandoPreview] = useState(false)
-  const [modoDuplicados, setModoDuplicados] = useState(null) // 'solo_nuevos' | 'actualizar' | null
-
-  // resultado
-  const [resultado, setResultado]     = useState(null)
-  const [cargando, setCargando]       = useState(false)
+  const [modoDuplicados, setModoDuplicados] = useState(null)
+  const [resultado, setResultado]         = useState(null)
+  const [cargando, setCargando]           = useState(false)
 
   // ── paso 1 ──────────────────────────────────────────
   async function handleTablaChange(valor) {
@@ -74,7 +65,6 @@ function ImporterView() {
     setPrimeraLinea(data.primera_linea)
     setTodasFilas(data.filas)
     setArchivoNombre(archivo.name)
-    // mapeo inicial vacío
     const mapeoInicial = {}
     data.encabezados.forEach(h => { mapeoInicial[h] = '' })
     setMapeo(mapeoInicial)
@@ -86,7 +76,6 @@ function ImporterView() {
     setPaso(3)
     setMostrandoPreview(false)
     setPreview([])
-    setDuplicados([])
     setModoDuplicados(null)
   }
 
@@ -94,37 +83,52 @@ function ImporterView() {
   function handleMapeoChange(campoArchivo, campoDB) {
     setMapeo(prev => ({ ...prev, [campoArchivo]: campoDB }))
     setMostrandoPreview(false)
-    setDuplicados([])
     setModoDuplicados(null)
   }
 
   async function handlePrevisualizar() {
+    // previsualizar NO detecta duplicados — solo muestra las 10 primeras filas mapeadas
     const data = await previsualizarImportacion(tabla, encabezados, todasFilas, mapeo)
     setPreview(data.preview)
-    setDuplicados(data.duplicados)
     setMostrandoPreview(true)
     setModoDuplicados(null)
   }
 
   async function handleImportar(modo) {
     setCargando(true)
-    const data = await ejecutarImportacion(tabla, encabezados, todasFilas, mapeo, modo)
-    setResultado(data)
-    setPaso(4)
-    setCargando(false)
+    try {
+      const data = await ejecutarImportacion(tabla, encabezados, todasFilas, mapeo, modo)
+      setResultado(data)
+      setPaso(4)
+    } catch (error) {
+      setResultado({ insertados: 0, actualizados: 0, omitidos: 0, errores: [{ error: error.message }] })
+      setPaso(4)
+    } finally {
+      setCargando(false)
+    }
+  }
+
+  // cuando hay duplicados el backend los devuelve en el resultado
+  // el usuario elige modo desde el paso 4
+  async function handleGestionarDuplicados(modo) {
+    await handleImportar(modo)
   }
 
   function handleCancelar() {
     setTabla(''); setColumnas([]); setArchivo(null)
     setEncabezados([]); setPrimeraLinea([]); setTodasFilas([])
     setArchivoNombre(''); setMapeo({}); setPreview([])
-    setDuplicados([]); setMostrandoPreview(false)
-    setModoDuplicados(null); setResultado(null)
-    setPaso(1)
+    setMostrandoPreview(false); setModoDuplicados(null)
+    setResultado(null); setPaso(1)
   }
 
-  const seccionLabel = SECCIONES.find(s => s.value === tabla)?.label ?? ''
-  const columnasDest = columnas.map(c => c.nombre)
+  const seccionLabel  = SECCIONES.find(s => s.value === tabla)?.label ?? ''
+  const columnasDest  = columnas.map(c => c.nombre)
+
+  // helpers para el resultado
+  const hayExito      = resultado && resultado.insertados > 0 && resultado.errores?.length === 0
+  const hayDuplicados = resultado && resultado.omitidos > 0
+  const hayErrores    = resultado && resultado.errores?.length > 0
 
   return (
     <div className="importer-view">
@@ -134,7 +138,6 @@ function ImporterView() {
       {/* ── PASO 1 ── */}
       <div className="importer-paso">
         <p className="importer-paso-titulo">1. Indique la sección donde desea importar</p>
-
         <select className="form-select importer-select"
           value={tabla} onChange={e => handleTablaChange(e.target.value)}>
           <option value="">- Seleccionar -</option>
@@ -166,7 +169,6 @@ function ImporterView() {
                 ))}
               </tbody>
             </table>
-
             {paso === 1 && (
               <div className="importer-botones">
                 <button className="btn-continuar" onClick={handleSiguiente1}>Siguiente</button>
@@ -181,7 +183,7 @@ function ImporterView() {
       {paso >= 2 && (
         <div className="importer-paso">
           <p className="importer-paso-titulo">2. Cargue el archivo a importar</p>
-          <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12 }}>
+          <p style={{ fontSize: 13, color: '#6b7280' }}>
             Sube un archivo CSV o Excel con datos de productos y configuraciones
           </p>
 
@@ -189,7 +191,6 @@ function ImporterView() {
             className="importer-file-input"
             onChange={e => { setArchivo(e.target.files[0]); setEncabezados([]) }}
           />
-
           <p style={{ fontSize: 12, color: '#9ca3af', fontStyle: 'italic' }}>
             Se empleará la primera fila como encabezado
           </p>
@@ -218,18 +219,13 @@ function ImporterView() {
               <div style={{ overflowX: 'auto' }}>
                 <table className="importer-tabla-preview">
                   <thead>
-                    <tr>
-                      {encabezados.map(h => <th key={h}>{h}</th>)}
-                    </tr>
+                    <tr>{encabezados.map(h => <th key={h}>{h}</th>)}</tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      {primeraLinea.map((v, i) => <td key={i}>{v}</td>)}
-                    </tr>
+                    <tr>{primeraLinea.map((v, i) => <td key={i}>{v}</td>)}</tr>
                   </tbody>
                 </table>
               </div>
-
               {paso === 2 && (
                 <div className="importer-botones">
                   <button className="btn-continuar" onClick={handleSiguiente2}>Siguiente</button>
@@ -249,7 +245,6 @@ function ImporterView() {
           <div className="mapeo-grid">
             <p className="mapeo-header">Campo origen</p>
             <p className="mapeo-header">Campo destino</p>
-
             {encabezados.map(h => (
               <>
                 <div key={`origen-${h}`} className="mapeo-origen">{h}</div>
@@ -270,30 +265,7 @@ function ImporterView() {
             <button className="btn-atras" onClick={handleCancelar}>Resetear Relación</button>
           </div>
 
-          {/* aviso duplicados */}
-          {mostrandoPreview && duplicados.length > 0 && modoDuplicados === null && (
-            <div className="importer-duplicados-aviso">
-              <p style={{ fontSize: 13, color: '#e57373', fontWeight: 500 }}>
-                Se encontraron <strong>{duplicados.length}</strong> identificadores duplicados.
-                ¿Cómo desea proceder?
-              </p>
-              <div className="importer-botones" style={{ marginTop: 8 }}>
-                <button className="btn-continuar"
-                  onClick={() => setModoDuplicados('actualizar')}>
-                  Insertar nuevos + actualizar existentes
-                </button>
-                <button className="btn-atras"
-                  onClick={() => setModoDuplicados('solo_nuevos')}>
-                  Solo insertar nuevos
-                </button>
-                <button className="pedido-borrar-btn" onClick={handleCancelar}>
-                  Cancelar importación
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* preview */}
+          {/* preview — sin aviso de duplicados aquí */}
           {mostrandoPreview && preview.length > 0 && (
             <>
               <p style={{ fontSize: 13, color: '#1a1a1a', marginTop: 16 }}>
@@ -302,9 +274,7 @@ function ImporterView() {
               <div style={{ overflowX: 'auto' }}>
                 <table className="importer-tabla-preview">
                   <thead>
-                    <tr>
-                      {Object.keys(preview[0]).map(col => <th key={col}>{col}</th>)}
-                    </tr>
+                    <tr>{Object.keys(preview[0]).map(col => <th key={col}>{col}</th>)}</tr>
                   </thead>
                   <tbody>
                     {preview.map((fila, i) => (
@@ -316,42 +286,91 @@ function ImporterView() {
                 </table>
               </div>
 
-              {/* botón importar — aparece si no hay duplicados o si ya eligió modo */}
-              {(duplicados.length === 0 || modoDuplicados !== null) && (
-                <div className="importer-botones" style={{ marginTop: 16 }}>
-                  <button className="btn-continuar"
-                    disabled={cargando}
-                    onClick={() => handleImportar(modoDuplicados ?? 'solo_nuevos')}>
-                    {cargando ? 'Importando...' : 'Importar datos'}
-                  </button>
-                  <button className="btn-atras" onClick={handleCancelar}>
-                    Cancelar Importación
-                  </button>
-                </div>
-              )}
+              <div className="importer-botones" style={{ marginTop: 16 }}>
+                <button className="btn-continuar" disabled={cargando}
+                  onClick={() => handleImportar('solo_nuevos')}>
+                  {cargando ? 'Importando...' : 'Importar datos'}
+                </button>
+                <button className="btn-atras" onClick={handleCancelar}>
+                  Cancelar Importación
+                </button>
+              </div>
             </>
           )}
         </div>
       )}
 
-      {/* ── RESULTADO ── */}
+      {/* ── RESULTADO (paso 4) ── */}
       {paso === 4 && resultado && (
         <div className="importer-paso">
-          <div className="exporter-archivos-generados">
-            <p className="importer-paso-titulo" style={{ marginBottom: 12 }}>
-              Archivos importados
+
+          {/* caso: éxito limpio */}
+          {hayExito && !hayDuplicados && (
+            <>
+              <div className="exporter-archivos-generados">
+                <p className="importer-paso-titulo" style={{ marginBottom: 12 }}>Archivos importados</p>
+                <div className="exporter-archivo-fila">
+                  <span className="exporter-archivo-icono">📄</span>
+                  <span className="exporter-archivo-nombre">{archivoNombre}</span>
+                  <span className="exporter-descargado">Importado</span>
+                </div>
+              </div>
+              <p style={{ fontSize: 13, color: '#4a6f8a', fontWeight: 500, marginTop: 12 }}>
+                Se han importado con éxito <strong>{resultado.insertados}</strong> filas.
+              </p>
+            </>
+          )}
+
+          {/* caso: éxito parcial con actualizaciones */}
+          {resultado.insertados > 0 && resultado.actualizados > 0 && !hayErrores && (
+            <p style={{ fontSize: 13, color: '#4a6f8a', fontWeight: 500 }}>
+              Insertadas <strong>{resultado.insertados}</strong> filas nuevas
+              y actualizadas <strong>{resultado.actualizados}</strong>.
             </p>
-            <div className="exporter-archivo-fila">
-              <span className="exporter-archivo-icono">📄</span>
-              <span className="exporter-archivo-nombre">{archivoNombre}</span>
-              <span className="exporter-descargado">Importado</span>
+          )}
+
+          {/* caso: hay duplicados omitidos → preguntar qué hacer */}
+          {hayDuplicados && modoDuplicados === null && !hayErrores && (
+            <div className="importer-duplicados-aviso">
+              <p style={{ fontSize: 13, color: '#e57373', fontWeight: 500 }}>
+                Se encontraron <strong>{resultado.omitidos}</strong> registros duplicados.
+                ¿Cómo desea proceder?
+              </p>
+              <div className="importer-botones" style={{ marginTop: 10 }}>
+                <button className="btn-continuar"
+                  onClick={() => { setModoDuplicados('actualizar'); handleGestionarDuplicados('actualizar') }}>
+                  Insertar nuevos + actualizar existentes
+                </button>
+                <button className="btn-atras"
+                  onClick={() => { setModoDuplicados('solo_nuevos'); setPaso(3) }}>
+                  Solo insertar nuevos (ignorar duplicados)
+                </button>
+                <button className="pedido-borrar-btn" onClick={handleCancelar}>
+                  Cancelar importación
+                </button>
+              </div>
             </div>
-          </div>
-          <p style={{ fontSize: 13, color: '#4a6f8a', fontWeight: 500, marginTop: 12 }}>
-            Se han importado con éxito{' '}
-            <strong>{resultado.insertados}</strong> filas
-            {resultado.actualizados > 0 && ` y actualizado ${resultado.actualizados}`}.
-          </p>
+          )}
+
+          {/* caso: errores */}
+          {hayErrores && (
+            <div className="importer-duplicados-aviso" style={{ marginTop: 12 }}>
+              <p style={{ fontSize: 13, color: '#e57373', fontWeight: 500 }}>
+                No se pudieron importar {resultado.errores.length} filas:
+              </p>
+              <ul style={{ margin: '8px 0 0 18px', fontSize: 12, color: '#6b7280' }}>
+                {resultado.errores.slice(0, 5).map((error, i) => (
+                  <li key={i}>
+                    {error.fila && `Fila ${error.fila}: `}{error.error}
+                  </li>
+                ))}
+                {resultado.errores.length > 5 && (
+                  <li>...y {resultado.errores.length - 5} más</li>
+                )}
+              </ul>
+            </div>
+          )}
+
           <button className="btn-atras" style={{ marginTop: 16 }} onClick={handleCancelar}>
             Nueva importación
           </button>

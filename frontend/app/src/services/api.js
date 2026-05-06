@@ -148,7 +148,9 @@ export async function parsearArchivo(archivo, separador) {
     method: 'POST',
     body: form
   })
-  return res.json()
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.detail || 'Error al parsear el archivo')
+  return data
 }
 
 export async function previsualizarImportacion(tabla, encabezados, filas, mapeo) {
@@ -157,7 +159,9 @@ export async function previsualizarImportacion(tabla, encabezados, filas, mapeo)
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ tabla, encabezados, filas, mapeo })
   })
-  return res.json()
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.detail || 'Error al previsualizar la importación')
+  return data
 }
 
 export async function ejecutarImportacion(tabla, encabezados, filas, mapeo, modo) {
@@ -166,5 +170,7 @@ export async function ejecutarImportacion(tabla, encabezados, filas, mapeo, modo
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ tabla, encabezados, filas, mapeo, modo })
   })
-  return res.json()
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.detail || 'Error al ejecutar la importación')
+  return data
 }

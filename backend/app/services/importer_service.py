@@ -16,6 +16,16 @@ TABLAS_IMPORTABLES = {
     'descuentos_soldadura':    'descuentos_soldadura',
 }
 
+CLAVES_DUPLICADOS = {
+    'bandas': ['codigo'],
+    'perfiles_longitudinales': ['codigo'],
+    'perfiles_transversales': ['codigo'],
+    'runners': ['codigo'],
+    'ondas': ['codigo'],
+    'clientes': ['codigo'],
+    'empalmes': ['tipo', 'subtipo', 'ancho'],
+}
+
 def validar_tabla(tabla):
     if tabla not in TABLAS_IMPORTABLES:
         raise ValueError(f"Tabla '{tabla}' no válida")
@@ -76,20 +86,50 @@ def aplicar_mapeo(encabezados, filas, mapeo):
             resultado.append(fila_mapeada)
     return resultado
 
+def _columnas_tabla(db, nombre_tabla):
+    cursor = db.cursor()
+    cursor.execute(f"PRAGMA table_info({nombre_tabla})")
+    return [row[1] for row in cursor.fetchall()]
+
+def _clave_duplicado(db, tabla, fila=None):
+    nombre_tabla = validar_tabla(tabla)
+    columnas_existentes = set(_columnas_tabla(db, nombre_tabla))
+    candidatas = CLAVES_DUPLICADOS.get(tabla, [])
+
+    if candidatas and set(candidatas).issubset(columnas_existentes):
+        if fila is None or all(fila.get(col) not in (None, '') for col in candidatas):
+            return candidatas
+
+    if 'id_import' in columnas_existentes:
+        if fila is None or fila.get('id_import') not in (None, ''):
+            return ['id_import']
+
+    return []
+
+def _where_por_clave(fila, clave):
+    where = ' AND '.join([f"{col} = ?" for col in clave])
+    valores = [fila[col] for col in clave]
+    return where, valores
+
 def detectar_duplicados(db, tabla, filas_mapeadas):
     nombre_tabla = validar_tabla(tabla)
     cursor = db.cursor()
     duplicados = []
     for i, fila in enumerate(filas_mapeadas):
-        id_import = fila.get('id_import')
-        if id_import is None:
+        clave = _clave_duplicado(db, tabla, fila)
+        if not clave:
             continue
+        where, valores = _where_por_clave(fila, clave)
         cursor.execute(
-            f"SELECT id_import FROM {nombre_tabla} WHERE id_import = ?",
-            (id_import,)
+            f"SELECT 1 FROM {nombre_tabla} WHERE {where}",
+            valores
         )
         if cursor.fetchone():
-            duplicados.append({"fila": i + 2, "id_import": id_import})
+            duplicados.append({
+                "fila": i + 2,
+                "clave": " + ".join(clave),
+                "valores": {col: fila[col] for col in clave},
+            })
     return duplicados
 
 def importar_filas(db, tabla, filas_mapeadas, modo='solo_nuevos'):
@@ -102,30 +142,40 @@ def importar_filas(db, tabla, filas_mapeadas, modo='solo_nuevos'):
     cursor = db.cursor()
     insertados = 0
     actualizados = 0
+    omitidos = 0
+    errores = []
 
-    for fila in filas_mapeadas:
-        id_import = fila.get('id_import')
+    for num_fila, fila in enumerate(filas_mapeadas, start=2):
+        clave = _clave_duplicado(db, tabla, fila)
+        existente = None
 
-        if modo == 'actualizar' and id_import is not None:
+        if clave:
+            where, valores_clave = _where_por_clave(fila, clave)
             cursor.execute(
-                f"SELECT id FROM {nombre_tabla} WHERE id_import = ?",
-                (id_import,)
+                f"SELECT id FROM {nombre_tabla} WHERE {where}",
+                valores_clave
             )
             existente = cursor.fetchone()
 
-            if existente:
-                # UPDATE
-                campos = [f"{k} = ?" for k in fila.keys() if k != 'id_import']
-                valores = [v for k, v in fila.items() if k != 'id_import']
-                valores.append(id_import)
-                cursor.execute(
-                    f"UPDATE {nombre_tabla} SET {', '.join(campos)} WHERE id_import = ?",
-                    valores
-                )
-                actualizados += 1
+        if existente and modo == 'actualizar':
+            campos = [f"{k} = ?" for k in fila.keys() if k not in clave and k != 'id']
+            valores = [v for k, v in fila.items() if k not in clave and k != 'id']
+            if not campos:
+                omitidos += 1
                 continue
 
-        # INSERT — si hay duplicado y modo es solo_nuevos, lo salta
+            valores.extend(valores_clave)
+            cursor.execute(
+                f"UPDATE {nombre_tabla} SET {', '.join(campos)} WHERE {where}",
+                valores
+            )
+            actualizados += 1
+            continue
+
+        if existente:
+            omitidos += 1
+            continue
+
         try:
             columnas = ', '.join(fila.keys())
             placeholders = ', '.join(['?'] * len(fila))
@@ -134,8 +184,18 @@ def importar_filas(db, tabla, filas_mapeadas, modo='solo_nuevos'):
                 list(fila.values())
             )
             insertados += 1
-        except Exception:
-            pass  # duplicado ignorado en modo solo_nuevos
+        except Exception as e:
+            errores.append({
+                "fila": num_fila,
+                "error": str(e),
+                "datos": fila,
+            })
 
     db.commit()
-    return {"insertados": insertados, "actualizados": actualizados}
+
+    return {
+        "insertados": insertados,
+        "actualizados": actualizados,
+        "omitidos": omitidos,
+        "errores": errores,
+    }
