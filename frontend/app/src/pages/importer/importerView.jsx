@@ -12,7 +12,7 @@ const SECCIONES = [
   { group: 'Material', value: 'runners',                 label: 'Runer — Material'        },
   { group: 'Material', value: 'ondas',                   label: 'Onda — Material'         },
   { group: 'Gestión',  value: 'clientes',                label: 'Clientes'                },
-  { group: 'Gestión',  value: 'descuentos',              label: 'Descuentos — Material'   },
+  { group: 'Gestión',  value: 'descuentos_material',              label: 'Descuentos — Material'   },
   { group: 'Gestión',  value: 'descuentos_soldadura',    label: 'Descuentos — Soldadura'  },
 ]
 
@@ -32,23 +32,32 @@ function ImporterView() {
   const [encabezados, setEncabezados]     = useState([])
   const [primeraLinea, setPrimeraLinea]   = useState([])
   const [todasFilas, setTodasFilas]       = useState([])
+
   const [archivoNombre, setArchivoNombre] = useState('')
-  const [cargandoArchivo, setCargandoArchivo] = useState(false)
+
   const [mapeo, setMapeo]                 = useState({})
   const [preview, setPreview]             = useState([])
+  const [duplicados, setDuplicados]       = useState([])
+
   const [mostrandoPreview, setMostrandoPreview] = useState(false)
+  const [cargandoArchivo, setCargandoArchivo] = useState(false)
   const [modoDuplicados, setModoDuplicados] = useState(null)
   const [resultado, setResultado]         = useState(null)
   const [cargando, setCargando]           = useState(false)
 
   // ── paso 1 ──────────────────────────────────────────
+
   async function handleTablaChange(valor) {
+
     setTabla(valor)
     setColumnas([])
     setPaso(1)
+
     if (!valor) return
+
     const cols = await getColumnasTabla(valor)
     setColumnas(cols)
+
   }
 
   function handleSiguiente1() {
@@ -57,14 +66,21 @@ function ImporterView() {
   }
 
   // ── paso 2 ──────────────────────────────────────────
+
   async function handleCargarArchivo() {
+
     if (!archivo) return
+
     setCargandoArchivo(true)
+
     const data = await parsearArchivo(archivo, separador)
+
     setEncabezados(data.encabezados)
     setPrimeraLinea(data.primera_linea)
     setTodasFilas(data.filas)
+
     setArchivoNombre(archivo.name)
+
     const mapeoInicial = {}
     data.encabezados.forEach(h => { mapeoInicial[h] = '' })
     setMapeo(mapeoInicial)
@@ -72,34 +88,62 @@ function ImporterView() {
   }
 
   function handleSiguiente2() {
+
     if (encabezados.length === 0) return
+
     setPaso(3)
+
     setMostrandoPreview(false)
     setPreview([])
+    setDuplicados([])
     setModoDuplicados(null)
   }
 
   // ── paso 3 ──────────────────────────────────────────
+
   function handleMapeoChange(campoArchivo, campoDB) {
+
     setMapeo(prev => ({ ...prev, [campoArchivo]: campoDB }))
+
     setMostrandoPreview(false)
+    setDuplicados([])
     setModoDuplicados(null)
+
   }
 
   async function handlePrevisualizar() {
-    // previsualizar NO detecta duplicados — solo muestra las 10 primeras filas mapeadas
+
     const data = await previsualizarImportacion(tabla, encabezados, todasFilas, mapeo)
+
     setPreview(data.preview)
+
+    setDuplicados([])
     setMostrandoPreview(true)
     setModoDuplicados(null)
+
   }
 
-  async function handleImportar(modo) {
+  async function handleImportar(modo = null) {
+
     setCargando(true)
+
     try {
-      const data = await ejecutarImportacion(tabla, encabezados, todasFilas, mapeo, modo)
+      if (modo === null) {
+
+        const previewData = await previsualizarImportacion(tabla, encabezados, todasFilas, mapeo)
+        const duplicadosDetectados = previewData.duplicados ?? []
+
+        if (duplicadosDetectados.length > 0) {
+          setDuplicados(duplicadosDetectados)
+          setModoDuplicados(null)
+          return
+        }
+      }
+
+      const data = await ejecutarImportacion(tabla, encabezados, todasFilas, mapeo, modo ?? 'solo_nuevos')
       setResultado(data)
       setPaso(4)
+
     } catch (error) {
       setResultado({ insertados: 0, actualizados: 0, omitidos: 0, errores: [{ error: error.message }] })
       setPaso(4)
@@ -108,17 +152,12 @@ function ImporterView() {
     }
   }
 
-  async function handleGestionarDuplicados(modo) {
-    setResultado(null) 
-    setModoDuplicados(modo)
-    await handleImportar(modo)
-  }
-
   function handleCancelar() {
+
     setTabla(''); setColumnas([]); setArchivo(null)
     setEncabezados([]); setPrimeraLinea([]); setTodasFilas([])
     setArchivoNombre(''); setMapeo({}); setPreview([])
-    setMostrandoPreview(false); setModoDuplicados(null)
+    setDuplicados([]); setMostrandoPreview(false); setModoDuplicados(null)
     setResultado(null); setPaso(1)
   }
 
@@ -126,8 +165,8 @@ function ImporterView() {
   const columnasDest  = columnas.map(c => c.nombre)
 
   // helpers para el resultado
-  const hayExito      = resultado && resultado.insertados > 0 && resultado.errores?.length === 0
-  const hayDuplicados = resultado && resultado.omitidos > 0
+  const hayExito      = resultado && (resultado.insertados > 0 || resultado.actualizados > 0) && resultado.errores?.length === 0
+  const hayOmitidos   = resultado && resultado.omitidos > 0
   const hayErrores    = resultado && resultado.errores?.length > 0
 
   return (
@@ -265,7 +304,7 @@ function ImporterView() {
             <button className="btn-atras" onClick={handleCancelar}>Resetear Relación</button>
           </div>
 
-          {/* preview — sin aviso de duplicados aquí */}
+          {/* preview */}
           {mostrandoPreview && preview.length > 0 && (
             <>
               <p style={{ fontSize: 13, color: '#1a1a1a', marginTop: 16 }}>
@@ -286,26 +325,63 @@ function ImporterView() {
                 </table>
               </div>
 
-              <div className="importer-botones" style={{ marginTop: 16 }}>
-                <button className="btn-continuar" disabled={cargando}
-                  onClick={() => handleImportar('solo_nuevos')}>
-                  {cargando ? 'Importando...' : 'Importar datos'}
-                </button>
-                <button className="btn-atras" onClick={handleCancelar}>
-                  Cancelar Importación
-                </button>
-              </div>
+              {(duplicados.length === 0 || modoDuplicados !== null) && (
+                <div className="importer-botones" style={{ marginTop: 16 }}>
+                  <button className="btn-continuar" disabled={cargando}
+                  onClick={() => handleImportar(modoDuplicados)}>
+                    {cargando ? 'Importando...' : 'Importar datos'}
+                  </button>
+                  <button className="btn-atras" onClick={handleCancelar}>
+                    Cancelar Importación
+                  </button>
+                </div>
+              )}
             </>
           )}
         </div>
       )}
+
+      {/* aviso duplicados */}
+          {mostrandoPreview && duplicados.length > 0 && modoDuplicados === null && (
+            <div className="importer-duplicados-aviso">
+              <p style={{ fontSize: 13, color: '#e57373', fontWeight: 500 }}>
+                Se encontraron <strong>{duplicados.length}</strong> registros duplicados.
+                ¿Cómo desea proceder?
+              </p>
+              <ul style={{ margin: '8px 0 0 18px', fontSize: 12, color: '#6b7280' }}>
+                {duplicados.slice(0, 3).map((duplicado, i) => (
+                  <li key={i}>
+                    Fila {duplicado.fila}: {Object.entries(duplicado.valores ?? {})
+                      .map(([campo, valor]) => `${campo}=${valor}`)
+                      .join(', ')}
+                  </li>
+                ))}
+                {duplicados.length > 3 && (
+                  <li>...y {duplicados.length - 3} más</li>
+                )}
+              </ul>
+              <div className="importer-botones" style={{ marginTop: 10 }}>
+                <button className="btn-continuar"
+                  onClick={() => handleImportar('actualizar')}>
+                  Insertar nuevos + actualizar existentes
+                </button>
+                <button className="btn-atras"
+                  onClick={() => handleImportar('solo_nuevos')}>
+                  Solo insertar nuevos
+                </button>
+                <button className="pedido-borrar-btn" onClick={handleCancelar}>
+                  Cancelar importación
+                </button>
+              </div>
+            </div>
+          )}
 
       {/* ── RESULTADO (paso 4) ── */}
       {paso === 4 && resultado && (
         <div className="importer-paso">
 
           {/* caso: éxito limpio */}
-          {hayExito && !hayDuplicados && (
+          {hayExito && (
             <>
               <div className="exporter-archivos-generados">
                 <p className="importer-paso-titulo" style={{ marginBottom: 12 }}>Archivos importados</p>
@@ -316,40 +392,17 @@ function ImporterView() {
                 </div>
               </div>
               <p style={{ fontSize: 13, color: '#4a6f8a', fontWeight: 500, marginTop: 12 }}>
-                Se han importado con éxito <strong>{resultado.insertados}</strong> filas.
+                Se han importado con éxito <strong>{resultado.insertados}</strong> filas
+                {resultado.actualizados > 0 && ` y actualizado ${resultado.actualizados}`}
+                {hayOmitidos && `; ${resultado.omitidos} duplicadas omitidas`}.
               </p>
             </>
           )}
 
-          {/* caso: éxito parcial con actualizaciones */}
-          {resultado.insertados > 0 && resultado.actualizados > 0 && !hayErrores && (
+          {!hayExito && hayOmitidos && !hayErrores && (
             <p style={{ fontSize: 13, color: '#4a6f8a', fontWeight: 500 }}>
-              Insertadas <strong>{resultado.insertados}</strong> filas nuevas
-              y actualizadas <strong>{resultado.actualizados}</strong>.
+              No se importaron filas nuevas; se omitieron <strong>{resultado.omitidos}</strong> duplicadas.
             </p>
-          )}
-
-          {/* caso: hay duplicados omitidos → preguntar qué hacer */}
-          {hayDuplicados && modoDuplicados === null && !hayErrores && (
-          <div className="importer-duplicados-aviso">
-              <p style={{ fontSize: 13, color: '#e57373', fontWeight: 500 }}>
-              Se encontraron <strong>{resultado.omitidos}</strong> registros duplicados.
-              ¿Cómo desea proceder?
-              </p>
-              <div className="importer-botones" style={{ marginTop: 10 }}>
-              <button className="btn-continuar"
-                  onClick={() => handleGestionarDuplicados('actualizar')}>
-                  Insertar nuevos + actualizar existentes
-              </button>
-              <button className="btn-atras"
-                  onClick={() => handleGestionarDuplicados('solo_nuevos')}>
-                  Solo insertar nuevos (ignorar duplicados)
-              </button>
-              <button className="pedido-borrar-btn" onClick={handleCancelar}>
-                  Cancelar importación
-              </button>
-              </div>
-          </div>
           )}
 
           {/* caso: errores */}

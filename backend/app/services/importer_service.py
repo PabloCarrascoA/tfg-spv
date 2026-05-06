@@ -81,7 +81,7 @@ def aplicar_mapeo(encabezados, filas, mapeo):
         fila_dict = dict(zip(encabezados, fila))
         fila_mapeada = {}
         for campo_archivo, campo_db in mapeo.items():
-            if campo_db and campo_archivo in fila_dict:
+            if campo_db and campo_db != 'id' and campo_archivo in fila_dict:
                 fila_mapeada[campo_db] = fila_dict[campo_archivo]
         if fila_mapeada:
             resultado.append(fila_mapeada)
