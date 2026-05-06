@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   getColumnasTabla, parsearArchivo,
   previsualizarImportacion, ejecutarImportacion
@@ -32,6 +32,8 @@ function ImporterView() {
   const [encabezados, setEncabezados]     = useState([])
   const [primeraLinea, setPrimeraLinea]   = useState([])
   const [todasFilas, setTodasFilas]       = useState([])
+
+  const [exito, setExito]                 = useState(false)
 
   const [archivoNombre, setArchivoNombre] = useState('')
 
@@ -158,16 +160,23 @@ function ImporterView() {
     setEncabezados([]); setPrimeraLinea([]); setTodasFilas([])
     setArchivoNombre(''); setMapeo({}); setPreview([])
     setDuplicados([]); setMostrandoPreview(false); setModoDuplicados(null)
-    setResultado(null); setPaso(1)
+    setResultado(null); setExito(false); setPaso(1)
   }
 
   const seccionLabel  = SECCIONES.find(s => s.value === tabla)?.label ?? ''
   const columnasDest  = columnas.map(c => c.nombre)
 
   // helpers para el resultado
+  
   const hayExito      = resultado && (resultado.insertados > 0 || resultado.actualizados > 0) && resultado.errores?.length === 0
   const hayOmitidos   = resultado && resultado.omitidos > 0
   const hayErrores    = resultado && resultado.errores?.length > 0
+
+  useEffect(() => {
+    if (hayExito && !exito) {
+        setExito(true)
+    }
+    }, [hayExito, exito])
 
   return (
     <div className="importer-view">
@@ -342,7 +351,7 @@ function ImporterView() {
       )}
 
       {/* aviso duplicados */}
-          {mostrandoPreview && duplicados.length > 0 && modoDuplicados === null && (
+          {mostrandoPreview && exito === false && duplicados.length > 0 && modoDuplicados === null && (
             <div className="importer-duplicados-aviso">
               <p style={{ fontSize: 13, color: '#e57373', fontWeight: 500 }}>
                 Se encontraron <strong>{duplicados.length}</strong> registros duplicados.
@@ -374,6 +383,7 @@ function ImporterView() {
                 </button>
               </div>
             </div>
+            
           )}
 
       {/* ── RESULTADO (paso 4) ── */}
