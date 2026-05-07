@@ -167,7 +167,7 @@ function ImporterView() {
   const columnasDest  = columnas.map(c => c.nombre)
 
   // helpers para el resultado
-  
+
   const hayExito      = resultado && (resultado.insertados > 0 || resultado.actualizados > 0) && resultado.errores?.length === 0
   const hayOmitidos   = resultado && resultado.omitidos > 0
   const hayErrores    = resultado && resultado.errores?.length > 0
@@ -177,6 +177,9 @@ function ImporterView() {
         setExito(true)
     }
     }, [hayExito, exito])
+
+
+  const destinosUsados = new Set(Object.values(mapeo).filter(v => v !== ''))
 
   return (
     <div className="importer-view">
@@ -297,12 +300,14 @@ function ImporterView() {
               <>
                 <div key={`origen-${h}`} className="mapeo-origen">{h}</div>
                 <select key={`dest-${h}`} className="form-select mapeo-select"
-                  value={mapeo[h] ?? ''}
-                  onChange={e => handleMapeoChange(h, e.target.value)}>
-                  <option value="">- No asignado -</option>
-                  {columnasDest.map(col => (
-                    <option key={col} value={col}>{col}</option>
-                  ))}
+                    value={mapeo[h] ?? ''}
+                    onChange={e => handleMapeoChange(h, e.target.value)}>
+                    <option value="">- No asignado -</option>
+                    {columnasDest.map(col => (
+                        (!destinosUsados.has(col) || mapeo[h] === col) && (
+                        <option key={col} value={col}>{col}</option>
+                        )
+                    ))}
                 </select>
               </>
             ))}
