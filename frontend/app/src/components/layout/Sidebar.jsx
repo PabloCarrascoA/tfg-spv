@@ -7,8 +7,8 @@ const links = [
   { to: '/',          label: 'Inicio', icon: <FiHome /> },
   { to: '/banda',     label: 'Configurar pedido', icon: <FiPackage /> },
   { to: '/pedidos',   label: 'Pedidos realizados', icon: <FiShoppingCart /> },
-  { to: '/importer',  label: 'Importar datos', icon: <FiUpload /> },
-  { to: '/exporter',  label: 'Exportar datos', icon: <FiDownload /> },
+  { to: '/importer',  label: 'Importar datos', icon: <FiDownload /> },
+  { to: '/exporter',  label: 'Exportar datos', icon: <FiUpload /> },
 ]
 
 function Sidebar() {
