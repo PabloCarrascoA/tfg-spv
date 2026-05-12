@@ -778,7 +778,7 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
     
     # dividir entre 1000000 para pasar a m2 y multiplicar por el precio por m2 de la onda
 
-    precio_onda_total = ((desarrollo_total * n_ondas) * ancho * onda["precio"]) / 1000000
+    precio_onda_total = (desarrollo_total * ancho * onda["precio"]) / 1000000
 
     if cliente_id is not None:
         
@@ -899,7 +899,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
             total_perfiles_longitudinales += n_perfiles_inferior
 
-    elif codigo_perfilT is not None and (distancia_paso is not None or n_perfilesT is not None):
+    if codigo_perfilT is not None and (distancia_paso is not None or n_perfilesT is not None):
 
         print(f"DEBUG: {codigo_perfilT}")
 
