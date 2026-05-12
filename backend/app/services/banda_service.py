@@ -470,7 +470,7 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
 
     precio_perfil_total = (n_perfiles * largo_m * precio_perfil_mL)
 
-    print(f"DEBUG: precio perfil total: {precio_perfil_total}")
+    print(f"DEBUG: precio perfil total *: {precio_perfil_total}")
 
     if cliente_id is not None:
         print(
@@ -508,7 +508,7 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
 
         precio_soldadura_total = precio_soldadura_total * (descuento_soldadura)
 
-    print(f"DEBUG: precio soldadura: {precio_soldadura_total}")
+    print(f"DEBUG: precio soldadura *: {precio_soldadura_total}")
 
 
     # - Calculo preparación -
@@ -518,7 +518,7 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
     precio_preparacion = calcular_precio_preparacion(tarifa_preparacion, cantidad_bandas, n_perfiles)
     
     
-    print(f"DEBUG: precio preparación: {precio_preparacion}")
+    print(f"DEBUG: precio preparación *: {precio_preparacion}")
     
     precio_final = precio_perfil_total + precio_soldadura_total + precio_preparacion
 
@@ -583,7 +583,7 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
     if ancho_perfil is not None and ancho_perfil > 0:
         ancho_m = (ancho_perfil + 40) / 1000
     else:
-        ancho_m = (ancho + 40) / 1000 # se suman 40mm de banda por el desaprovechamiento en los cortes
+        ancho_m = 0
 
     precio_perfil_total = (n_perfiles * ancho_m * precio_perfil_mL)
 
@@ -597,10 +597,10 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
 
     # - Calculo soldadura -
 
-    if largo <= 1000:
+    if ancho <= 1000:
         precio_soldadura_mL = perfil["precioSoldar_Lhasta1000"]
 
-    elif largo >= 1000 and largo <= 1400:
+    elif ancho >= 1000 and ancho <= 1400:
         precio_soldadura_mL = perfil["precioSoldar_L1000_1400"]
 
     else:

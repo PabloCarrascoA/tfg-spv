@@ -86,6 +86,17 @@ function PerfilTConfigView() {
       }
     }, [anchoBanda, margen])
 
+    useEffect(() => {
+      const largo = parseFloat(state.banda?.longitud)
+      if (!largo || cantidad <= 1) {
+        setDistancia('')  // reset
+        return
+      }
+
+      const paso = largo / cantidad
+      setDistancia(paso.toFixed(2))  
+    }, [cantidad, state.banda?.longitud])
+
 
   function handleSiguiente() {
 
@@ -157,16 +168,16 @@ function PerfilTConfigView() {
             </div>
 
             {cantidad > 1 && (
-            <div className="form-group">
-              <label className="form-label">Paso entre perfiles (mm)</label>
-              <input
-                type="number"
-                className="form-input"
-                placeholder="0"
-                value={distancia}
-                onChange={e => setDistancia(e.target.value)}
-              />
-            </div>
+              <div className="form-group">
+                <label className="form-label">Paso entre perfiles (mm)</label>
+                <input
+                  type="number"
+                  className="form-input"
+                  value={distancia}
+                  readOnly                                        
+                  style={{ background: '#f5f6f8', color: '#6b7280' }}  // ← visualmente deshabilitado
+                />
+              </div>
             )}
 
             <div className="form-row">
