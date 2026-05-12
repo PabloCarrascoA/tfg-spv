@@ -470,6 +470,8 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
 
     precio_perfil_total = (n_perfiles * largo_m * precio_perfil_mL)
 
+    print(f"DEBUG: precio perfil total: {precio_perfil_total}")
+
     if cliente_id is not None:
         print(
             "DEBUG descuento perfil longitudinal:",
@@ -492,7 +494,7 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
     if largo < 1500:
         precio_soldadura_mL = perfil["precioSoldar_Linf1500"]
 
-    elif largo >= 1500 and largo < 2100:
+    elif largo >= 1500 and ancho < 2100:
         precio_soldadura_mL = perfil["precioSoldar_Lsup1500_Ainf2100"]
 
     else:
@@ -505,6 +507,8 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
         descuento_soldadura = 1 - get_descuento_soldadura(db, cliente_id, "perfiles_longitudinales")
 
         precio_soldadura_total = precio_soldadura_total * (descuento_soldadura)
+
+    print(f"DEBUG: precio soldadura: {precio_soldadura_total}")
 
 
     # - Calculo preparación -
@@ -772,7 +776,9 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
     print(f"DEBUG: valor de desarrollo total -> {desarrollo_total}")
     
-    precio_onda_total = (desarrollo_total * n_ondas) * ancho * onda["precio"]
+    # dividir entre 1000000 para pasar a m2 y multiplicar por el precio por m2 de la onda
+
+    precio_onda_total = ((desarrollo_total * n_ondas) * ancho * onda["precio"]) / 1000000
 
     if cliente_id is not None:
         
