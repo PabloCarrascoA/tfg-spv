@@ -1,6 +1,6 @@
 import math
 from app.utils.descuentos import get_descuento_producto, get_descuento_soldadura, get_cliente_id_por_nombre, get_tarifa_preparacion
-from app.utils.preparacion import calcular_precio_preparacion
+from app.utils.preparacion import calcular_precio_preparacionLR, calcular_precio_preparacionTO
 
 # ------------------------
 # OBTENER DATOS POR CÓDIGO
@@ -515,7 +515,7 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
 
     tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_longitudinales")
 
-    precio_preparacion = calcular_precio_preparacion(tarifa_preparacion, cantidad_bandas, n_perfiles)
+    precio_preparacion = calcular_precio_preparacionLR(tarifa_preparacion, cantidad_bandas, n_perfiles)
     
     
     print(f"DEBUG: precio preparación *: {precio_preparacion}")
@@ -620,7 +620,7 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
 
     tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_transversales")
 
-    precio_preparacion = calcular_precio_preparacion(tarifa_preparacion, cantidad_bandas, n_perfiles)
+    precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho)
 
 
     precio_final = precio_perfil_total + precio_soldadura_total + precio_preparacion
@@ -698,7 +698,7 @@ def calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_per
 
     tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "runers")
 
-    precio_preparacion = calcular_precio_preparacion(tarifa_preparacion, cantidad_bandas, n_perfiles)
+    precio_preparacion = calcular_precio_preparacionLR(tarifa_preparacion, cantidad_bandas, n_perfiles)
 
 
     precio_final = precio_runer_total + precio_soldadura_total + precio_preparacion
