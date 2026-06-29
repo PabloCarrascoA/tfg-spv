@@ -355,6 +355,43 @@ a {
   min-width: 0;
   background: #d6e4ef;
   border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* imagenes del panel */
+.config-side-img-wrapper {
+  position: relative;
+  width: 75%;
+  max-width: 400px;
+}
+
+.config-side-img {
+  width: 100%;
+  opacity: 0.85;
+  display: block;
+}
+
+.config-banda-label {
+  position: absolute;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c4f6b;
+  text-align: center;
+  width: 70px; 
+}
+
+/* ajustes de posición de los labels según el tipo de banda */
+
+.config-banda-ancho {
+  top: 51.5%;   
+  left: 5%; 
+}
+
+.config-banda-longitud {
+  top: 2%;   
+  left: 60%;  
 }
 
 .config-step-label {

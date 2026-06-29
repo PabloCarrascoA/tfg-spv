@@ -229,7 +229,17 @@ function BandaConfigView() {
           </div>
         </div>
 
-        <div className="config-side-panel" />
+        <div className="config-side-panel">
+          <div className="config-side-img-wrapper">
+            <img src="/images/sketch-banda.svg" alt="Esquema de banda" className="config-side-img" />
+            <span className="config-banda-label config-banda-ancho">
+              {ancho || '—'} mm
+            </span>
+            <span className="config-banda-label config-banda-longitud">
+              {longitud || '—'} mm
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   )

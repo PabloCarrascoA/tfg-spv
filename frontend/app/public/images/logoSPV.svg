@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" width="100%" height="100%">
+  <style>
+    .st-white { fill: none; stroke: #FFFFFF; stroke-width: 14; stroke-miterlimit: 10; stroke-linejoin: round; stroke-linecap: round; }
+    .st-text { font-family: 'Montserrat', 'Arial Black', sans-serif; font-weight: 900; fill: #FFFFFF; font-size: 68px; letter-spacing: 1px; }
+    .st-solid { fill: #FFFFFF; }
+  </style>
+
+  <g id="Logo_SPV">
+    <path class="st-solid" d="M224,152 c4,-18,3,-35-5,-56 c-2,-5-7,-2-7,2 c2,18,1,28-4,43 c-5,14-11,28-11,46 c0,15,6,27,9,41 c2,11,1,25-3,37 c-8,24-18,48-26,73 c-4,12-19,19-24,31 c-4,9,3,15,11,11 c15-8,24-24,38-34 c5-4,10-1,12,4 c5,12,7,26,7,40 c0,11-6,21-9,32 c-2,6,4,11,9,7 c12-10,18-26,29-38 c3,12,9,21,18,29 c5,4,12,0,10-6 c-3-11-9-20-11-31 c8,2,14,7,22,7 c8,0,13-8,9-14 c-7-11-17-18-24-29 c8-21,11-45,10-68 c-1-21-6-41-11-61 c-4-15-10-30-10-46 C218,181,221,166,224,152 Z" />
+    <circle class="st-solid" cx="212" cy="135" r="4"/>
+    
+    <path class="st-white" d="M430,170 H320 C280,170 280,230 320,230 H400 C440,230 440,290 400,290 H290" />
+    
+    <path class="st-white" d="M445,290 V170 H520 C570,170 570,230 520,230 H445" />
+    
+    <path class="st-white" d="M565,170 L640,290 L715,170" />
+    
+    <path class="st-white" d="M295,260 H400" />
+  </g>
+
+  <text x="500" y="410" text-anchor="middle" class="st-text">Sucesor de Pérez Verdú, S.L</text>
+</svg>
