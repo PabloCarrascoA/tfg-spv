@@ -21,6 +21,12 @@ function OndaConfigView() {
   const [pisada, setPisada]             = useState('')
   const [comentarios, setComentarios]   = useState('')
 
+  const anchoBanda = Number(state.banda?.ancho)
+  const alturaNumero = Number(altura)
+  const baseMayorQueAnchoBanda = base !== '' && Number(base) > anchoBanda
+  const anchoOndaMayorQueAnchoBanda = anchoOnda !== '' && Number(anchoOnda) > anchoBanda
+  const alturaFueraDeRango = altura !== '' && (alturaNumero > 100 || alturaNumero < 10)
+
  useEffect(() => {
      getOndas()
        .then(data => setOndas(data))
@@ -29,7 +35,7 @@ function OndaConfigView() {
 
   function handleSiguiente() {
 
-    if (altura > 100 || altura < 10) {
+    if (alturaFueraDeRango || baseMayorQueAnchoBanda || anchoOndaMayorQueAnchoBanda) {
       return alert('Revisa las alertas de configuración, hay parámetros incompatibles')
     }
 
@@ -126,7 +132,9 @@ function OndaConfigView() {
                 <label className="form-label">Base (mm)</label>
                 <input type="number" className="form-input" placeholder="0"
                   value={base} onChange={e => setBase(e.target.value)} />
+                {baseMayorQueAnchoBanda && <p style={{ fontSize: 13, color: '#e57373' }}>La base de la onda no puede ser superior al ancho de la banda ({anchoBanda} mm)</p>}
               </div>
+
               <div className="form-group">
                 <label className="form-label">Altura (mm)</label>
 
@@ -134,7 +142,7 @@ function OndaConfigView() {
                   value={altura} onChange={e => setAltura(e.target.value)} />
 
                 {altura % 5 !== 0 && <p style={{ fontSize: 13, color: '#e57373' }}>Recuerda que la altura debe ser múltiplo de 5</p>}
-                {(altura > 100 || altura < 10) && <p style={{ fontSize: 13, color: '#e57373' }}>La altura de la onda no puede ser ni mayor a 100 (mm) ni inferior a 10 (mm)</p>}
+                {alturaFueraDeRango && <p style={{ fontSize: 13, color: '#e57373' }}>La altura de la onda no puede ser ni mayor a 100 (mm) ni inferior a 10 (mm)</p>}
 
               </div>
             </div>
@@ -144,7 +152,10 @@ function OndaConfigView() {
                 <label className="form-label">Ancho onda (mm)</label>
                 <input type="number" className="form-input" placeholder="0"
                   value={anchoOnda} onChange={e => setAnchoOnda(e.target.value)} />
+                {anchoOndaMayorQueAnchoBanda && <p style={{ fontSize: 13, color: '#e57373' }}>El ancho de la onda no puede ser superior al ancho de la banda ({anchoBanda} mm)</p>}
               </div>
+
+
               <div className="form-group">
                 <label className="form-label">Pisada (mm)</label>
                 <select
