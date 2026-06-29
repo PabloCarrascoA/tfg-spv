@@ -151,8 +151,7 @@ def obtener_runer(codigo: str, db = Depends(get_db)):
         "color": runer["color"],
         "material": runer["material"],
         "precio_material": runer["precio_material"],
-        "precioSoldar_Asup1700_PVC": runer["precioSoldar_Asup1700_PVC"],
-        "precioSoldar_Ainf1700_PVC": runer["precioSoldar_Ainf1700_PVC"],
+        "precioSoldar_PVC": runer["precioSoldar_PVC"],
         "precioSoldar_Uretano": runer["precioSoldar_Uretano"]
 
     }

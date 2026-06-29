@@ -20,7 +20,8 @@ with get_db_connection() as conn:
             proveedor TEXT,
             material TEXT,
             color TEXT,
-            precio REAL NOT NULL
+            precio REAL NOT NULL,
+            id_import INTEGER
         )
     """)
     conn.commit()
@@ -71,8 +72,7 @@ with get_db_connection() as conn:
             color TEXT,
             material TEXT,
             precio_material REAL,
-            precioSoldar_Asup1700_PVC REAL,
-            precioSoldar_Ainf1700_PVC REAL,
+            precioSoldar_PVC REAL,
             precioSoldar_Uretano REAL
                    
         )

@@ -85,7 +85,7 @@ def obtener_perfil_longitudinal_por_codigo(db, codigo: str):
 def obtener_runer_por_codigo(db, codigo:str):
     cursor = db.cursor()
     cursor.execute(
-        "SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_Asup1700_PVC, precioSoldar_Ainf1700_PVC, precioSoldar_Uretano, ancho FROM runners WHERE codigo = ?",
+        "SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_PVC, precioSoldar_Uretano, ancho FROM runners WHERE codigo = ?",
         (codigo,)
     )
 
@@ -101,10 +101,9 @@ def obtener_runer_por_codigo(db, codigo:str):
         "color": row[3],
         "material": row[4],
         "precio_material": row[5],
-        "precioSoldar_Asup1700_PVC": row[6],
-        "precioSoldar_Ainf1700_PVC": row[7],
-        "precioSoldar_Uretano": row[8],
-        "ancho": row[9]
+        "precioSoldar_PVC": row[6],
+        "precioSoldar_Uretano": row[7],
+        "ancho": row[8]
     }
 
 def obtener_onda_por_codigo(db, codigo:str):
@@ -219,7 +218,7 @@ def obtener_perfiles_longitudinales(db):
 
 def obtener_runers(db):
     cursor = db.cursor()
-    cursor.execute("SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_Asup1700_PVC, precioSoldar_Ainf1700_PVC, precioSoldar_Uretano, ancho FROM runners")
+    cursor.execute("SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_PVC, precioSoldar_Uretano, ancho FROM runners")
     rows = cursor.fetchall()
 
     runers = []
@@ -231,10 +230,9 @@ def obtener_runers(db):
             "color": row[3],
             "material": row[4],
             "precio_material": row[5],
-            "precioSoldar_Asup1700_PVC": row[6],
-            "precioSoldar_Ainf1700_PVC": row[7],
-            "precioSoldar_Uretano": row[8],
-            "ancho": row[9]
+            "precioSoldar_PVC": row[6],
+            "precioSoldar_Uretano": row[7],
+            "ancho": row[8]
         })
 
     return runers
@@ -672,13 +670,9 @@ def calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_per
 
     # - Calculo soldadura
 
-    if ancho >= 1700 and runer["material"] == "PVC":
+    if runer["precioSoldar_PVC"]:
 
-        precio_soldadura_mL = runer["precioSoldar_Asup1700_PVC"]
-
-    elif ancho < 1700 and runer["material"] == "PVC":
-
-        precio_soldadura_mL = runer["precioSoldar_Ainf1700_PVC"]
+        precio_soldadura_mL = runer["precioSoldar_PVC"]
 
     else:
 
@@ -696,10 +690,11 @@ def calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_per
 
     # - Cálculo preparación -
 
-    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "runers")
+    if cliente_id is not None:
 
-    precio_preparacion = calcular_precio_preparacionLR(tarifa_preparacion, cantidad_bandas, n_perfiles)
+        tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "runers")
 
+        precio_preparacion = calcular_precio_preparacionLR(tarifa_preparacion, cantidad_bandas, n_perfiles)
 
     precio_final = precio_runer_total + precio_soldadura_total + precio_preparacion
 
@@ -752,14 +747,12 @@ def calcular_precio_perforaciones(db, agujeros_x_fila, filas_x_agujero, diametro
     }
 
 
-def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, ancho, pisada, cliente_id = None):
+def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, ancho, pisada, cantidad_bandas, cliente_id = None):
     
     onda = obtener_onda_por_codigo(db, codigo_onda)
 
     if onda is None:
         raise ValueError("Onda no encontrada")
-    
-    # [TODO] habrá que pasar pisada a mm ?
     
     if continuidad == True:
         desarrollo_total = ((obtener_desarrollo_ondas(base, altura) + pisada) * n_ondas) + 1000
@@ -776,9 +769,11 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
     print(f"DEBUG: valor de desarrollo total -> {desarrollo_total}")
     
-    # dividir entre 1000000 para pasar a m2 y multiplicar por el precio por m2 de la onda
+    
 
     precio_onda_total = (desarrollo_total * ancho * onda["precio"]) / 1000000
+
+    # - Descuento preparación -
 
     if cliente_id is not None:
         
@@ -788,17 +783,26 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
     precio_soldadura_total = 0
 
-    # [TODO] calcular la soldadura
+    # - Cálculo soldadura -
 
     if cliente_id is not None:
         
         descuento_soldadura = 1 - get_descuento_soldadura(db, cliente_id, "ondas")
 
-        precio_soldadura_total = precio_onda_total * (descuento_soldadura)
+        precio_soldadura_total = precio_soldadura_total * (descuento_soldadura)
 
-    # [TODO] calcular la preparación
 
-    precio_final = precio_onda_total + precio_soldadura_total
+    precio_preparacion = 25
+
+    # - Cálculo preparación -
+ 
+    if cliente_id is not None:
+
+        tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "ondas")
+
+        precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho)
+
+    precio_final = precio_onda_total + precio_soldadura_total + precio_preparacion
 
     return {
 
@@ -962,7 +966,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
     if codigo_onda is not None:
         
-        resultado_ondas = calcular_precio_ondas(db, continuidad_onda, codigo_onda, n_ondas, base_onda, altura_onda, ancho, pisada_onda, cliente_id)
+        resultado_ondas = calcular_precio_ondas(db, continuidad_onda, codigo_onda, n_ondas, base_onda, altura_onda, ancho, pisada_onda, cantidad_bandas, cliente_id)
 
         precio_ondas = resultado_ondas["precio_onda"]
         precio_ondas_total = resultado_ondas["precio_onda_total"]
