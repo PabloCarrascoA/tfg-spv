@@ -435,6 +435,105 @@ a {
   left: 35%; 
 }
 
+/* panel lateral --> RUNER */
+
+.config-side-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.config-side-row .config-side-img-wrapper {
+  width: 45%;
+  max-width: none;
+}
+
+.config-runer-margen {
+  top: 43%; 
+  left: 30%;
+}
+
+.config-runer-luz {
+  top: 6%;  
+  left: 35%;  
+}
+
+/* --- sketch perfilT-1 --- */
+
+.config-side-img-wrapper-perfilT {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+}
+
+.config-perfilT1-label {
+  position: absolute;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c4f6b;
+  text-align: center;
+  width: 80px;
+}
+
+.config-perfilT1-paso {
+  top: 27%;   
+  left: 8%;  
+}
+
+.config-perfilT1-ancho {
+  top: 46%;   
+  left: 10%;  
+}
+
+.config-perfilT1-margen {
+  top: 66%;   
+  left: 20%;  
+}
+
+/* --- sketch perfilT-2 --- */
+
+.config-perfilT2-label {
+  position: absolute;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c4f6b;
+  text-align: center;
+  width: 90px;
+}
+
+.config-perfilT2-paso {
+  top: 18.5%; 
+  left: 8%;
+}
+
+.config-perfilT2-ancho {
+  top: 37.5%; 
+  left: 8%;
+}
+
+.config-perfilT2-margen {
+  top: 57.5%; 
+  left: 22%; 
+}
+
+.config-perfilT2-luz {
+  top: 57.5%; 
+  left: 4.5%;
+}
+
+.config-perfilT2-ancho1 {
+  top: 76.5%; 
+  left: 4.5%;
+}
+
+.config-perfilT2-ancho2 {
+  top: 76.5%; 
+  left: 23.5%;
+}
+
 .config-step-label {
   font-size: 13px;
   font-weight: 500;

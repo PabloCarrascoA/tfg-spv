@@ -226,7 +226,33 @@ function RunerConfigView() {
           </div>
         </div>
 
-        <div className="config-side-panel" />
+        <div className="config-side-panel">
+          <div className="config-side-row">
+
+            <div className="config-side-img-wrapper">
+              <img
+                src={cantidad === 3 ? '/images/sketch-runer-2.svg' : '/images/sketch-runer-1.svg'}
+                alt="Esquema de runers"
+                className="config-side-img"
+              />
+              <span className="config-banda-label config-runer-margen">
+                {margen || '—'} mm
+              </span>
+              <span className="config-banda-label config-runer-luz">
+                {luz || '—'} mm
+              </span>
+            </div>
+
+            <div className="config-side-img-wrapper">
+              <img
+                src="/images/sketch-runer-3.svg"
+                alt="Esquema aclarativo de runer"
+                className="config-side-img"
+              />
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   )

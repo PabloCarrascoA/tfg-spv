@@ -349,7 +349,54 @@ function PerfilTConfigView() {
           </div>
         </div>
 
-        <div className="config-side-panel" />
+        <div className="config-side-panel">
+
+          {hileras <= 1 ? (
+            <div className="config-side-img-wrapper-perfilT config-perfilT1-wrapper">
+              <img
+                src="/images/sketch-perfilT-1.svg"
+                alt="Esquema de perfil transversal"
+                className="config-side-img"
+              />
+              <span className="config-perfilT1-label config-perfilT1-paso">
+                {distancia || '—'} mm
+              </span>
+              <span className="config-perfilT1-label config-perfilT1-ancho">
+                {ancho || '—'} mm
+              </span>
+              <span className="config-perfilT1-label config-perfilT1-margen">
+                {margen || '—'} mm
+              </span>
+            </div>
+          ) : (
+            <div className="config-side-img-wrapper-perfilT config-perfilT2-wrapper">
+              <img
+                src="/images/sketch-perfilT-2.svg"
+                alt="Esquema de perfil transversal con hileras"
+                className="config-side-img"
+              />
+              <span className="config-perfilT2-label config-perfilT2-paso">
+                {distancia || '—'} mm
+              </span>
+              <span className="config-perfilT2-label config-perfilT2-ancho">
+                {ancho || '—'} mm
+              </span>
+              <span className="config-perfilT2-label config-perfilT2-margen">
+                {margen || '—'} mm
+              </span>
+              <span className="config-perfilT2-label config-perfilT2-luz">
+                {luz || '—'} mm
+              </span>
+              <span className="config-perfilT2-label config-perfilT2-ancho1">
+                {ancho1 || '—'} mm
+              </span>
+              <span className="config-perfilT2-label config-perfilT2-ancho2">
+                {ancho2 || '—'} mm
+              </span>
+            </div>
+          )}
+
+        </div>
 
       </div>
     </div>
