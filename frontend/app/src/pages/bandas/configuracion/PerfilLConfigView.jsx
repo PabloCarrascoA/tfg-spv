@@ -303,7 +303,76 @@ function PerfilLConfigView() {
           </div>
         </div>
 
-        <div className="config-side-panel" />
+        
+
+        <div className="config-side-panel">
+          <div className="config-side-panel-PL">
+
+          {superior.activo && (
+            <div className="config-side-sketch">
+              <p className="config-side-sketch-title">Cobertura superior</p>
+              <div className="config-side-img-wrapper">
+                <img
+                  src={superior.cantidad > 1 ? '/images/sketch-longitud-CS-2.svg' : '/images/sketch-longitud-CS-1.svg'}
+                  alt="Esquema perfil longitudinal superior"
+                  className="config-side-img"
+                />
+
+                {superior.cantidad === 1 && (
+                  <span className="config-banda-label config-banda-borde-centro-1">
+                    {superior.distanciaBordeCentro || '—'} mm
+                  </span>
+                )}
+
+                {superior.cantidad > 1 && (
+                  <span className="config-banda-label config-banda-borde-centro-2">
+                    {superior.distanciaBordeCentro || '—'} mm
+                  </span>
+                )}
+
+                {superior.cantidad > 1 && (
+                  <span className="config-banda-label config-banda-distancia-centros">
+                    {superior.distancia || '—'} mm
+                  </span>
+                )}
+
+              </div>
+            </div>
+          )}
+
+          {inferior.activo && (
+            <div className="config-side-sketch">
+              <p className="config-side-sketch-title">Cobertura inferior</p>
+              <div className="config-side-img-wrapper">
+                <img
+                  src={inferior.cantidad > 1 ? '/images/sketch-longitud-CI-2.svg' : '/images/sketch-longitud-CI-1.svg'}
+                  alt="Esquema perfil longitudinal inferior"
+                  className="config-side-img"
+                />
+
+                {inferior.cantidad === 1 && (
+                  <span className="config-banda-label config-banda-borde-centro-1">
+                    {inferior.distanciaBordeCentro || '—'} mm
+                  </span>
+                )}
+
+                {inferior.cantidad > 1 && (
+                  <span className="config-banda-label config-banda-borde-centro-2">
+                    {inferior.distanciaBordeCentro || '—'} mm
+                  </span>
+                )}
+
+                {inferior.cantidad > 1 && (
+                  <span className="config-banda-label config-banda-distancia-centros">
+                    {inferior.distancia || '—'} mm
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
       </div>
     </div>
   )

@@ -394,6 +394,47 @@ a {
   left: 60%;  
 }
 
+.config-side-panel-PL {
+  flex: 1;
+  min-width: 0;
+  background: #d6e4ef;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 24px 0;
+}
+
+.config-side-sketch {
+  margin-bottom: 12px;
+}
+
+.config-side-sketch-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c4f6b;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.config-banda-borde-centro-2 {
+  top: 70%;  
+  left: 63%;  
+}
+
+.config-banda-borde-centro-1 {
+  top: 61%;  
+  left: 65%;  
+}
+
+.config-banda-distancia-centros {
+  top: 30%;   
+  left: 35%; 
+}
+
 .config-step-label {
   font-size: 13px;
   font-weight: 500;
