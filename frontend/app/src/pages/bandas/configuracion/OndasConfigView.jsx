@@ -22,8 +22,9 @@ function OndaConfigView() {
   const [comentarios, setComentarios]   = useState('')
 
   const anchoBanda = Number(state.banda?.ancho)
+  const largoBanda = Number(state.banda?.longitud)
   const alturaNumero = Number(altura)
-  const baseMayorQueAnchoBanda = base !== '' && Number(base) > anchoBanda
+  const baseMayorQueLargoBanda = base !== '' && Number(base) > largoBanda
   const anchoOndaMayorQueAnchoBanda = anchoOnda !== '' && Number(anchoOnda) > anchoBanda
   const alturaFueraDeRango = altura !== '' && (alturaNumero > 100 || alturaNumero < 10)
 
@@ -35,7 +36,7 @@ function OndaConfigView() {
 
   function handleSiguiente() {
 
-    if (alturaFueraDeRango || baseMayorQueAnchoBanda || anchoOndaMayorQueAnchoBanda) {
+    if (alturaFueraDeRango || baseMayorQueLargoBanda || anchoOndaMayorQueAnchoBanda) {
       return alert('Revisa las alertas de configuración, hay parámetros incompatibles')
     }
 
@@ -132,7 +133,7 @@ function OndaConfigView() {
                 <label className="form-label">Base (mm)</label>
                 <input type="number" className="form-input" placeholder="0"
                   value={base} onChange={e => setBase(e.target.value)} />
-                {baseMayorQueAnchoBanda && <p style={{ fontSize: 13, color: '#e57373' }}>La base de la onda no puede ser superior al ancho de la banda ({anchoBanda} mm)</p>}
+                {baseMayorQueLargoBanda && <p style={{ fontSize: 13, color: '#e57373' }}>La base de la onda no puede ser superior al largo de la banda ({largoBanda} mm)</p>}
               </div>
 
               <div className="form-group">
