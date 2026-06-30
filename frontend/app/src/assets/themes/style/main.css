@@ -385,14 +385,16 @@ a {
 /* ajustes de posición de los labels según el tipo de banda */
 
 .config-banda-ancho {
+  top: 2%;   
+  left: 60%; 
+}
+
+.config-banda-longitud {
   top: 51.5%;   
   left: 5%; 
 }
 
-.config-banda-longitud {
-  top: 2%;   
-  left: 60%;  
-}
+/* panel lateral --> PERFIL L */
 
 .config-side-panel-PL {
   flex: 1;
@@ -406,6 +408,7 @@ a {
   gap: 24px;
   padding: 24px 0;
 }
+
 
 .config-side-sketch {
   margin-bottom: 12px;
@@ -460,6 +463,7 @@ a {
   top: 6%;  
   left: 35%;  
 }
+/* panel lateral --> PERFIL T */
 
 /* --- sketch perfilT-1 --- */
 
