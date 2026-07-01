@@ -143,7 +143,13 @@ function PerforacionesConfigView() {
           </div>
         </div>
 
-        <div className="config-side-panel" />
+        <div className="config-side-panel config-side-panel-perf">
+          <div className="config-side-img-wrapper config-perforaciones-wrapper">
+            <img src="/images/sketch-perforaciones.svg" alt="Esquema de perforaciones" className="config-side-img" />
+            <span className="config-banda-label config-banda-perforaciones">{diametro || "-"} mm
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   )

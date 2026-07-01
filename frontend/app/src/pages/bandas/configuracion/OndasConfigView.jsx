@@ -186,7 +186,27 @@ function OndaConfigView() {
           </div>
         </div>
 
-        <div className="config-side-panel" />
+        <div className="config-side-panel">
+          <div className="config-side-img-wrapper config-onda-wrapper">
+            <img
+              src="/images/sketch-ondas.svg"
+              alt="Esquema de onda"
+              className="config-side-img"
+            />
+            <span className="config-onda-label config-onda-ancho">
+              {anchoOnda || '—'} mm
+            </span>
+            <span className="config-onda-label config-onda-altura">
+              {altura || '—'} mm
+            </span>
+            <span className="config-onda-label config-onda-base">
+              {base || '—'} mm
+            </span>
+            <span className="config-onda-label config-onda-pisada">
+              {pisada || '—'} mm
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   )

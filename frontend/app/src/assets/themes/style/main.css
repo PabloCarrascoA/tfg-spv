@@ -360,11 +360,19 @@ a {
   justify-content: center;
 }
 
+.config-side-panel-perf {
+  align-items: flex-end;
+}
+
 /* imagenes del panel */
 .config-side-img-wrapper {
   position: relative;
   width: 75%;
   max-width: 400px;
+}
+
+.config-perforaciones-wrapper {
+  width: 60%;
 }
 
 .config-side-img {
@@ -536,6 +544,46 @@ a {
 .config-perfilT2-ancho2 {
   top: 76.5%; 
   left: 23.5%;
+}
+
+/* --- panel lateral --> PERFORACIONES --- */
+
+.config-banda-perforaciones {
+  top: 18.6%;   
+  left: 44%; 
+}
+
+/* --- panel lateral --> ONDAS --- */
+
+
+
+.config-onda-label {
+  position: absolute;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c4f6b;
+  text-align: center;
+  width: 60px;
+}
+
+.config-onda-ancho {
+  top: 26.8%; 
+  left: 38%;
+}
+
+.config-onda-altura {
+  top: 50.5%; 
+  left: 30%;
+}
+
+.config-onda-base {
+  top: 76.8%; 
+  left: 56%;
+}
+
+.config-onda-pisada {
+  top: 64.5%; 
+  left: 25%;
 }
 
 .config-step-label {
