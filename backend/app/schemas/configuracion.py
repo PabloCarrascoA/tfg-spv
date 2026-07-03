@@ -131,6 +131,7 @@ class CalculoBandaResponse(BaseModel):
     n_ondas: Optional[int] = None
     base_onda: Optional[float] = None
     altura_onda: Optional[float] = None
+    ancho_onda: Optional[float] = None
     continuidad_onda: Optional[bool] = None
     pisada_onda: Optional[float] = None
     precio_onda: Optional[float] = None

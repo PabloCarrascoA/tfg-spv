@@ -219,6 +219,7 @@ def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
             request.base_onda,
             request.altura_onda,
             request.continuidad_onda,
+            request.ancho_onda,
             request.pisada_onda
 
         )
