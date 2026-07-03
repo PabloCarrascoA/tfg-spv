@@ -551,15 +551,9 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
     if ancho <= 0:
         raise ValueError("Ancho debe ser mayor que cero")
 
-    if n_perfiles <= 0:
-        raise ValueError("El número de perfiles no puede ser 0")
-    
     if largo <= 0:
         raise ValueError("Largo debe ser mayor que cero")
-    
-    if distancia_paso <= 0:
-        raise ValueError("La distancia entre perfiles no puede ser 0")
-    
+
     # ajustar el número de perfiles y el paso si el largo no es múltiplo de la distancia entre perfiles
 
     if n_perfiles and not distancia_paso:
@@ -575,6 +569,12 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
 
     else:
         raise ValueError("Debes indicar n_perfiles o distancia_paso")
+
+    if n_perfiles <= 0:
+        raise ValueError("El número de perfiles no puede ser 0")
+
+    if distancia_paso <= 0:
+        raise ValueError("La distancia entre perfiles no puede ser 0")
 
     # Usar ancho_perfil si se proporciona, sino usar el ancho de la banda + 40mm
     
