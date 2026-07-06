@@ -205,7 +205,7 @@ function PerfilTConfigView() {
 
             {ancho && anchoBanda && parseFloat(ancho) > anchoBanda && (
               <p style={{ fontSize: 13, color: '#e57373' }}>
-                El ancho del perfil no puede superar el ancho de la banda ({anchoBanda} mm)
+                El ancho del perfil no puede superar los 1600 mm
               </p>
             )}
 
