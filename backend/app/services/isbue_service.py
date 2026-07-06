@@ -145,7 +145,7 @@ class IsbueService:
 
         if resultado.get("codigo_onda"):
 
-            continuidad = "CONTINUAS" if resultado.get("continuidad_onda") else "DISCONTINUAS"
+            continuidad = "CONTINUAS" if resultado.get("continuidad_onda") == 'SÍ' else "DISCONTINUAS"
 
             observaciones.append(
                 f"""CON {resultado.get('n_ondas')} ONDAS {continuidad}

@@ -35,9 +35,20 @@ function BandaConfigView() {
   const [precioEmpalme, setPrecioEmpalme]     = useState(null)
   const [comentarios, setComentarios]         = useState('')
 
+  const [color, setColor] = useState('')
+
   // --- datos de la API ---
   const [bandas, setBandas]     = useState([])
   const [subtipos, setSubtipos] = useState([])
+
+  function handleCodigoBandaChange(e) {
+    const nuevoCodigo = e.target.value
+    const bandaSeleccionada = bandas.find(banda => banda.codigo === nuevoCodigo)
+
+    setCodigoBanda(nuevoCodigo)
+    setColor(bandaSeleccionada?.color ?? '')
+    console.log('Color de la banda seleccionada:', bandaSeleccionada?.color)
+  }
 
   // --- cargar bandas al montar ---
   useEffect(() => {
@@ -99,6 +110,7 @@ function BandaConfigView() {
           tipoEmpalme,
           subtipoEmpalme,
           precioEmpalme,
+          color,
           comentarios,
         }
       }
@@ -125,7 +137,7 @@ function BandaConfigView() {
                 <select
                   className="form-select"
                   value={codigoBanda}
-                  onChange={e => setCodigoBanda(e.target.value)}
+                  onChange={handleCodigoBandaChange}
                 >
                   <option value="">- Seleccione una banda -</option>
                   {bandas.map(banda => (
