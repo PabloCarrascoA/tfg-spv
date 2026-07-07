@@ -201,4 +201,27 @@ class IsbueService:
 
         return body
     
-   
+    def obtener_clientes(self):
+
+        token = self.get_token()
+
+        response = requests.post(
+            f"{API_URL}/i/{INSTALLATION_COD}/list",
+            headers={
+                "Authorization": f"Bearer {token}"
+            },
+            json={
+                "table": "personas",
+                "fields": "id,cod,nombre",
+                "offset": 0,
+                "limit": -1,
+                "count": True,
+                "order": {
+                    "nombre": "asc"
+                }
+            }
+        )
+
+        response.raise_for_status()
+
+        return response.json()["data"]

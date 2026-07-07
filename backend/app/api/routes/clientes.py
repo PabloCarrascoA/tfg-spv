@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
+from app.services.isbue_service import IsbueService
 from app.db.database import get_db
+
+isbue_service = IsbueService()
 
 router = APIRouter(
     prefix="/clientes",
@@ -7,7 +10,8 @@ router = APIRouter(
 )
 
 @router.get("")
-def listar_clientes(db=Depends(get_db)):
-    cursor = db.cursor()
-    cursor.execute("SELECT nombre FROM clientes ORDER BY nombre")
-    return [row[0] for row in cursor.fetchall()]
+def listar_clientes():
+
+    clientes = isbue_service.obtener_clientes()
+
+    return clientes

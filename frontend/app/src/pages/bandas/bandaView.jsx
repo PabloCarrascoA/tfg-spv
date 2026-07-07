@@ -49,76 +49,108 @@ const COMPONENTES = [
 
 // Componente para el nombre del cliente
 
-function AutocompleteCliente({ value, onChange }) {
-  const [clientes, setClientes]         = useState([])
-  const [sugerencias, setSugerencias]   = useState([])
-  const [abierto, setAbierto]           = useState(false)
+function AutocompleteCliente({ cliente, onSeleccionar }) {
+
+  const [clientes, setClientes] = useState([])
+  const [texto, setTexto] = useState("")
+  const [sugerencias, setSugerencias] = useState([])
+  const [abierto, setAbierto] = useState(false)
+
   const ref = useRef(null)
 
-  // cargar clientes al montar
   useEffect(() => {
     getClientes()
-      .then(data => setClientes(data))
-      .catch(err => console.error('Error cargando clientes:', err))
+      .then(setClientes)
+      .catch(err => console.error(err))
   }, [])
 
-  // cerrar al hacer click fuera
   useEffect(() => {
     function handleClickFuera(e) {
       if (ref.current && !ref.current.contains(e.target)) {
         setAbierto(false)
       }
     }
-    document.addEventListener('mousedown', handleClickFuera)
-    return () => document.removeEventListener('mousedown', handleClickFuera)
+
+    document.addEventListener("mousedown", handleClickFuera)
+
+    return () =>
+      document.removeEventListener("mousedown", handleClickFuera)
+
   }, [])
 
-  function handleInput(e) {
-    const texto = e.target.value
-    onChange(texto)
+  useEffect(() => {
+    if (cliente) {
+      setTexto(cliente.nombre)
+    }
+  }, [cliente])
 
-    if (texto.length === 0) {
+  function handleInput(e) {
+
+    const value = e.target.value
+
+    setTexto(value)
+
+    // si el usuario vuelve a escribir,
+    // deja de haber un cliente seleccionado
+    onSeleccionar(null)
+
+    if (!value) {
       setSugerencias([])
       setAbierto(false)
       return
     }
 
     const filtrados = clientes.filter(c =>
-      c.toLowerCase().includes(texto.toLowerCase())
+      c.nombre.toLowerCase().includes(value.toLowerCase())
     )
+
     setSugerencias(filtrados)
     setAbierto(filtrados.length > 0)
   }
 
-  function handleSeleccionar(nombre) {
-    onChange(nombre)
+  function handleSeleccion(cliente) {
+
+    setTexto(cliente.nombre)
+
+    onSeleccionar(cliente)
+
     setSugerencias([])
+
     setAbierto(false)
   }
 
   return (
     <div className="autocomplete-wrapper" ref={ref}>
+
       <input
-        type="text"
         className="form-input"
+        type="text"
         placeholder="Nombre del cliente (opcional)"
-        value={value}
+        value={texto}
         onChange={handleInput}
-        onFocus={() => sugerencias.length > 0 && setAbierto(true)}
+        onFocus={() => sugerencias.length && setAbierto(true)}
       />
+
       {abierto && (
+
         <ul className="autocomplete-lista">
-          {sugerencias.map(nombre => (
+
+          {sugerencias.map(cliente => (
+
             <li
-              key={nombre}
+              key={cliente.id}
               className="autocomplete-item"
-              onMouseDown={() => handleSeleccionar(nombre)}
+              onMouseDown={() => handleSeleccion(cliente)}
             >
-              {nombre}
+              {cliente.nombre}
             </li>
+
           ))}
+
         </ul>
+
       )}
+
     </div>
   )
 }
@@ -127,7 +159,7 @@ function BandaView() {
 
   const navigate = useNavigate()
 
-  const [nombre, setNombre] = useState('')
+  const [cliente, setCliente] = useState(null)
 
   // el estado inicial marca como seleccionado banda y empalme que es obligatorio
   const [seleccion, setSeleccion] = useState(
@@ -148,7 +180,7 @@ function BandaView() {
   navigate('/banda/configurar/banda', { 
     state: { 
       seleccion,
-      nombreCliente: nombre
+      cliente
     } 
   })
 }
@@ -160,7 +192,7 @@ function BandaView() {
 
       <div className="selector-card">
         <p className="selector-label">Introduzca el nombre del cliente</p>
-        <AutocompleteCliente value={nombre} onChange={setNombre} />
+        <AutocompleteCliente cliente={cliente} onSeleccionar={setCliente} />
       </div>
 
       <div className="selector-card">
