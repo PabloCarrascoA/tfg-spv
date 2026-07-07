@@ -21,9 +21,23 @@ function PerfilTConfigView() {
   const [ancho2, setAncho2]             = useState('')
   const [comentarios, setComentarios]   = useState('')
 
+  const [color, setColor] = useState('')
+  const [tipoPerfilT, setTipoPerfil] = useState('')
+
   // --- datos de la API ---
 
   const [perfilesT, setPerfilesT] = useState([])
+
+  function handleCodigoPerfilChange(e) {
+    const nuevoCodigo = e.target.value
+    const perfilSeleccionado = perfilesT.find(perfil => perfil.codigo === nuevoCodigo)
+
+    setCodigoPerfil(nuevoCodigo)
+    setColor(perfilSeleccionado?.color ?? '')
+    setTipoPerfil(perfilSeleccionado?.tipo ?? '')
+    console.log('Color del perfil seleccionado:', perfilSeleccionado?.color)
+    console.log('Tipo del perfil seleccionado:', perfilSeleccionado?.tipo)
+  }
 
   // --- cargar perfiles transversales al montar ---
 
@@ -120,6 +134,8 @@ function PerfilTConfigView() {
             ancho2,
             luz,
             comentarios,
+            color,
+            tipoPerfilT
         }
         }
     })
@@ -147,7 +163,7 @@ function PerfilTConfigView() {
                 <select 
                     className="form-select"
                     value={codigoPerfil}
-                    onChange={e => setCodigoPerfil(e.target.value)}
+                    onChange={handleCodigoPerfilChange}
                 >
                   <option value="">- Seleccione un perfil -</option>
                   {perfilesT.map(perfil => (

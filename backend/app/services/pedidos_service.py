@@ -1,4 +1,7 @@
 from datetime import date
+from app.services.isbue_service import IsbueService
+
+isbue_service = IsbueService()
 
 def get_siguiente_numero_pedido(db):
     cursor = db.cursor()
@@ -131,6 +134,23 @@ def guardar_pedido(db, resultado, state_frontend):
         ))
 
     db.commit()
+
+    # pasar el pedido al ERP Isbue
+    
+    try:
+
+        body = isbue_service.construir_body_isbue(resultado, state_frontend)
+
+        print(body)
+
+        respuesta = isbue_service.crear_pedido(body)
+
+        print(respuesta)
+        
+    except Exception as e:
+
+        print("ERROR ISBUE:", e)
+
     return {"pedido_id": pedido_id, "numero_pedido": numero}
 
 

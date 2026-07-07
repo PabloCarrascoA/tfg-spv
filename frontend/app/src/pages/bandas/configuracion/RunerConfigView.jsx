@@ -17,6 +17,9 @@ function RunerConfigView() {
   const [margen, setMargen]             = useState('')
   const [comentarios, setComentarios]   = useState('')
 
+  const [color, setColor]               = useState('')
+  const [tipo, setTipoRuner]             = useState('')
+
   // ancho del runer
 
   const anchoRuner = runers.find(r => r.codigo === codigoRuner)?.ancho ?? null
@@ -24,6 +27,19 @@ function RunerConfigView() {
   console.log("ancho runer: " + anchoRuner)
 
   const anchoBanda = parseFloat(state.banda?.ancho) || null
+
+  function handleCodigoRunerChange(e) {
+    const nuevoCodigo = e.target.value
+    const runerSeleccionado = runers.find(runer => runer.codigo === nuevoCodigo)
+
+    setCodigoRuner(nuevoCodigo)
+    setColor(runerSeleccionado?.color ?? '')
+    setTipoRuner(runerSeleccionado?.tipo ?? '')
+    setLuz('')
+    setMargen('')
+    console.log('Color del runer seleccionado:', runerSeleccionado?.color)
+    console.log('Tipo del runer seleccionado:', runerSeleccionado?.tipo)
+  }
 
   useEffect(() => {
     getRuners()
@@ -96,6 +112,8 @@ function RunerConfigView() {
           margen,
           anchoRuner,
           comentarios,
+          color,
+          tipo,
         }
       }
     })
@@ -121,11 +139,7 @@ function RunerConfigView() {
                 <select
                   className="form-select"
                   value={codigoRuner}
-                  onChange={e => {
-                    setCodigoRuner(e.target.value)
-                    setLuz('')
-                    setMargen('')
-                  }}
+                  onChange={handleCodigoRunerChange}
                 >
                   <option value="">- Seleccione un runer -</option>
                   {runers.map(runer => (

@@ -9,6 +9,18 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
   const perfilSeleccionado = perfiles.find(perf => perf.codigo === perfil.codigo)
   const anchoPerfil = parseFloat(perfilSeleccionado?.ancho)
 
+  function handleCodigoPerfilChange(e) {
+    const nuevoCodigo = e.target.value
+    const nuevoPerfilSeleccionado = perfiles.find(perf => perf.codigo === nuevoCodigo)
+
+    setPerfil(p => ({
+      ...p,
+      codigo: nuevoCodigo,
+      tipo: nuevoPerfilSeleccionado?.tipo ?? '',
+      color: nuevoPerfilSeleccionado?.color ?? '',
+    }))
+  }
+
   const superaBanda =
     Boolean(anchoBanda) &&
     !Number.isNaN(distanciaBordeCentro) &&
@@ -53,7 +65,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
               <select
                 className="form-select"
                 value={perfil.codigo}
-                onChange={e => setPerfil(p => ({ ...p, codigo: e.target.value }))}
+                onChange={handleCodigoPerfilChange}
               >
                 <option value="">- Seleccione un perfil -</option>
                 {perfiles.map(perf => (
@@ -146,12 +158,6 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
             </p>
           )}
 
-          {/*distanciaExcede && (
-            <p style={{ fontSize: 13, color: '#e57373' }}>
-              La distribución de los perfiles supera el ancho de la banda ({anchoBanda} mm)
-            </p>
-          )*/}
-
           {distanciaIncompatible && (
             <p style={{ fontSize: 13, color: '#e57373' }}>
               La distancia entre centros seleccionada es incompatible: no puede ser superior a {anchoBanda - anchoPerfil} mm
@@ -186,6 +192,8 @@ function PerfilLConfigView() {
     distancia: '',
     distanciaBordeCentro: '',
     centrado: false,
+    tipo: '',
+    color: '',
   })
   const [superior, setSuperior] = useState({
     activo: false,
@@ -194,6 +202,8 @@ function PerfilLConfigView() {
     distancia: '',
     distanciaBordeCentro: '',
     centrado: false,
+    tipo: '',
+    color: '',
   })
   const [comentarios, setComentarios] = useState('')
 
@@ -257,7 +267,15 @@ function PerfilLConfigView() {
     navigate(ruta, {
       state: {
         ...state,
-        perfilL: { inferior, superior, comentarios }
+        perfilL: {
+          inferior,
+          superior,
+          comentarios,
+          tipoPerfilSuperior: superior.tipo,
+          tipoPerfilInferior: inferior.tipo,
+          colorPerfilSuperior: superior.color,
+          colorPerfilInferior: inferior.color,
+        }
       }
     })
   }

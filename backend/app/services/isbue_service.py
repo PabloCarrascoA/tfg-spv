@@ -57,22 +57,52 @@ class IsbueService:
             json=body
         )
 
+        print("STATUS:", response.status_code)
+        print("BODY:", response.text)
+
         response.raise_for_status()
 
         return response.json()
     
-    def construir_body_isbue(resultado, state_frontend):
+    def construir_body_isbue(self, resultado, state_frontend):
         body = {
+            "table": "pedidosV",
             "main": {
                 "customer_id": 1,
                 "group_id": 1,
                 "payment_method_id": 1,
-                "shipping_method_id": 1
+                "shipping_method_id": 1,
+                "date": datetime.now().strftime("%d-%m-%Y"),
+                "observations": "Pedido de prueba generado desde la aplicación",
             },
             "lines": []
         }
 
         observaciones = []
+        perfil_l_state = state_frontend.get("perfilL", {})
+        perfil_t_state = state_frontend.get("perfilT", {})
+        runer_state = state_frontend.get("runer", {})
+
+        tipo_perfil_superior = (
+            perfil_l_state.get("tipoPerfilSuperior")
+            or perfil_l_state.get("superior", {}).get("tipo")
+        )
+        color_perfil_superior = (
+            perfil_l_state.get("colorPerfilSuperior")
+            or perfil_l_state.get("superior", {}).get("color")
+        )
+        tipo_perfil_inferior = (
+            perfil_l_state.get("tipoPerfilInferior")
+            or perfil_l_state.get("inferior", {}).get("tipo")
+        )
+        color_perfil_inferior = (
+            perfil_l_state.get("colorPerfilInferior")
+            or perfil_l_state.get("inferior", {}).get("color")
+        )
+        tipo_perfilT = perfil_t_state.get("tipoPerfilT")
+        color_perfilT = perfil_t_state.get("color")
+        tipo_runer = runer_state.get("tipo")
+        color_runer = runer_state.get("color")
 
         #
         # PERFILES LONGITUDINALES
@@ -82,8 +112,8 @@ class IsbueService:
 
             observaciones.append(
                 f"CON {resultado.get('n_perfiles_superior')} PERFILES LONGITUDINALES "
-                f"{resultado.get('tipo_perfil_superior')} "
-                f"{resultado.get('color_perfil_superior')} "
+                f"{tipo_perfil_superior} "
+                f"{color_perfil_superior} "
                 f"COLOCADOS EN {resultado.get('distancia_margen_superior')} mm "
                 f"DEL EXTREMO POR LA PARTE SUPERIOR"
             )
@@ -92,8 +122,8 @@ class IsbueService:
 
             observaciones.append(
                 f"CON {resultado.get('n_perfiles_inferior')} PERFILES LONGITUDINALES "
-                f"{resultado.get('tipo_perfil_inferior')} "
-                f"{resultado.get('color_perfil_inferior')} "
+                f"{tipo_perfil_inferior} "
+                f"{color_perfil_inferior} "
                 f"COLOCADOS EN {resultado.get('distancia_margen_inferior')} mm "
                 f"DEL EXTREMO POR LA PARTE INFERIOR"
             )
@@ -108,8 +138,8 @@ class IsbueService:
 
                 observaciones.append(
                     f"CON {resultado.get('n_perfilesT')} PERFILES TRANSVERSALES "
-                    f"{resultado.get('tipo_perfilT')} "
-                    f"{resultado.get('color_perfilT')} "
+                    f"{tipo_perfilT} "
+                    f"{color_perfilT} "
                     f"DE {resultado.get('ancho_perfilT')} mm, "
                     f"COLOCADOS A UN PASO DE {resultado.get('distancia_paso')} mm"
                 )
@@ -119,6 +149,8 @@ class IsbueService:
                 observaciones.append(
                     f"CON {resultado.get('n_hileras')} FILAS DE "
                     f"{resultado.get('n_perfilesT')} PERFILES TRANSVERSALES "
+                    f"{tipo_perfilT} "
+                    f"{color_perfilT} "
                     f"DE {resultado.get('ancho_perfilT')} mm "
                     f"CON {resultado.get('n_hileras') - 1} INTERRUPCIONES CENTRALES "
                     f"DE {resultado.get('luz_interior')} mm "
@@ -133,8 +165,8 @@ class IsbueService:
 
             observaciones.append(
                 f"CON {resultado.get('n_perfiles_runer')} RUNERS "
-                f"{resultado.get('tipo_runer')} "
-                f"{resultado.get('color_runer')} "
+                f"{tipo_runer} "
+                f"{color_runer} "
                 f"COLOCADOS EN {resultado.get('margen_runer')} mm "
                 f"DEL EXTREMO POR LA PARTE SUPERIOR"
             )
@@ -164,7 +196,9 @@ class IsbueService:
             "product_id": 1,
             "qty": resultado.get("cantidad_bandas"),
             "price": resultado.get("precio_total"),
-            "observations": "\n".join(observaciones)
+            "observation": "\n".join(observaciones)
         })
 
         return body
+    
+   
