@@ -1,10 +1,16 @@
 from pydantic import BaseModel, Field
 from typing import Literal, Optional
 
+
+class FormaPagoRequest(BaseModel):
+    cod: str
+    id: str
+    value: str
 class ClienteRequest(BaseModel):
     id: str
     cod: str
     nombre: str
+    id_forma_pago: Optional[FormaPagoRequest] = None
 
 class CalculoBandaRequest(BaseModel):
 

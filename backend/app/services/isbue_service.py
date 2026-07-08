@@ -70,7 +70,7 @@ class IsbueService:
             "main": {
                 "customer_id": state_frontend.get("cliente", {}).get("id"),
                 "group_id": 1,
-                "payment_method_id": 1,
+                "payment_method_id": state_frontend.get("cliente", {}).get("id_forma_pago", {}).get("id"),
                 "shipping_method_id": 1,
                 "date": datetime.now().strftime("%d-%m-%Y"),
                 "observations": "Pedido de prueba generado desde la aplicación",
@@ -212,7 +212,7 @@ class IsbueService:
             },
             json={
                 "table": "personas",
-                "fields": "id,cod,nombre",
+                "fields": "id,cod,nombre,id_forma_pago",
                 "offset": 0,
                 "limit": -1,
                 "count": True,
