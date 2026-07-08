@@ -90,8 +90,6 @@ function AutocompleteCliente({ cliente, onSeleccionar }) {
 
     setTexto(value)
 
-    // si el usuario vuelve a escribir,
-    // deja de haber un cliente seleccionado
     onSeleccionar(null)
 
     if (!value) {
@@ -171,12 +169,13 @@ function BandaView() {
   function handleToggle(id) {
     setSeleccion(prev =>
       prev.includes(id)
-        ? prev.filter(s => s !== id)   // lo quita si ya estaba
-        : [...prev, id]                 // lo añade si no estaba
+        ? prev.filter(s => s !== id)   
+        : [...prev, id]                 
     )
   }
 
   function handleContinuar() {
+  console.log('Continuar con la configuración. Selección:', seleccion, 'Cliente:', cliente)
   navigate('/banda/configurar/banda', { 
     state: { 
       seleccion,

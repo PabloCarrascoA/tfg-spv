@@ -20,7 +20,7 @@ def guardar_pedido(db, resultado, state_frontend):
     cursor.execute("""
         INSERT INTO pedidos (numero_pedido, fecha, nombre_cliente, estado, precio_total)
         VALUES (?, ?, ?, 'en_proceso', ?)
-    """, (numero, fecha, resultado.get('nombre_cliente'), resultado.get('precio_total')))
+    """, (numero, fecha, resultado.get('cliente', {}).get('nombre') if resultado.get('cliente') else None, resultado.get('precio_total')))
 
     pedido_id = cursor.lastrowid
 

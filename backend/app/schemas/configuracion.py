@@ -1,9 +1,14 @@
 from pydantic import BaseModel, Field
 from typing import Literal, Optional
 
+class ClienteRequest(BaseModel):
+    id: str
+    cod: str
+    nombre: str
+
 class CalculoBandaRequest(BaseModel):
 
-    nombre_cliente: Optional[str] = None
+    cliente: Optional[ClienteRequest] = None
     
     # Campos para banda
 
@@ -76,7 +81,7 @@ class CalculoBandaRequest(BaseModel):
 
 class CalculoBandaResponse(BaseModel):
 
-    nombre_cliente: Optional[str] = None
+    cliente: Optional[ClienteRequest] = None
 
     cantidad_bandas: Optional[int] = None
     ancho_banda: Optional[float] = None

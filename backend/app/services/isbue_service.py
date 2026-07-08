@@ -68,7 +68,7 @@ class IsbueService:
         body = {
             "table": "pedidosV",
             "main": {
-                "customer_id": 1,
+                "customer_id": state_frontend.get("cliente", {}).get("id"),
                 "group_id": 1,
                 "payment_method_id": 1,
                 "shipping_method_id": 1,

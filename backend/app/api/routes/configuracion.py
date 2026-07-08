@@ -178,7 +178,6 @@ def obtener_onda(codigo: str, db = Depends(get_db)):
 
 @router.post("/calcular", response_model=CalculoBandaResponse)
 def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
-    # print(f"DEBUG: Endpoint recibió request.ancho_perfil = {request.ancho_perfil}")
     try:
 
         precio_total = calcular_configuracion_completa (
@@ -213,7 +212,7 @@ def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
             request.agujeros_x_fila,
             request.filas_x_agujero,
             request.diametro_perforacion,
-            request.nombre_cliente,
+            request.cliente,
             request.codigo_onda,
             request.n_ondas,
             request.base_onda,

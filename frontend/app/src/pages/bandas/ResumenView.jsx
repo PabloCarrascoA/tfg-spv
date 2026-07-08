@@ -51,7 +51,7 @@ function ResumenView() {
             <span>Banda: {resultado.codigo_banda}</span>
             <span className="resumen-precio-total">Precio Total: <strong>{resultado.precio_total} €</strong></span>
           </div>
-          <span className="resumen-cliente">{state.nombreCliente ?? '[Sin cliente]'}</span>
+          <span className="resumen-cliente">{state.cliente?.nombre ?? '[Sin cliente]'}</span>
         </div>
 
         <hr className="resumen-divider" />
@@ -193,7 +193,7 @@ function construirPayload(state) {
   const toFloat = val => parseFloat(val) || null
 
   return {
-    nombre_cliente:   state.nombreCliente ?? null,
+    cliente:   state.cliente ?? null,
     codigo_banda:     state.banda?.codigoBanda   ?? null,
     cantidad_bandas:  state.banda?.cantidad      ?? 1,
     largo_banda:      toFloat(state.banda?.longitud),

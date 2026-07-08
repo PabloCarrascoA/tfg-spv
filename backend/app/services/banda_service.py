@@ -819,9 +819,9 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
 
 
-def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, ancho, tipo_empalme, subtipo_empalme, codigo_perfilT = None, n_perfilesT = None, margen_lateral = None, distancia_paso = None, ancho_perfilT = None, n_hileras = None, ancho1 = None, ancho2 = None, luz_interior = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, nombre_cliente = None, codigo_onda = None, n_ondas = None, base_onda = None, altura_onda = None, continuidad_onda = None, ancho_onda = None, pisada_onda = None):
+def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, ancho, tipo_empalme, subtipo_empalme, codigo_perfilT = None, n_perfilesT = None, margen_lateral = None, distancia_paso = None, ancho_perfilT = None, n_hileras = None, ancho1 = None, ancho2 = None, luz_interior = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, codigo_onda = None, n_ondas = None, base_onda = None, altura_onda = None, continuidad_onda = None, ancho_onda = None, pisada_onda = None):
     
-    cliente_id = get_cliente_id_por_nombre(db, nombre_cliente)
+    cliente_id = cliente.cod if cliente is not None else None
     # - Precio banda -
 
     precio_banda = 0
@@ -982,7 +982,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
 
     return {
 
-        "nombre_cliente": nombre_cliente,
+        "cliente": cliente,
         "cantidad_bandas": cantidad_bandas,
         "ancho_banda": ancho,
         "largo_banda": largo,
