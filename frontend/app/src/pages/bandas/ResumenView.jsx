@@ -48,7 +48,7 @@ function ResumenView() {
           <div className="resumen-cabecera-left">
             <span className="resumen-pedido-titulo">⚙ Pedido</span>
             <span className="resumen-fecha">📅 {fecha}</span>
-            <span>Banda: {resultado.codigo_banda}</span>
+            <span>Banda: {resultado.banda?.codigo_barras}</span>
             <span className="resumen-precio-total">Precio Total: <strong>{resultado.precio_total} €</strong></span>
           </div>
           <span className="resumen-cliente">{state.cliente?.nombre ?? '[Sin cliente]'}</span>
@@ -64,9 +64,9 @@ function ResumenView() {
           {/* 1. Banda */}
           <div className="resumen-seccion">
             <p className="resumen-seccion-titulo">1. Banda cortada y empalme</p>
-            {resultado.codigo_banda ? (
+            {resultado.banda?.codigo_barras ? (
               <ul className="resumen-lista">
-                <li>Banda: {resultado.codigo_banda}</li>
+                <li>Banda: {resultado.banda?.codigo_barras}</li>
                 <li>Cantidad: {resultado.cantidad_bandas}</li>
                 <li>Largo: {resultado.largo_banda} mm</li>
                 <li>Ancho: {resultado.ancho_banda} mm</li>
@@ -194,7 +194,8 @@ function construirPayload(state) {
 
   return {
     cliente:   state.cliente ?? null,
-    codigo_banda:     state.banda?.codigoBanda   ?? null,
+    //codigo_banda:     state.banda?.codigoBanda   ?? null,
+    banda:            state.banda?.banda ?? null,
     cantidad_bandas:  state.banda?.cantidad      ?? 1,
     largo_banda:      toFloat(state.banda?.longitud),
     ancho_banda:      toFloat(state.banda?.ancho),

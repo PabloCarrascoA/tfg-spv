@@ -12,13 +12,27 @@ class ClienteRequest(BaseModel):
     nombre: str
     id_forma_pago: Optional[FormaPagoRequest] = None
 
+class ConjuntosAcabados(BaseModel):
+    cod: str
+    id: str
+    value: str
+class BandaRequest(BaseModel):
+    id: str
+    cod: str
+    pvp1: float
+    codigo_barras: str
+    color: Optional[str] = None
+    descripcion: Optional[str] = None
+    id_conjunto_acabados: Optional[ConjuntosAcabados] = None
+
 class CalculoBandaRequest(BaseModel):
 
     cliente: Optional[ClienteRequest] = None
     
     # Campos para banda
 
-    codigo_banda: Optional[str] = None
+    banda: Optional[BandaRequest] = None
+    
     cantidad_bandas: Optional[int] = Field(default=1, gt=0)
     largo_banda: Optional[float] = Field(default=None, gt=0)
     ancho_banda: Optional[float] = Field(default=None, gt=0)
@@ -92,7 +106,7 @@ class CalculoBandaResponse(BaseModel):
     cantidad_bandas: Optional[int] = None
     ancho_banda: Optional[float] = None
     largo_banda: Optional[float] = None
-    codigo_banda: Optional[str] = None
+    banda: Optional[BandaRequest] = None
     tipo_empalme: Optional[str] = None
     subtipo_empalme: Optional[str] = None
     precio_banda: float

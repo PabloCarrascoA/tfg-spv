@@ -95,6 +95,8 @@ function BandaConfigView() {
 
   function handleSiguiente() {
 
+    console.log('banda:', banda)
+
     if (!ancho || !longitud) {
       return alert('Introduce el ancho y la longitud de la banda antes de continuar')
     }

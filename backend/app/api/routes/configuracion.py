@@ -196,7 +196,7 @@ def calcular(request: CalculoBandaRequest, db = Depends(get_db)):
 
             db,
             request.cantidad_bandas,
-            request.codigo_banda,
+            request.banda,
             request.largo_banda,
             request.ancho_banda,
             request.tipo_empalme,

@@ -353,14 +353,14 @@ def obtener_desarrollo_ondas(base, altura):
 # OBTENER PRECIOS DE CADA SECCIÓN
 # ------------------------
 
-def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
+def calcular_precio_banda(db, banda, largo, ancho, cliente_id = None):
 
-    banda = obtener_banda_por_codigo(db, codigo)
+    # banda = obtener_banda_por_codigo(db, codigo)
 
     if banda is None:
         raise ValueError("Banda no encontrada")
 
-    precio_unitario = banda["precio"]
+    precio_unitario = float(banda.pvp1) if banda.pvp1 is not None else 1
 
     print(f"DEBUG -> precio_unitario: {precio_unitario}")
 
@@ -391,7 +391,7 @@ def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
 
     if cliente_id is not None:
         
-        descuento = 1 - get_descuento_producto(db, cliente_id, "bandas", codigo)
+        descuento = 1 - get_descuento_producto(db, cliente_id, "bandas", banda.codigo_barras)
 
         precio_total = precio_total * (descuento)
 
@@ -400,7 +400,7 @@ def calcular_precio_banda(db, codigo, largo, ancho, cliente_id = None):
         print(f"DEBUG -> precio_total con descuento: {precio_total}")
 
     return {
-        "codigo_banda": codigo,
+        "codigo_banda": banda.codigo_barras,
         "precio_unitario": precio_unitario,
         "precio_total": precio_total,
         "ancho_ajustado": ancho_ajustado
@@ -819,16 +819,16 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
 
 
-def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, ancho, tipo_empalme, subtipo_empalme, codigo_perfilT = None, n_perfilesT = None, margen_lateral = None, distancia_paso = None, ancho_perfilT = None, n_hileras = None, ancho1 = None, ancho2 = None, luz_interior = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, codigo_onda = None, n_ondas = None, base_onda = None, altura_onda = None, continuidad_onda = None, ancho_onda = None, pisada_onda = None):
+def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, codigo_perfilT = None, n_perfilesT = None, margen_lateral = None, distancia_paso = None, ancho_perfilT = None, n_hileras = None, ancho1 = None, ancho2 = None, luz_interior = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, codigo_onda = None, n_ondas = None, base_onda = None, altura_onda = None, continuidad_onda = None, ancho_onda = None, pisada_onda = None):
     
     cliente_id = cliente.cod if cliente is not None else None
     # - Precio banda -
 
     precio_banda = 0
 
-    if codigo_banda is not None:
+    if banda.codigo_barras is not None:
 
-        resultado_banda = calcular_precio_banda(db, codigo_banda, largo, ancho, cliente_id)
+        resultado_banda = calcular_precio_banda(db, banda, largo, ancho, cliente_id)
         precio_banda = resultado_banda["precio_total"]
 
         if resultado_banda["ancho_ajustado"] is not None:
@@ -986,7 +986,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, codigo_banda, largo, an
         "cantidad_bandas": cantidad_bandas,
         "ancho_banda": ancho,
         "largo_banda": largo,
-        "codigo_banda": codigo_banda,
+        "codigo_banda": banda.codigo_barras,
         "tipo_empalme": tipo_empalme,
         "subtipo_empalme": subtipo_empalme,
         "precio_banda": round(precio_banda, 2),
