@@ -38,16 +38,21 @@ function BandaConfigView() {
   const [color, setColor] = useState('')
 
   // --- datos de la API ---
-  const [bandas, setBandas]     = useState([])
+  const [banda, setBanda] = useState(null)
+  const [bandas, setBandas] = useState([])
+
   const [subtipos, setSubtipos] = useState([])
 
-  function handleCodigoBandaChange(e) {
-    const nuevoCodigo = e.target.value
-    const bandaSeleccionada = bandas.find(banda => banda.codigo === nuevoCodigo)
+  function handleBandaChange(e) {
 
-    setCodigoBanda(nuevoCodigo)
-    setColor(bandaSeleccionada?.color ?? '')
-    console.log('Color de la banda seleccionada:', bandaSeleccionada?.color)
+    const id = e.target.value
+
+    const bandaSeleccionada = bandas.find(
+      banda => String(banda.id) === String(id)
+    )
+
+    setBanda(bandaSeleccionada ?? null)
+
   }
 
   // --- cargar bandas al montar ---
@@ -94,8 +99,8 @@ function BandaConfigView() {
       return alert('Introduce el ancho y la longitud de la banda antes de continuar')
     }
 
-    if (!codigoBanda) {
-      return alert('Selecciona un código de banda antes de continuar')
+    if (!banda) {
+      return alert('Selecciona una banda antes de continuar')
     }
 
     const ruta = siguienteRuta(state.seleccion, 'banda')
@@ -103,7 +108,7 @@ function BandaConfigView() {
       state: {
         ...state,
         banda: {
-          codigoBanda,
+          banda,
           cantidad,
           ancho,
           longitud,
@@ -136,13 +141,13 @@ function BandaConfigView() {
                 <label className="form-label">Código de banda</label>
                 <select
                   className="form-select"
-                  value={codigoBanda}
-                  onChange={handleCodigoBandaChange}
+                  value={banda?.id ?? ""}
+                  onChange={handleBandaChange}
                 >
                   <option value="">- Seleccione una banda -</option>
                   {bandas.map(banda => (
-                    <option key={banda.codigo} value={banda.codigo}>
-                      {banda.codigo} - {banda.nombre}
+                    <option key={banda.id} value={banda.id}>
+                      {banda.codigo_barras} - {banda.descripcion}
                     </option>
                   ))}
                 </select>

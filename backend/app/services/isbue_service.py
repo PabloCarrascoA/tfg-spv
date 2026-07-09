@@ -227,7 +227,7 @@ class IsbueService:
         return response.json()["data"]
     
     def obtener_bandas(self):
-        
+
         token = self.get_token()
 
         response = requests.post(
@@ -237,9 +237,12 @@ class IsbueService:
             },
             json={
                 "table": "articulos",
-                "fields": "id,cod,pvp1,color",
+                "fields": "id,cod,pvp1,codigo_barras,color,descripcion,id_conjunto_acabados",
+                "where": [
+                    { "field": "id_conjunto_acabados", "condition": "eq", "value": "1" }
+                ],
                 "offset": 0,
-                "limit": 500,
+                "limit": -1,
                 "count": True,
                 "order": {
                     "cod": "asc"
