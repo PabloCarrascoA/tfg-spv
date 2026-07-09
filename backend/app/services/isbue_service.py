@@ -193,7 +193,7 @@ class IsbueService:
         #
 
         body["lines"].append({
-            "product_id": 1,
+            "product_id": state_frontend.get("banda", {}).get("banda", {}).get("id"),
             "qty": resultado.get("cantidad_bandas"),
             "price": resultado.get("precio_total"),
             "observation": "\n".join(observaciones)

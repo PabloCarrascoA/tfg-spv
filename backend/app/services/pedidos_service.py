@@ -13,6 +13,7 @@ def guardar_pedido(db, resultado, state_frontend):
     numero = get_siguiente_numero_pedido(db)
     fecha  = date.today().isoformat()
     banda_state = state_frontend.get('banda', {})
+    banda = state_frontend.get("banda", {}).get("banda")
 
     cursor = db.cursor()
 
@@ -25,14 +26,15 @@ def guardar_pedido(db, resultado, state_frontend):
     pedido_id = cursor.lastrowid
 
     # banda
-    if resultado.get('codigo_banda'):
+    if banda:
+        
         cursor.execute("""
             INSERT INTO pedido_banda
             (pedido_id, codigo_banda, cantidad, largo, ancho, tipo_empalme, subtipo_empalme, precio_banda, precio_empalme, comentarios)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             pedido_id,
-            resultado.get('codigo_banda'),
+            banda.get('codigo_barras'),
             resultado.get('cantidad_bandas'),
             resultado.get('largo_banda'),
             resultado.get('ancho_banda'),
