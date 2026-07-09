@@ -225,3 +225,30 @@ class IsbueService:
         response.raise_for_status()
 
         return response.json()["data"]
+    
+    def obtener_bandas(self):
+        
+        token = self.get_token()
+
+        response = requests.post(
+            f"{API_URL}/i/{INSTALLATION_COD}/list",
+            headers={
+                "Authorization": f"Bearer {token}"
+            },
+            json={
+                "table": "articulos",
+                "fields": "id,cod,pvp1,color",
+                "offset": 0,
+                "limit": 500,
+                "count": True,
+                "order": {
+                    "cod": "asc"
+                }
+            }
+        )
+
+        response.raise_for_status()
+
+        data = response.json()
+
+        return data["data"]

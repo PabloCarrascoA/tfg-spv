@@ -22,18 +22,30 @@ from app.schemas.configuracion import CalculoBandaRequest, CalculoBandaResponse
 
 from app.services.banda_service import obtener_bandas
 
+from app.services.isbue_service import IsbueService
+
 router = APIRouter(
     prefix="/configuracion",
     tags=["Configurador"]
 )
 
+isbue_service = IsbueService()
+
 # --------------------------------
 # OBTENER TODOS LOS DATOS A LA VEZ
 # --------------------------------
 
+# Versión Local
+# @router.get("/bandas")
+# def listar_bandas(db = Depends(get_db)):
+#    bandas = obtener_bandas(db)
+#    return bandas
+
 @router.get("/bandas")
 def listar_bandas(db = Depends(get_db)):
-    bandas = obtener_bandas(db)
+    
+    bandas = isbue_service.obtener_bandas()
+
     return bandas
 
 @router.get("/empalmes/{tipo}/subtipos")
