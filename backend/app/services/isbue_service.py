@@ -103,30 +103,52 @@ class IsbueService:
         color_perfilT = perfil_t_state.get("color")
         tipo_runer = runer_state.get("tipo")
         color_runer = runer_state.get("color")
-
+        
         #
         # PERFILES LONGITUDINALES
         #
 
         if resultado.get("codigo_perfil_superior"):
 
-            observaciones.append(
-                f"CON {resultado.get('n_perfiles_superior')} PERFILES LONGITUDINALES "
-                f"{tipo_perfil_superior} "
-                f"{color_perfil_superior} "
-                f"COLOCADOS EN {resultado.get('distancia_margen_superior')} mm "
-                f"DEL EXTREMO POR LA PARTE SUPERIOR"
-            )
+            n_sup = resultado.get('n_perfiles_superior')
+
+            if n_sup == 1:
+                observaciones.append(
+                    f"CON 1 PERFIL LONGITUDINAL "
+                    f"{tipo_perfil_superior} "
+                    f"{color_perfil_superior} "
+                    f"COLOCADO EN {resultado.get('distancia_margen_superior')} mm "
+                    f"DEL EXTREMO POR LA PARTE SUPERIOR"
+                )
+            else:
+                observaciones.append(
+                    f"CON {n_sup} PERFILES LONGITUDINALES "
+                    f"{tipo_perfil_superior} "
+                    f"{color_perfil_superior} "
+                    f"COLOCADOS EN {resultado.get('distancia_margen_superior')} mm "
+                    f"DEL EXTREMO POR LA PARTE SUPERIOR"
+                )
 
         if resultado.get("codigo_perfil_inferior"):
 
-            observaciones.append(
-                f"CON {resultado.get('n_perfiles_inferior')} PERFILES LONGITUDINALES "
-                f"{tipo_perfil_inferior} "
-                f"{color_perfil_inferior} "
-                f"COLOCADOS EN {resultado.get('distancia_margen_inferior')} mm "
-                f"DEL EXTREMO POR LA PARTE INFERIOR"
-            )
+            n_inf = resultado.get('n_perfiles_inferior')
+
+            if n_inf == 1:
+                observaciones.append(
+                    f"CON 1 PERFIL LONGITUDINAL "
+                    f"{tipo_perfil_inferior} "
+                    f"{color_perfil_inferior} "
+                    f"COLOCADO EN {resultado.get('distancia_margen_inferior')} mm "
+                    f"DEL EXTREMO POR LA PARTE INFERIOR"
+                )
+            else:
+                observaciones.append(
+                    f"CON {n_inf} PERFILES LONGITUDINALES "
+                    f"{tipo_perfil_inferior} "
+                    f"{color_perfil_inferior} "
+                    f"COLOCADOS EN {resultado.get('distancia_margen_inferior')} mm "
+                    f"DEL EXTREMO POR LA PARTE INFERIOR"
+                )
 
         #
         # PERFILES TRANSVERSALES
@@ -134,25 +156,43 @@ class IsbueService:
 
         if resultado.get("codigo_perfilT"):
 
+            n_perfilesT = resultado.get('n_perfilesT')
+
             if resultado.get("n_hileras", 1) <= 1:
 
-                observaciones.append(
-                    f"CON {resultado.get('n_perfilesT')} PERFILES TRANSVERSALES "
-                    f"{tipo_perfilT} "
-                    f"{color_perfilT} "
-                    f"DE {resultado.get('ancho_perfilT')} mm, "
-                    f"COLOCADOS A UN PASO DE {resultado.get('distancia_paso')} mm"
-                )
+                if n_perfilesT == 1:
+                    observaciones.append(
+                        f"CON 1 PERFIL TRANSVERSAL "
+                        f"{tipo_perfilT} "
+                        f"{color_perfilT} "
+                        f"DE {resultado.get('ancho_perfilT')} mm, "
+                        f"COLOCADO A UN PASO DE {resultado.get('distancia_paso')} mm"
+                    )
+                else:
+                    observaciones.append(
+                        f"CON {n_perfilesT} PERFILES TRANSVERSALES "
+                        f"{tipo_perfilT} "
+                        f"{color_perfilT} "
+                        f"DE {resultado.get('ancho_perfilT')} mm, "
+                        f"COLOCADOS A UN PASO DE {resultado.get('distancia_paso')} mm"
+                    )
 
             else:
 
+                n_hileras = resultado.get('n_hileras')
+                n_interrupciones = n_hileras - 1
+
+                texto_hileras = "1 FILA DE" if n_hileras == 1 else f"{n_hileras} FILAS DE"
+                texto_perfilesT = f"1 PERFIL TRANSVERSAL" if n_perfilesT == 1 else f"{n_perfilesT} PERFILES TRANSVERSALES"
+                texto_interrupciones = "1 INTERRUPCIÓN CENTRAL" if n_interrupciones == 1 else f"{n_interrupciones} INTERRUPCIONES CENTRALES"
+
                 observaciones.append(
-                    f"CON {resultado.get('n_hileras')} FILAS DE "
-                    f"{resultado.get('n_perfilesT')} PERFILES TRANSVERSALES "
+                    f"CON {texto_hileras} "
+                    f"{texto_perfilesT} "
                     f"{tipo_perfilT} "
                     f"{color_perfilT} "
                     f"DE {resultado.get('ancho_perfilT')} mm "
-                    f"CON {resultado.get('n_hileras') - 1} INTERRUPCIONES CENTRALES "
+                    f"CON {texto_interrupciones} "
                     f"DE {resultado.get('luz_interior')} mm "
                     f"COLOCADOS A UN PASO DE {resultado.get('distancia_paso')} mm"
                 )
@@ -163,13 +203,24 @@ class IsbueService:
 
         if resultado.get("codigo_runer"):
 
-            observaciones.append(
-                f"CON {resultado.get('n_perfiles_runer')} RUNERS "
-                f"{tipo_runer} "
-                f"{color_runer} "
-                f"COLOCADOS EN {resultado.get('margen_runer')} mm "
-                f"DEL EXTREMO POR LA PARTE SUPERIOR"
-            )
+            n_runer = resultado.get('n_perfiles_runer')
+
+            if n_runer == 1:
+                observaciones.append(
+                    f"CON 1 RUNER "
+                    f"{tipo_runer} "
+                    f"{color_runer} "
+                    f"COLOCADO EN {resultado.get('margen_runer')} mm "
+                    f"DEL EXTREMO POR LA PARTE SUPERIOR"
+                )
+            else:
+                observaciones.append(
+                    f"CON {n_runer} RUNERS "
+                    f"{tipo_runer} "
+                    f"{color_runer} "
+                    f"COLOCADOS EN {resultado.get('margen_runer')} mm "
+                    f"DEL EXTREMO POR LA PARTE SUPERIOR"
+                )
 
         #
         # ONDAS
@@ -177,16 +228,29 @@ class IsbueService:
 
         if resultado.get("codigo_onda"):
 
-            continuidad = "CONTINUAS" if resultado.get("continuidad_onda") == 'SÍ' else "DISCONTINUAS"
+            n_ondas = resultado.get('n_ondas')
+            es_continua = resultado.get("continuidad_onda") == 'SÍ'
 
-            observaciones.append(
-                f"""CON {resultado.get('n_ondas')} ONDAS {continuidad}
-                COD: {resultado.get('codigo_onda')}
-                ALTURA: {resultado.get('altura_onda')} mm
-                BASE: {resultado.get('base_onda')} mm
-                ANCHO: {resultado.get('ancho_banda')} mm
-                PISADA: {resultado.get('pisada_onda')} mm"""
-                        )
+            if n_ondas == 1:
+                continuidad = "CONTINUA" if es_continua else "DISCONTINUA"
+                observaciones.append(
+                    f"CON 1 ONDA {continuidad}\n"
+                    f"COD: {resultado.get('codigo_onda')}\n"
+                    f"ALTURA: {resultado.get('altura_onda')} mm\n"
+                    f"BASE: {resultado.get('base_onda')} mm\n"
+                    f"ANCHO: {resultado.get('ancho_banda')} mm\n"
+                    f"PISADA: {resultado.get('pisada_onda')} mm"
+                )
+            else:
+                continuidad = "CONTINUAS" if es_continua else "DISCONTINUAS"
+                observaciones.append(
+                    f"CON {n_ondas} ONDAS {continuidad}\n"
+                    f"COD: {resultado.get('codigo_onda')}\n"
+                    f"ALTURA: {resultado.get('altura_onda')} mm\n"
+                    f"BASE: {resultado.get('base_onda')} mm\n"
+                    f"ANCHO: {resultado.get('ancho_banda')} mm\n"
+                    f"PISADA: {resultado.get('pisada_onda')} mm"
+                )
 
         #
         # Línea Isbue
