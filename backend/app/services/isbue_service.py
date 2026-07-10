@@ -319,3 +319,59 @@ class IsbueService:
         data = response.json()
 
         return data["data"]
+    
+    def obtener_lineas_pedido(self, id_documento):
+
+        token = self.get_token()
+
+        response = requests.post(
+            f"{API_URL}/i/{INSTALLATION_COD}/list",
+            headers={
+                "Authorization": f"Bearer {token}"
+            },
+            json={
+                "table": "lpedidosV",
+                "fields": "id,id_documento,product_id,cape_13,cape_2",
+                "where": [
+                    {"field": "id_documento", "condition": "eq", "value": str(id_documento)}
+                ],
+                "offset": 0,
+                "count": True,
+                "order": {
+                    "id": "asc"
+                }
+            }
+        )
+
+        print("STATUS LIST:", response.status_code)
+        print("BODY LIST:", response.text)
+
+        response.raise_for_status()
+
+        return response.json().get("data", [])
+
+    def actualizar_medidas_linea(self, id_linea, ancho, largo):
+
+        token = self.get_token()
+
+        response = requests.post(
+            f"{API_URL}/i/{INSTALLATION_COD}/save",
+            headers={
+                "Authorization": f"Bearer {token}"
+            },
+            json={
+                "table": "lpedidosV",
+                "id": id_linea,
+                "data": {
+                    "cape_2": ancho,
+                    "cape_13": largo
+                }
+            }
+        )
+
+        print("STATUS SAVE:", response.status_code)
+        print("BODY SAVE:", response.text)
+
+        response.raise_for_status()
+
+        return response.json()

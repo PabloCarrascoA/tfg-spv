@@ -27,7 +27,7 @@ def guardar_pedido(db, resultado, state_frontend):
 
     # banda
     if banda:
-        
+
         cursor.execute("""
             INSERT INTO pedido_banda
             (pedido_id, codigo_banda, cantidad, largo, ancho, tipo_empalme, subtipo_empalme, precio_banda, precio_empalme, comentarios)
@@ -146,6 +146,21 @@ def guardar_pedido(db, resultado, state_frontend):
         print(body)
 
         respuesta = isbue_service.crear_pedido(body)
+
+        id_documento = respuesta["data"]["id"]
+
+        lineas = isbue_service.obtener_lineas_pedido(id_documento)
+
+        if lineas:
+            id_linea = lineas[0]["id"]
+
+            banda_state = state_frontend.get("banda", {})
+            ancho = banda_state.get("ancho")
+            largo = banda_state.get("largo")
+
+            isbue_service.actualizar_medidas_linea(id_linea, ancho, largo)
+        else:
+            print(f"ISBUE WARNING: no se encontraron líneas para el documento {id_documento}")
 
         print(respuesta)
         
