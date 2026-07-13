@@ -79,6 +79,7 @@ class IsbueService:
         }
 
         observaciones = []
+        banda_state = state_frontend.get("banda", {})
         perfil_l_state = state_frontend.get("perfilL", {})
         perfil_t_state = state_frontend.get("perfilT", {})
         runer_state = state_frontend.get("runer", {})
@@ -103,6 +104,15 @@ class IsbueService:
         color_perfilT = perfil_t_state.get("color")
         tipo_runer = runer_state.get("tipo")
         color_runer = runer_state.get("color")
+
+        #
+        # BANDA CORTADA Y EMPALME
+        #
+
+        if resultado.get("tipo_empalme"):
+            observaciones.append(
+                f"{resultado.get('subtipo_empalme').upper()} "
+            )
         
         #
         # PERFILES LONGITUDINALES
