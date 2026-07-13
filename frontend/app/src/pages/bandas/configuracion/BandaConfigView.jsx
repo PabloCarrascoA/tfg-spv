@@ -8,7 +8,20 @@ const TIPOS_EMPALME = [
   { value: 'banda-sin-fin',       label: 'Banda sin fin'       },
   { value: 'extremos-preparados', label: 'Extremos preparados' },
   { value: 'grapas',              label: 'Grapas'              },
+  { value: 'emp-mec-galvan',      label: 'Emp. Mec. Galvan.'   },
+  { value: 'emp-mec-inox',        label: 'Emp. Mec. Inox.'     },
+  { value: 'emp-mec-plastico',    label: 'Emp. Mec. Plástico'  },
 ]
+
+const ACABADO_POR_EMPALME = {
+  'banda-abierta':       1,
+  'banda-sin-fin':       2,
+  'extremos-preparados': 3,
+  'emp-mec-galvan':      4,
+  'emp-mec-inox':        5,
+  'emp-mec-plastico':    6,
+  'grapas':              7,
+}
 
 const LABELS_SUBTIPO = {
   'sin-fin-z':                  'Banda sin fin Z',
