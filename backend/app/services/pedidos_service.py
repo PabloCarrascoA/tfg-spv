@@ -161,11 +161,12 @@ def guardar_pedido(db, resultado, state_frontend):
             banda_state = state_frontend.get("banda", {})
             ancho = banda_state.get("ancho")
             largo = banda_state.get("longitud")
+            acabado = banda_state.get("acabado")
             trabajo = state_frontend.get("trabajo", {})
 
-            print(f"ISBUE INFO: actualizando medidas de la línea {id_linea} del pedido {id_documento} con ancho={ancho} y largo={largo} y trabajo={trabajo}")
+            print(f"ISBUE INFO: actualizando medidas de la línea {id_linea} del pedido {id_documento} con ancho={ancho} y largo={largo}, trabajo={trabajo} y acabado={acabado}")
 
-            isbue_service.actualizar_medidas_linea(id_linea, ancho, largo, trabajo)
+            isbue_service.actualizar_medidas_linea(id_linea, ancho, largo, trabajo, acabado)
         else:
             print(f"ISBUE WARNING: no se encontraron líneas para el documento {id_documento}")
 

@@ -412,6 +412,8 @@ def calcular_precio_empalme(db, tipo_empalme, subtipo, ancho, cliente_id = None)
 
     precio = obtener_precio_empalme(db, tipo_empalme, subtipo, ancho)
 
+    descuento = 1.0  # Valor por defecto si no hay descuento
+
     if tipo_empalme == "banda-sin-fin":
         
         descuento = 1 - get_descuento_soldadura(db, cliente_id, "sin_fin") if cliente_id is not None else 1

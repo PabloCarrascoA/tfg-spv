@@ -350,7 +350,7 @@ class IsbueService:
 
         return response.json().get("data", [])
 
-    def actualizar_medidas_linea(self, id_linea, ancho, largo, trabajo = None):
+    def actualizar_medidas_linea(self, id_linea, ancho, largo, trabajo = None, acabado = None):
 
         token = self.get_token()
 
@@ -365,9 +365,14 @@ class IsbueService:
             data_actualizar["cape_13"] = largo_valido
         if trabajo is not None:
             data_actualizar["cape_27"] = trabajo
+        if acabado is not None:
+            data_actualizar["id_acabado"] = acabado
+            print(f"ISBUE INFO: Se actualizará el acabado de la línea {id_linea} a {acabado}")
+
+        print("data actualizar:", data_actualizar)
 
         if not data_actualizar:
-            print(f"ISBUE WARNING: ancho/largo no válidos para línea {id_linea}, no se actualiza. ancho={ancho!r} largo={largo!r}trabajo={trabajo!r}")
+            print(f"ISBUE WARNING: ancho/largo no válidos para línea {id_linea}, no se actualiza. ancho={ancho!r} largo={largo!r}trabajo={trabajo!r}, acabado={acabado!r}")
             return None
 
         response = requests.post(

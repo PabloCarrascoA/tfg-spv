@@ -43,6 +43,9 @@ class CalculoBandaRequest(BaseModel):
         "banda-abierta",
         "banda-sin-fin",
         "extremos-preparados",
+        "emp-mec-galvan",
+        "emp-mec-inox",
+        "emp-mec-plastico",
         "grapas"
     ]] = None
 
