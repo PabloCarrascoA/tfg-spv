@@ -47,6 +47,8 @@ const COMPONENTES = [
   },
 ]
 
+const COMPONENTES_VALOR_3 = ['banda', 'perfil-longitudinal']
+
 // Componente para el nombre del cliente
 
 function AutocompleteCliente({ cliente, onSeleccionar }) {
@@ -158,6 +160,7 @@ function BandaView() {
   const navigate = useNavigate()
 
   const [cliente, setCliente] = useState(null)
+  const [trabajo, setTrabajo] = useState(3)
 
   // el estado inicial marca como seleccionado banda y empalme que es obligatorio
   const [seleccion, setSeleccion] = useState(
@@ -165,6 +168,14 @@ function BandaView() {
       .filter(c => c.obligatorio)
       .map(c => c.id)
   )
+
+  useEffect(() => {
+    const hayComponenteDeValor4 = seleccion.some(
+      id => !COMPONENTES_VALOR_3.includes(id)
+    )
+
+    setTrabajo(hayComponenteDeValor4 ? 4 : 3)
+  }, [seleccion])
 
   function handleToggle(id) {
     setSeleccion(prev =>
@@ -175,11 +186,12 @@ function BandaView() {
   }
 
   function handleContinuar() {
-  console.log('Continuar con la configuración. Selección:', seleccion, 'Cliente:', cliente)
+  console.log('Continuar con la configuración. Selección:', seleccion, 'Cliente:', cliente, 'Trabajo:', trabajo)
   navigate('/banda/configurar/banda', { 
     state: { 
       seleccion,
-      cliente
+      cliente,
+      trabajo
     } 
   })
 }

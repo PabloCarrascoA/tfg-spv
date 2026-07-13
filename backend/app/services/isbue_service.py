@@ -350,9 +350,25 @@ class IsbueService:
 
         return response.json().get("data", [])
 
-    def actualizar_medidas_linea(self, id_linea, ancho, largo):
+    def actualizar_medidas_linea(self, id_linea, ancho, largo, trabajo = None):
 
         token = self.get_token()
+
+        data_actualizar = {}
+
+        ancho_valido = self._to_int_valido(ancho)
+        largo_valido = self._to_int_valido(largo)
+
+        if ancho_valido is not None:
+            data_actualizar["cape_2"] = ancho_valido
+        if largo_valido is not None:
+            data_actualizar["cape_13"] = largo_valido
+        if trabajo is not None:
+            data_actualizar["cape_27"] = trabajo
+
+        if not data_actualizar:
+            print(f"ISBUE WARNING: ancho/largo no válidos para línea {id_linea}, no se actualiza. ancho={ancho!r} largo={largo!r}trabajo={trabajo!r}")
+            return None
 
         response = requests.post(
             f"{API_URL}/i/{INSTALLATION_COD}/save",
@@ -362,10 +378,7 @@ class IsbueService:
             json={
                 "table": "lpedidosV",
                 "id": id_linea,
-                "data": {
-                    "cape_2": ancho,
-                    "cape_13": largo
-                }
+                "data": data_actualizar
             }
         )
 
@@ -375,3 +388,13 @@ class IsbueService:
         response.raise_for_status()
 
         return response.json()
+
+    def _to_int_valido(self, valor):
+        if valor is None:
+            return None
+        if isinstance(valor, str) and valor.strip().lower() in ("", "null", "none", "undefined"):
+            return None
+        try:
+            return int(round(float(valor)))
+        except (TypeError, ValueError):
+            return None
