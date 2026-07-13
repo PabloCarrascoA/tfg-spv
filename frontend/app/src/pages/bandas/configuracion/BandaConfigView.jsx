@@ -106,9 +106,11 @@ function BandaConfigView() {
 
   }, [subtipoEmpalme, ancho])
 
+  const acabado = ACABADO_POR_EMPALME[tipoEmpalme] ?? null
+
   function handleSiguiente() {
 
-    console.log('banda:', banda)
+    console.log('banda:', banda, 'acabado:', acabado)
 
     if (!ancho || !longitud) {
       return alert('Introduce el ancho y la longitud de la banda antes de continuar')
@@ -129,6 +131,7 @@ function BandaConfigView() {
           longitud,
           tipoEmpalme,
           subtipoEmpalme,
+          acabado,
           precioEmpalme,
           color,
           comentarios,
