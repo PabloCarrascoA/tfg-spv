@@ -35,17 +35,6 @@ function ResumenView() {
     }
   }
 
-  async function handleConfirmar() {
-    setGuardando(true)
-    try {
-        await guardarPedido(resultado, state)
-        navigate('/pedidos')
-    } catch (err) {
-        console.error('Error guardando pedido:', err)
-        setGuardando(false)
-    }
-  }
-
   useEffect(() => {
     const datos = construirPayload(state)
     console.log('DEBUG payload:', datos)
@@ -204,22 +193,22 @@ function ResumenView() {
           {guardando ? 'Guardando...' : 'Confirmar ›'}
         </button>
       </div>
-      
+
       {modalAbierto && (
         <div className="modal-overlay" onClick={() => setModalAbierto(false)}>
           <div className="modal-contenido" onClick={e => e.stopPropagation()}>
             <h3 className="modal-titulo">¿Cómo quieres guardar esta configuración?</h3>
-            <p className="modal-subtitulo">Elige si quieres generarlo como pedido en firme o como presupuesto.</p>
+            <p className="modal-subtitulo">Elige si quieres generarlo como pedido o como presupuesto.</p>
             <div className="modal-botones">
               <button
-                className="btn-modal btn-pedido"
+                className="btn-atras"
                 onClick={() => handleSeleccionModal(false)}
                 disabled={guardando}
               >
                 Pedido
               </button>
               <button
-                className="btn-modal btn-presupuesto"
+                className="btn-continuar"
                 onClick={() => handleSeleccionModal(true)}
                 disabled={guardando}
               >
