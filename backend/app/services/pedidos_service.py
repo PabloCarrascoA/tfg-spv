@@ -151,7 +151,7 @@ def guardar_pedido(db, resultado, state_frontend):
 
         print(f"ISBUE INFO: pedido creado en Isbue con id_documento={id_documento}")
 
-        lineas = isbue_service.obtener_lineas_pedido(id_documento)
+        lineas = isbue_service.obtener_lineas_pedido(id_documento, state_frontend)
 
         print(lineas)
 
@@ -166,7 +166,7 @@ def guardar_pedido(db, resultado, state_frontend):
 
             print(f"ISBUE INFO: actualizando medidas de la línea {id_linea} del pedido {id_documento} con ancho={ancho} y largo={largo}, trabajo={trabajo} y acabado={acabado}")
 
-            isbue_service.actualizar_medidas_linea(id_linea, ancho, largo, trabajo, acabado)
+            isbue_service.actualizar_medidas_linea(id_linea, ancho, largo, state_frontend, trabajo, acabado)
         else:
             print(f"ISBUE WARNING: no se encontraron líneas para el documento {id_documento}")
 

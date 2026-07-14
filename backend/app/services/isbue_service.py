@@ -65,8 +65,12 @@ class IsbueService:
         return response.json()
     
     def construir_body_isbue(self, resultado, state_frontend):
+
+        esPresupuesto = state_frontend.get("esPresupuesto")
+        print(f"ISBUE INFO: Construyendo body para {'presupuesto' if esPresupuesto else 'pedido'}, esPresupuesto={esPresupuesto}")
+        table = "presupuestosV" if esPresupuesto else "pedidosV"
         body = {
-            "table": "pedidosV",
+            "table": table,
             "main": {
                 "customer_id": state_frontend.get("cliente", {}).get("id"),
                 "group_id": 1,
@@ -330,9 +334,12 @@ class IsbueService:
 
         return data["data"]
     
-    def obtener_lineas_pedido(self, id_documento):
+    def obtener_lineas_pedido(self, id_documento, state_frontend):
 
         token = self.get_token()
+
+        esPresupuesto = state_frontend.get("esPresupuesto")
+        table = "lpresupuestosV" if esPresupuesto else "lpedidosV"
 
         response = requests.post(
             f"{API_URL}/i/{INSTALLATION_COD}/list",
@@ -340,7 +347,7 @@ class IsbueService:
                 "Authorization": f"Bearer {token}"
             },
             json={
-                "table": "lpedidosV",
+                "table": table,
                 "fields": "id,id_documento,product_id,cape_13,cape_2",
                 "where": [
                     {"field": "id_documento", "condition": "eq", "value": str(id_documento)}
@@ -360,9 +367,17 @@ class IsbueService:
 
         return response.json().get("data", [])
 
-    def actualizar_medidas_linea(self, id_linea, ancho, largo, trabajo = None, acabado = None):
+    def actualizar_medidas_linea(self, id_linea, ancho, largo, state_frontend, trabajo = None, acabado = None):
 
         token = self.get_token()
+
+        esPresupuesto = state_frontend.get("esPresupuesto")
+
+        table = "lpresupuestosV" if esPresupuesto else "lpedidosV"
+
+        campo_personalizado_ancho = "cape_1" if esPresupuesto else "cape_2"
+        campo_personalizado_largo = "cape_12" if esPresupuesto else "cape_13"
+        campo_personalizado_trabajo = "cape_25" if esPresupuesto else "cape_27"
 
         data_actualizar = {}
 
@@ -370,11 +385,11 @@ class IsbueService:
         largo_valido = self._to_int_valido(largo)
 
         if ancho_valido is not None:
-            data_actualizar["cape_2"] = ancho_valido
+            data_actualizar[campo_personalizado_ancho] = ancho_valido
         if largo_valido is not None:
-            data_actualizar["cape_13"] = largo_valido
+            data_actualizar[campo_personalizado_largo] = largo_valido
         if trabajo is not None:
-            data_actualizar["cape_27"] = trabajo
+            data_actualizar[campo_personalizado_trabajo] = trabajo
         if acabado is not None:
             data_actualizar["id_acabado"] = acabado
             print(f"ISBUE INFO: Se actualizará el acabado de la línea {id_linea} a {acabado}")
@@ -391,7 +406,7 @@ class IsbueService:
                 "Authorization": f"Bearer {token}"
             },
             json={
-                "table": "lpedidosV",
+                "table": table,
                 "id": id_linea,
                 "data": data_actualizar
             }

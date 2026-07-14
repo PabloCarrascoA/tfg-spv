@@ -23,7 +23,7 @@ function ResumenView() {
 
     const stateConGuardar = {
       ...state,
-      guardar: esPresupuesto,
+      esPresupuesto: esPresupuesto,
     }
 
     try {
