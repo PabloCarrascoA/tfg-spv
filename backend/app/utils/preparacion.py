@@ -5,22 +5,26 @@ def calcular_precio_preparacionLR(tarifa_preparacion, cantidad_bandas, n_perfile
     precio_preparacion = 0
     n_cobros = 0
 
+    print(f"DEBUG preparación PL: cantidad_bandas={cantidad_bandas}, n_perfiles={n_perfiles}, tarifa_preparacion={tarifa_preparacion}")
+
     if cantidad_bandas == 1 and n_perfiles == 1:
         precio_preparacion = tarifa_preparacion
+        print("entro en caso 1")
 
     elif cantidad_bandas > 1 and n_perfiles == 1:
-        precio_preparacion = (2 * tarifa_preparacion) / cantidad_bandas
+        precio_preparacion = (tarifa_preparacion) / cantidad_bandas
+        print("entro en caso 2")
 
     elif n_perfiles > 1 and cantidad_bandas >= 1:
 
         if n_perfiles % 2 == 0:
             n_cobros = n_perfiles / 2
+            print("entro en caso 3.1")
         else:
-            # hay que redondear por abajo ver si da bien con ceil o floor
-            n_cobros = math.ceil(n_perfiles/2) + 1 
+            n_cobros = math.floor(n_perfiles/2) + 1 
 
         precio_preparacion = (n_cobros * tarifa_preparacion) / cantidad_bandas
-    
+
     else:
         raise ValueError("cantidad de bandas o perfiles no válidos para calcular preparación")
     
