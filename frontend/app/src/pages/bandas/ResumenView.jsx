@@ -11,16 +11,39 @@ function ResumenView() {
   const [error, setError]         = useState(null)
 
   const [guardando, setGuardando] = useState(false)
+  const [modalAbierto, setModalAbierto] = useState(false)
 
-  async function handleConfirmar() {
-  setGuardando(true)
-  try {
-      await guardarPedido(resultado, state)
+  function handleConfirmar() {
+    setModalAbierto(true)
+  }
+
+  async function handleSeleccionModal(esPresupuesto) {
+    setModalAbierto(false)
+    setGuardando(true)
+
+    const stateConGuardar = {
+      ...state,
+      guardar: esPresupuesto,
+    }
+
+    try {
+      await guardarPedido(resultado, stateConGuardar)
       navigate('/pedidos')
-  } catch (err) {
+    } catch (err) {
       console.error('Error guardando pedido:', err)
       setGuardando(false)
+    }
   }
+
+  async function handleConfirmar() {
+    setGuardando(true)
+    try {
+        await guardarPedido(resultado, state)
+        navigate('/pedidos')
+    } catch (err) {
+        console.error('Error guardando pedido:', err)
+        setGuardando(false)
+    }
   }
 
   useEffect(() => {
@@ -178,9 +201,35 @@ function ResumenView() {
       <div className="config-footer">
         <button className="btn-atras" onClick={() => navigate(-1)}>‹ Atrás</button>
         <button className="btn-continuar" onClick={handleConfirmar} disabled={guardando}>
-        {guardando ? 'Guardando...' : 'Confirmar ›'}
+          {guardando ? 'Guardando...' : 'Confirmar ›'}
         </button>
       </div>
+      
+      {modalAbierto && (
+        <div className="modal-overlay" onClick={() => setModalAbierto(false)}>
+          <div className="modal-contenido" onClick={e => e.stopPropagation()}>
+            <h3 className="modal-titulo">¿Cómo quieres guardar esta configuración?</h3>
+            <p className="modal-subtitulo">Elige si quieres generarlo como pedido en firme o como presupuesto.</p>
+            <div className="modal-botones">
+              <button
+                className="btn-modal btn-pedido"
+                onClick={() => handleSeleccionModal(false)}
+                disabled={guardando}
+              >
+                Pedido
+              </button>
+              <button
+                className="btn-modal btn-presupuesto"
+                onClick={() => handleSeleccionModal(true)}
+                disabled={guardando}
+              >
+                Presupuesto
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
     </div>
   )
 }
