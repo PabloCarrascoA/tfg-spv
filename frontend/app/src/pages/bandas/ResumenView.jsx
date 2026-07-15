@@ -17,6 +17,7 @@ function ResumenView() {
     setModalAbierto(true)
   }
 
+
   async function handleSeleccionModal(esPresupuesto) {
     setModalAbierto(false)
     setGuardando(true)
@@ -81,7 +82,7 @@ function ResumenView() {
                 <li>Banda: {state.banda.banda.codigo_barras}</li>
                 <li>Cantidad: {resultado.cantidad_bandas}</li>
                 <li>Largo: {resultado.largo_banda} mm</li>
-                <li>Ancho: {resultado.ancho_banda} mm</li>
+                <li>Ancho: {state.banda?.ancho} mm</li>
                 <li>Empalme: {state.banda?.tipoEmpalme} — {state.banda?.subtipoEmpalme ?? 'Banda abierta'}</li>
                 <li>Precio banda: {resultado.precio_banda} €</li>
                 <li>Precio empalme: {resultado.precio_empalme} €</li>
@@ -236,7 +237,7 @@ function construirPayload(state) {
     banda:            state.banda?.banda ?? null,
     cantidad_bandas:  state.banda?.cantidad      ?? 1,
     largo_banda:      toFloat(state.banda?.longitud),
-    ancho_banda:      toFloat(state.banda?.ancho),
+    ancho_banda:      toFloat(state.banda?.anchoAjustado),
     tipo_empalme:     state.banda?.tipoEmpalme   ?? null,
     subtipo_empalme:  state.banda?.subtipoEmpalme ?? null,
     codigo_perfil_superior:    state.perfilL?.superior?.activo ? state.perfilL.superior.codigo                        : null,

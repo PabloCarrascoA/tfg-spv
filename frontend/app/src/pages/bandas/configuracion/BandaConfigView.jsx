@@ -33,6 +33,16 @@ const LABELS_SUBTIPO = {
 
 }
 
+function calcularAnchoAjustado(valor) {
+  const num = parseFloat(valor)
+
+  if (!valor || isNaN(num)) return null
+
+  return (num % 50 !== 0)
+    ? (Math.trunc(num / 50) + 1) * 50
+    : num
+}
+
 function BandaConfigView() {
   const { state } = useLocation()
   const navigate = useNavigate()
@@ -55,6 +65,8 @@ function BandaConfigView() {
   const [bandas, setBandas] = useState([])
 
   const [subtipos, setSubtipos] = useState([])
+
+  const anchoAjustado = calcularAnchoAjustado(ancho)
 
   function handleBandaChange(e) {
 
@@ -98,13 +110,13 @@ function BandaConfigView() {
 
   // --- buscar precio cuando cambia subtipo o ancho ---
   useEffect(() => {
-    if (!subtipoEmpalme || !ancho) return
+    if (!subtipoEmpalme || !anchoAjustado) return
 
-    getPrecioEmpalme(tipoEmpalme, subtipoEmpalme, parseFloat(ancho))
+    getPrecioEmpalme(tipoEmpalme, subtipoEmpalme, parseFloat(anchoAjustado))
       .then(data => setPrecioEmpalme(data.precio))
       .catch(err => console.error('Error cargando precio empalme:', err))
 
-  }, [subtipoEmpalme, ancho])
+  }, [subtipoEmpalme, anchoAjustado])
 
   const acabado = ACABADO_POR_EMPALME[tipoEmpalme] ?? null
 
@@ -128,6 +140,7 @@ function BandaConfigView() {
           banda,
           cantidad,
           ancho,
+          anchoAjustado,
           longitud,
           tipoEmpalme,
           subtipoEmpalme,
