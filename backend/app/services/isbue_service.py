@@ -64,26 +64,9 @@ class IsbueService:
 
         return response.json()
     
-    def construir_body_isbue(self, resultado, state_frontend):
-
-        esPresupuesto = state_frontend.get("esPresupuesto")
-        print(f"ISBUE INFO: Construyendo body para {'presupuesto' if esPresupuesto else 'pedido'}, esPresupuesto={esPresupuesto}")
-        table = "presupuestosV" if esPresupuesto else "pedidosV"
-        body = {
-            "table": table,
-            "main": {
-                "customer_id": state_frontend.get("cliente", {}).get("id"),
-                "group_id": 1,
-                "payment_method_id": state_frontend.get("cliente", {}).get("id_forma_pago", {}).get("id"),
-                "shipping_method_id": 1,
-                "date": datetime.now().strftime("%d-%m-%Y"),
-                "observations": "Pedido de prueba generado desde la aplicación",
-            },
-            "lines": []
-        }
+    def construir_linea_isbue(self, resultado, state_frontend):
 
         observaciones = []
-        banda_state = state_frontend.get("banda", {})
         perfil_l_state = state_frontend.get("perfilL", {})
         perfil_t_state = state_frontend.get("perfilT", {})
         runer_state = state_frontend.get("runer", {})
@@ -117,7 +100,7 @@ class IsbueService:
             observaciones.append(
                 f"{resultado.get('subtipo_empalme').upper()} "
             )
-        
+
         #
         # PERFILES LONGITUDINALES
         #
@@ -270,12 +253,32 @@ class IsbueService:
         # Línea Isbue
         #
 
-        body["lines"].append({
+        return {
             "product_id": state_frontend.get("banda", {}).get("banda", {}).get("id"),
             "qty": resultado.get("cantidad_bandas"),
             "price": resultado.get("precio_total"),
             "observation": "\n".join(observaciones)
-        })
+        }
+
+    def construir_body_isbue(self, lineas, state_frontend):
+        
+        esPresupuesto = state_frontend.get("esPresupuesto")
+        print(f"ISBUE INFO: Construyendo body para {'presupuesto' if esPresupuesto else 'pedido'}, esPresupuesto={esPresupuesto}, nº líneas={len(lineas)}")
+
+        table = "presupuestosV" if esPresupuesto else "pedidosV"
+
+        body = {
+            "table": table,
+            "main": {
+                "customer_id": state_frontend.get("cliente", {}).get("id"),
+                "group_id": 1,
+                "payment_method_id": state_frontend.get("cliente", {}).get("id_forma_pago", {}).get("id"),
+                "shipping_method_id": 1,
+                "date": datetime.now().strftime("%d-%m-%Y"),
+                "observations": "Pedido de prueba generado desde la aplicación",
+            },
+            "lines": lineas
+        }
 
         return body
     
