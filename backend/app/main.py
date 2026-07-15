@@ -8,6 +8,7 @@ from app.api.routes import importer
 from app.api.routes import exporter
 from app.api.routes import pedidos
 from app.api.routes import clientes
+from app.api.routes import carrito
 
 # Crear tablas de bandas si no existe
 with get_db_connection() as conn:
@@ -79,6 +80,17 @@ with get_db_connection() as conn:
     """)
     conn.commit()
 
+with get_db_connection() as conn:
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS carrito_lineas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            datos TEXT NOT NULL,
+            fecha_creacion TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+
 app = FastAPI(
     title="Configurador Industrial API",
     description="API para configurar y gestionar productos",
@@ -104,6 +116,8 @@ app.include_router(exporter.router)
 app.include_router(pedidos.router)
 
 app.include_router(clientes.router)
+
+app.include_router(carrito.router)
 
 @app.get("/")
 def read_root():

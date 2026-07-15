@@ -1373,4 +1373,17 @@ a {
   margin-top: 16px;
 }
 
+.btn-añadir-linea {
+  
+  background: #529dd3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
 

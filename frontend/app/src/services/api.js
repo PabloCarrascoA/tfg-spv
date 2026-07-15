@@ -174,3 +174,35 @@ export async function ejecutarImportacion(tabla, encabezados, filas, mapeo, modo
   if (!res.ok) throw new Error(data.detail || 'Error al ejecutar la importación')
   return data
 }
+
+// Funciones de carrito
+
+export async function añadirLineaCarrito(resultado, stateFrontend) {
+  const res = await fetch(`${BASE_URL}/carrito/lineas`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ resultado, state_frontend: stateFrontend })
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.detail || 'Error al añadir la línea al carrito')
+  return data
+}
+
+export async function getLineasCarrito() {
+  const res = await fetch(`${BASE_URL}/carrito/lineas`)
+  return res.json()
+}
+
+export async function borrarLineaCarrito(id) {
+  const res = await fetch(`${BASE_URL}/carrito/lineas/${id}`, {
+    method: 'DELETE'
+  })
+  return res.json()
+}
+
+export async function vaciarCarrito() {
+  const res = await fetch(`${BASE_URL}/carrito/lineas`, {
+    method: 'DELETE'
+  })
+  return res.json()
+}

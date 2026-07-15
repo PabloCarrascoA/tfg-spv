@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { calcularPedido } from '../../services/api'
 import { guardarPedido } from '../../services/api'
+import { añadirLineaCarrito } from '../../services/api'
 
 function ResumenView() {
   const { state } = useLocation()
@@ -18,6 +19,8 @@ function ResumenView() {
   }
 
 
+  // --- FUNCIÓN DE GUARDADO DE PEDIDO ---
+
   async function handleSeleccionModal(esPresupuesto) {
     setModalAbierto(false)
     setGuardando(true)
@@ -32,6 +35,21 @@ function ResumenView() {
       navigate('/pedidos')
     } catch (err) {
       console.error('Error guardando pedido:', err)
+      setGuardando(false)
+    }
+  }
+
+  // --- FUNCIÓN DE AÑADIR LÍNEA AL CARRITO ---
+
+  async function handleAñadirLinea() {
+    setModalAbierto(false)
+    setGuardando(true)
+
+    try {
+      await añadirLineaCarrito(resultado, state)
+      navigate('/banda', { state: { cliente: state.cliente } })
+    } catch (err) {
+      console.error('Error añadiendo línea al carrito:', err)
       setGuardando(false)
     }
   }
@@ -201,6 +219,13 @@ function ResumenView() {
             <h3 className="modal-titulo">¿Cómo quieres guardar esta configuración?</h3>
             <p className="modal-subtitulo">Elige si quieres generarlo como pedido o como presupuesto.</p>
             <div className="modal-botones">
+              <button
+                className="btn-añadir-linea"
+                onClick={handleAñadirLinea}
+                disabled={guardando}
+              >
+                Añadir línea
+              </button>
               <button
                 className="btn-atras"
                 onClick={() => handleSeleccionModal(false)}
