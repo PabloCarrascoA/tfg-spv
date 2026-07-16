@@ -86,6 +86,7 @@ with get_db_connection() as conn:
         CREATE TABLE IF NOT EXISTS carrito_lineas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             datos TEXT NOT NULL,
+            datos_extra TEXT NOT NULL,
             fecha_creacion TEXT NOT NULL
         )
     """)

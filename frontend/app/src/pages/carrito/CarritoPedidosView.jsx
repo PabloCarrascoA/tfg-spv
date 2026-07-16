@@ -39,6 +39,7 @@ function CarritoPedidosView() {
   }
 
   async function handleEliminarLinea(id) {
+    if (!window.confirm(`¿Desea eliminar esta línea para el cliente ${cliente?.nombre}? Esta acción no se puede deshacer.`)) return
     try {
       await borrarLineaCarrito(id)
       setLineas(prev => prev.filter(l => l.id !== id))
@@ -52,6 +53,8 @@ function CarritoPedidosView() {
   }
 
   async function handleCancelar() {
+    if (!window.confirm(`¿Desea cancelar el carrito? Esta acción eliminará las lineas asociadas al pedido delcliente ${cliente?.nombre}. Esta acción no se puede deshacer.`)) return
+
     setProcesando(true)
     try {
       await vaciarCarrito()
