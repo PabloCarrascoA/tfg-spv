@@ -18,6 +18,8 @@ import ImporterView from './pages/importer/ImporterView'
 
 import ExporterView from './pages/exporter/ExporterView'
 
+import CarritoPedidosView from './pages/carrito/CarritoPedidosView'
+
 function App() {
   return (
     <BrowserRouter>
@@ -35,6 +37,8 @@ function App() {
           <Route path="/pedidos" element={<PedidosView />}/>
           <Route path="/importer" element={<ImporterView />}/>
           <Route path="/exporter" element={<ExporterView />}/>
+          <Route path="/carrito" element={<CarritoPedidosView />}/>
+
         </Routes>
       </Layout>
     </BrowserRouter>

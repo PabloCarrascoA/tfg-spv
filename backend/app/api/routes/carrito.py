@@ -45,3 +45,25 @@ def borrar_linea(id_linea: int, db=Depends(get_db)):
 def vaciar_carrito(db=Depends(get_db)):
     carrito_service.vaciar_carrito(db)
     return {"ok": True}
+
+# CARRITO - CLIENTE
+
+class GuardarClienteRequest(BaseModel):
+    cliente: Dict[str, Any]
+
+
+@router.post("/cliente")
+def guardar_cliente(payload: GuardarClienteRequest, db=Depends(get_db)):
+    guardado = carrito_service.guardar_cliente(db, payload.cliente)
+    return {"guardado": guardado}
+
+
+@router.get("/cliente")
+def obtener_cliente(db=Depends(get_db)):
+    return {"cliente": carrito_service.obtener_cliente(db)}
+
+
+@router.delete("/cliente")
+def vaciar_cliente(db=Depends(get_db)):
+    carrito_service.vaciar_cliente(db)
+    return {"ok": True}

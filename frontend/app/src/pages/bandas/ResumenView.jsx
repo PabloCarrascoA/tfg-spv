@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { calcularPedido } from '../../services/api'
 import { guardarPedido } from '../../services/api'
 import { añadirLineaCarrito } from '../../services/api'
+import { guardarClienteCarrito } from '../../services/api'
 
 function ResumenView() {
   const { state } = useLocation()
@@ -46,8 +47,11 @@ function ResumenView() {
     setGuardando(true)
 
     try {
+      if (state.cliente) {
+        await guardarClienteCarrito(state.cliente)
+      }
       await añadirLineaCarrito(resultado, state)
-      navigate('/banda', { state: { cliente: state.cliente } })
+      navigate('/banda', { state: {cliente: state.cliente } })
     } catch (err) {
       console.error('Error añadiendo línea al carrito:', err)
       setGuardando(false)

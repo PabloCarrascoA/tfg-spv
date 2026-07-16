@@ -206,3 +206,40 @@ export async function vaciarCarrito() {
   })
   return res.json()
 }
+
+// funciones cliente-carrito
+
+// Funciones de cliente del carrito
+
+export async function getClienteCarrito() {
+  const res = await fetch(`${BASE_URL}/carrito/cliente`)
+  return res.json()
+}
+
+export async function guardarClienteCarrito(cliente) {
+  const res = await fetch(`${BASE_URL}/carrito/cliente`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cliente })
+  })
+  return res.json()
+}
+
+export async function vaciarClienteCarrito() {
+  const res = await fetch(`${BASE_URL}/carrito/cliente`, {
+    method: 'DELETE'
+  })
+  return res.json()
+}
+
+
+export async function confirmarPedidoCarrito(esPresupuesto) {
+  const res = await fetch(`${BASE_URL}/carrito/confirmar`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ esPresupuesto })
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.detail || 'Error al confirmar el pedido')
+  return data
+}

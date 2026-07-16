@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getClientes } from '../../services/api'
+import { getClienteCarrito, vaciarClienteCarrito } from '../../services/api'
+
 
 const COMPONENTES = [
   {
@@ -51,7 +53,7 @@ const COMPONENTES_VALOR_3 = ['banda', 'perfil-longitudinal']
 
 // Componente para el nombre del cliente
 
-function AutocompleteCliente({ cliente, onSeleccionar }) {
+function AutocompleteCliente({ cliente, onSeleccionar, bloqueado, onDesbloquear }) {
 
   const [clientes, setClientes] = useState([])
   const [texto, setTexto] = useState("")
@@ -81,10 +83,14 @@ function AutocompleteCliente({ cliente, onSeleccionar }) {
   }, [])
 
   useEffect(() => {
-    if (cliente) {
+    if (bloqueado) {
+      setTexto(`— Cliente guardado: ${cliente.nombre} —`);
+    } else if (cliente) {
       setTexto(cliente.nombre)
+    } else {
+      setTexto("")
     }
-  }, [cliente])
+  }, [cliente, bloqueado])
 
   function handleInput(e) {
 
@@ -129,7 +135,18 @@ function AutocompleteCliente({ cliente, onSeleccionar }) {
         value={texto}
         onChange={handleInput}
         onFocus={() => sugerencias.length && setAbierto(true)}
+        disabled={bloqueado}
       />
+
+      {bloqueado && (
+        <button
+          type="button"
+          className="btn-cambiar-cliente"
+          onClick={onDesbloquear}
+        >
+          Cambiar cliente
+        </button>
+      )}
 
       {abierto && (
 
@@ -160,6 +177,7 @@ function BandaView() {
   const navigate = useNavigate()
 
   const [cliente, setCliente] = useState(null)
+  const [clienteBloqueado, setClienteBloqueado] = useState(false)
   const [trabajo, setTrabajo] = useState(3)
 
   // el estado inicial marca como seleccionado banda y empalme que es obligatorio
@@ -170,12 +188,33 @@ function BandaView() {
   )
 
   useEffect(() => {
+    getClienteCarrito()
+      .then(data => {
+        if (data.cliente) {
+          setCliente(data.cliente)
+          setClienteBloqueado(true)
+        }
+      })
+      .catch(err => console.error('Error cargando cliente del carrito:', err))
+  }, [])
+
+  useEffect(() => {
     const hayComponenteDeValor4 = seleccion.some(
       id => !COMPONENTES_VALOR_3.includes(id)
     )
 
     setTrabajo(hayComponenteDeValor4 ? 4 : 3)
   }, [seleccion])
+
+  async function handleDesbloquearCliente() {
+    try {
+      await vaciarClienteCarrito()
+      setCliente(null)
+      setClienteBloqueado(false)
+    } catch (err) {
+      console.error('Error al cambiar cliente:', err)
+    }
+  }
 
   function handleToggle(id) {
     setSeleccion(prev =>
@@ -203,7 +242,7 @@ function BandaView() {
 
       <div className="selector-card">
         <p className="selector-label">Introduzca el nombre del cliente</p>
-        <AutocompleteCliente cliente={cliente} onSeleccionar={setCliente} />
+        <AutocompleteCliente cliente={cliente} onSeleccionar={setCliente} bloqueado={clienteBloqueado} onDesbloquear={handleDesbloquearCliente} />
       </div>
 
       <div className="selector-card">

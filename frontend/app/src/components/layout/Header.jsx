@@ -1,3 +1,6 @@
+import { NavLink } from 'react-router-dom'
+import { FiHome, FiShoppingCart, FiSettings, FiUpload, FiDownload, FiPackage} from 'react-icons/fi'
+
 function Header() {
   return (
     <header className="header">
@@ -5,6 +8,18 @@ function Header() {
         <img src="/images/logoSPV.png" alt="Logo SPV" />
       </div>
       <h1 className="header-title">Sucesor de Pérez Verdú</h1>
+      <NavLink
+          key="/carrito"
+          to="/carrito"
+          end
+          className={({ isActive }) =>
+            isActive ? 'nav-item active' : 'nav-item'
+          }
+        >
+          <span className="nav-icon"><FiShoppingCart /></span>
+          
+      </NavLink>
+
     </header>
   )
 }
