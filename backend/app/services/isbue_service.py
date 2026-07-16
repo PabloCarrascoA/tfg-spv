@@ -431,3 +431,25 @@ class IsbueService:
             return int(round(float(valor)))
         except (TypeError, ValueError):
             return None
+        
+    def construir_datos_extra(self, resultado, state_frontend):
+        banda_state = state_frontend.get("banda", {})
+
+        return {
+            "ancho": banda_state.get("ancho"),
+            "largo": banda_state.get("longitud"),
+            "trabajo": state_frontend.get("trabajo", {}),
+            "acabado": banda_state.get("acabado"),
+        }
+    
+    def obtener_lineas_y_extras_carrito(self, lineas_carrito):
+        """
+        Recibe la lista de filas devueltas por carrito_service.listar_lineas
+        (cada una con 'datos' y 'datos_extra' ya parseados como dicts) y separa
+        en dos listas paralelas: una para pasar a construir_body_isbue, y otra
+        con los datos_extra para usar después con actualizar_medidas_linea.
+        """
+        lineas_isbue = [fila["datos"] for fila in lineas_carrito]
+        extras = [fila["datos_extra"] for fila in lineas_carrito]
+
+        return lineas_isbue, extras

@@ -4,11 +4,11 @@ import json
 from datetime import datetime
 
 
-def añadir_linea(db, linea_dict):
+def añadir_linea(db, linea_dict, datos_extra_dict):
     cursor = db.cursor()
     cursor.execute(
-        "INSERT INTO carrito_lineas (datos, fecha_creacion) VALUES (?, ?)",
-        (json.dumps(linea_dict), datetime.now().isoformat())
+        "INSERT INTO carrito_lineas (datos, datos_extra, fecha_creacion) VALUES (?, ?, ?)",
+        (json.dumps(linea_dict), json.dumps(datos_extra_dict), datetime.now().isoformat())
     )
     db.commit()
     return cursor.lastrowid
@@ -16,14 +16,15 @@ def añadir_linea(db, linea_dict):
 
 def listar_lineas(db):
     cursor = db.cursor()
-    cursor.execute("SELECT id, datos, fecha_creacion FROM carrito_lineas ORDER BY id ASC")
+    cursor.execute("SELECT id, datos, datos_extra, fecha_creacion FROM carrito_lineas ORDER BY id ASC")
     filas = cursor.fetchall()
 
     return [
         {
             "id": fila[0],
             "datos": json.loads(fila[1]),
-            "fecha_creacion": fila[2]
+            "datos_extra": json.loads(fila[2]),
+            "fecha_creacion": fila[3]
         }
         for fila in filas
     ]

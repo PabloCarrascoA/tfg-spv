@@ -23,9 +23,11 @@ class AñadirLineaRequest(BaseModel):
 
 @router.post("/lineas")
 def añadir_linea(payload: AñadirLineaRequest, db=Depends(get_db)):
+
     linea = isbue_service.construir_linea_isbue(payload.resultado, payload.state_frontend)
-    id_linea = carrito_service.añadir_linea(db, linea)
-    return {"id": id_linea, "linea": linea}
+    datos_extra = isbue_service.construir_datos_extra(payload.resultado, payload.state_frontend)
+    id_linea = carrito_service.añadir_linea(db, linea, datos_extra)
+    return {"id": id_linea, "linea": linea, "datos_extra": datos_extra}
 
 
 @router.get("/lineas")
