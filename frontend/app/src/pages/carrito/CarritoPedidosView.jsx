@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { FiShoppingCart, FiCalendar, FiEye, FiTrash2, FiBox } from 'react-icons/fi'
 import {
   getLineasCarrito,
   borrarLineaCarrito,
@@ -86,7 +87,7 @@ function CarritoPedidosView() {
       <div className="carrito-cabecera">
         <h2 className="content-title">Carrito de Pedidos</h2>
         <span className="carrito-cliente">
-          {cliente?.nombre ?? '-NOMBRE CLIENTE-'}
+          {cliente?.nombre ?? '-NO HAY CLIENTE-'}
         </span>
       </div>
 
@@ -100,23 +101,23 @@ function CarritoPedidosView() {
             <div key={linea.id} className="carrito-linea-row">
               <div className="carrito-linea-card">
                 <div className="carrito-linea-header">
-                  <span className="carrito-linea-titulo">📦 Línea {index + 1}</span>
+                  <span className="carrito-linea-titulo"><FiBox size={12} /> Línea {index + 1}</span>
                   <span className="carrito-linea-precio">€ {linea.datos.price}</span>
                 </div>
                 <div className="carrito-linea-footer">
                   <span className="carrito-linea-fecha">
-                    📅 {new Date(linea.fecha_creacion).toLocaleDateString('es-ES')}
+                    <FiCalendar size={12} /> {new Date(linea.fecha_creacion).toLocaleDateString('es-ES')}
                   </span>
                   <button
                     className="carrito-linea-detalle-btn"
                     onClick={() => handleToggleDetalle(linea.id)}
                   >
-                    👁 Ver detalles
+                    <FiEye size={12} /> Ver detalles
                   </button>
                 </div>
                 {lineaExpandida === linea.id && (
                   <pre className="carrito-linea-detalle">
-                    {linea.datos.observation}
+                    {linea.datos.observation ?? 'Línea sin detalles adicionales.'}
                   </pre>
                 )}
               </div>
@@ -126,25 +127,28 @@ function CarritoPedidosView() {
                 onClick={() => handleEliminarLinea(linea.id)}
                 disabled={procesando}
               >
-                🗑 ELIMINAR LÍNEA
+                <FiTrash2 size={12} /> ELIMINAR LÍNEA
               </button>
             </div>
           ))}
-        </div>
-      )}
 
-      <div className="carrito-footer">
-        <button className="btn-atras" onClick={handleCancelar} disabled={procesando}>
-          Cancelar
-        </button>
-        <button
-          className="btn-continuar"
-          onClick={handleContinuar}
-          disabled={procesando || lineas.length === 0}
-        >
-          Continuar
-        </button>
-      </div>
+          <div className="carrito-footer">
+            <button className="btn-atras" onClick={handleCancelar} disabled={procesando}>
+            Cancelar
+            </button>
+            <button
+            className="btn-continuar"
+            onClick={handleContinuar}
+            disabled={procesando || lineas.length === 0}
+            >
+            Continuar
+            </button>
+        </div>
+
+        </div>
+
+
+      )}
 
       {modalAbierto && (
         <div className="modal-overlay" onClick={() => setModalAbierto(false)}>
