@@ -51,3 +51,29 @@ def vaciar_carrito(db):
     cursor = db.cursor()
     cursor.execute("DELETE FROM carrito_lineas")
     db.commit()
+
+
+# CLIENTE-CARRITO
+
+def guardar_cliente(db, cliente):
+    cursor = db.cursor()
+    cursor.execute("SELECT id FROM cliente_carrito LIMIT 1")
+    if cursor.fetchone():
+        return False
+
+    cursor.execute("INSERT INTO cliente_carrito (cliente) VALUES (?)", (json.dumps(cliente),))
+    db.commit()
+    return True
+
+def obtener_cliente(db):
+    cursor = db.cursor()
+    cursor.execute("SELECT cliente FROM cliente_carrito LIMIT 1")
+    fila = cursor.fetchone()
+    if fila:
+        return json.loads(fila[0])
+    return None
+
+def vaciar_cliente(db):
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM cliente_carrito")
+    db.commit()

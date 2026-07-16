@@ -91,6 +91,17 @@ with get_db_connection() as conn:
     """)
     conn.commit()
 
+with get_db_connection() as conn:
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS cliente_carrito (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cliente TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    
+
 app = FastAPI(
     title="Configurador Industrial API",
     description="API para configurar y gestionar productos",
