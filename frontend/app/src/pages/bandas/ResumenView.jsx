@@ -220,8 +220,7 @@ function ResumenView() {
       {modalAbierto && (
         <div className="modal-overlay" onClick={() => setModalAbierto(false)}>
           <div className="modal-contenido" onClick={e => e.stopPropagation()}>
-            <h3 className="modal-titulo">¿Cómo quieres guardar esta configuración?</h3>
-            <p className="modal-subtitulo">Elige si quieres generarlo como pedido o como presupuesto.</p>
+            <h3 className="modal-titulo">¿Quieres añadir la línea configurada al carrito?</h3>
             <div className="modal-botones">
               <button
                 className="btn-añadir-linea"
@@ -229,20 +228,6 @@ function ResumenView() {
                 disabled={guardando}
               >
                 Añadir línea
-              </button>
-              <button
-                className="btn-atras"
-                onClick={() => handleSeleccionModal(false)}
-                disabled={guardando}
-              >
-                Pedido
-              </button>
-              <button
-                className="btn-continuar"
-                onClick={() => handleSeleccionModal(true)}
-                disabled={guardando}
-              >
-                Presupuesto
               </button>
             </div>
           </div>

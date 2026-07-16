@@ -142,7 +142,7 @@ def guardar_pedido(db, resultado, state_frontend):
 
         if not lineas_carrito:
             print("ISBUE WARNING: no hay líneas en el carrito para enviar a Isbue")
-            return {"pedido_id": pedido_id, "numero_pedido": numero}
+            return
         
         lineas_isbue, extras = isbue_service.obtener_lineas_y_extras_carrito(lineas_carrito)
 
@@ -203,7 +203,7 @@ def guardar_pedido(db, resultado, state_frontend):
 
         print("ERROR ISBUE:", e)
 
-    return {"pedido_id": pedido_id, "numero_pedido": numero}
+    return True
 
 
 def listar_pedidos(db):

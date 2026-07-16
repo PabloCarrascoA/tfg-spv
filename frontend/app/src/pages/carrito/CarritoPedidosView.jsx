@@ -7,7 +7,7 @@ import {
   vaciarCarrito,
   getClienteCarrito,
   vaciarClienteCarrito,
-  confirmarPedidoCarrito,
+  guardarPedido,
 } from '../../services/api'
 
 function CarritoPedidosView() {
@@ -74,8 +74,13 @@ function CarritoPedidosView() {
     setModalAbierto(false)
     setProcesando(true)
 
+    const stateConGuardar = {
+      ...state,
+      esPresupuesto: esPresupuesto,
+    }
+
     try {
-      await confirmarPedidoCarrito(esPresupuesto)
+      await guardarPedido(resultado, stateConGuardar)
       navigate('/pedidos')
     } catch (err) {
       console.error('Error confirmando el pedido:', err)
