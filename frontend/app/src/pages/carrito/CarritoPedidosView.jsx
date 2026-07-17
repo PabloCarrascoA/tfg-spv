@@ -74,19 +74,18 @@ function CarritoPedidosView() {
     setModalAbierto(false)
     setProcesando(true)
 
-    const stateConGuardar = {
-      ...state,
-      esPresupuesto: esPresupuesto,
+    const stateFrontend = {
+        esPresupuesto,
     }
 
     try {
-      await guardarPedido(resultado, stateConGuardar)
-      navigate('/pedidos')
+        await guardarPedido({}, stateFrontend)
+        navigate('/pedidos')
     } catch (err) {
-      console.error('Error confirmando el pedido:', err)
-      setProcesando(false)
+        console.error('Error confirmando el pedido:', err)
+        setProcesando(false)
     }
-  }
+    }
 
   if (cargando) return <div className="home-view"><p>Cargando carrito...</p></div>
 

@@ -2,6 +2,8 @@
 
 import requests
 from datetime import datetime, timedelta
+from app.services import carrito_service
+
 
 API_URL = "https://api2.isbue.io/api"
 
@@ -260,19 +262,21 @@ class IsbueService:
             "observation": "\n".join(observaciones)
         }
 
-    def construir_body_isbue(self, lineas, state_frontend):
+    def construir_body_isbue(self, db, lineas, state_frontend):
         
         esPresupuesto = state_frontend.get("esPresupuesto")
         print(f"ISBUE INFO: Construyendo body para {'presupuesto' if esPresupuesto else 'pedido'}, esPresupuesto={esPresupuesto}, nº líneas={len(lineas)}")
 
         table = "presupuestosV" if esPresupuesto else "pedidosV"
 
+        cliente_carrito = carrito_service.obtener_cliente(db)
+
         body = {
             "table": table,
             "main": {
-                "customer_id": state_frontend.get("cliente", {}).get("id"),
+                "customer_id": cliente_carrito.get("id"),
                 "group_id": 1,
-                "payment_method_id": state_frontend.get("cliente", {}).get("id_forma_pago", {}).get("id"),
+                "payment_method_id": cliente_carrito.get("id_forma_pago", {}).get("id"),
                 "shipping_method_id": 1,
                 "date": datetime.now().strftime("%d-%m-%Y"),
                 "observations": "Pedido de prueba generado desde la aplicación",

@@ -18,7 +18,7 @@ def guardar_pedido(db, resultado, state_frontend):
 
     # cabecera
    # cursor.execute("""
-    #    INSERT INTO pedidos (numero_pedido, fecha, nombre_cliente, estado, precio_total)
+    #    INSERT INTO pedidos (numero_pedido, fecha, nombre_cliente, estado, _total)
     #    VALUES (?, ?, ?, 'en_proceso', ?)
     #""", (numero, fecha, resultado.get('cliente', {}).get('nombre') if resultado.get('cliente') else None, resultado.get('precio_total')))
 
@@ -152,14 +152,9 @@ def guardar_pedido(db, resultado, state_frontend):
 
         cliente_carrito = carrito_service.obtener_cliente(db)
 
-        state_frontend_isbue = {
-            **state_frontend,
-            "cliente": cliente_carrito,
-        }
-
         # -----
 
-        body = isbue_service.construir_body_isbue(lineas_isbue, state_frontend_isbue)
+        body = isbue_service.construir_body_isbue(db, lineas_isbue, state_frontend)
 
         print(body)
 
@@ -169,7 +164,7 @@ def guardar_pedido(db, resultado, state_frontend):
 
         print(f"ISBUE INFO: pedido creado en Isbue con id_documento={id_documento}")
 
-        lineas_creadas = isbue_service.obtener_lineas_pedido(id_documento, state_frontend_isbue)
+        lineas_creadas = isbue_service.obtener_lineas_pedido(id_documento, state_frontend)
 
         print(lineas_creadas)
 
@@ -191,7 +186,7 @@ def guardar_pedido(db, resultado, state_frontend):
                 print(f"ISBUE INFO: actualizando línea {id_linea} con ancho={ancho}, largo={largo}, trabajo={trabajo}, acabado={acabado}")
 
                 isbue_service.actualizar_medidas_linea(
-                    id_linea, ancho, largo, state_frontend_isbue, trabajo, acabado
+                    id_linea, ancho, largo, state_frontend, trabajo, acabado
                 )
 
         carrito_service.vaciar_carrito(db)
