@@ -20,25 +20,6 @@ function ResumenView() {
   }
 
 
-  // --- FUNCIÓN DE GUARDADO DE PEDIDO ---
-
-  async function handleSeleccionModal(esPresupuesto) {
-    setModalAbierto(false)
-    setGuardando(true)
-
-    const stateConGuardar = {
-      ...state,
-      esPresupuesto: esPresupuesto,
-    }
-
-    try {
-      await guardarPedido(resultado, stateConGuardar)
-      navigate('/pedidos')
-    } catch (err) {
-      console.error('Error guardando pedido:', err)
-      setGuardando(false)
-    }
-  }
 
   // --- FUNCIÓN DE AÑADIR LÍNEA AL CARRITO ---
 
