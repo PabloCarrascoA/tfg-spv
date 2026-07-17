@@ -49,8 +49,16 @@ a {
   height: 85px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   flex-shrink: 0;
+  
+}
+
+.header-left {
+  display: flex;
+  align-items: center; 
+  gap: 16px;          
 }
 
 .header-logo {

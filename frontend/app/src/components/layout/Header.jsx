@@ -4,11 +4,18 @@ import { FiHome, FiShoppingCart, FiSettings, FiUpload, FiDownload, FiPackage} fr
 function Header() {
   return (
     <header className="header">
-      <div className="header-logo">
-        <img src="/images/logoSPV.png" alt="Logo SPV" />
+
+      <div className="header-left">
+        
+        <div className="header-logo">
+          <img src="/images/logoSPV.png" alt="Logo SPV" />
+        </div>
+
+        <h1 className="header-title">Sucesor de Pérez Verdú</h1>
       </div>
-      <h1 className="header-title">Sucesor de Pérez Verdú</h1>
-      <NavLink
+
+      <div className="header-right">
+        <NavLink
           key="/carrito"
           to="/carrito"
           end
@@ -18,7 +25,9 @@ function Header() {
         >
           <span className="nav-icon"><FiShoppingCart /></span>
           
-      </NavLink>
+        </NavLink>
+      </div>
+      
 
     </header>
   )
