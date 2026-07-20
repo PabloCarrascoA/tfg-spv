@@ -30,6 +30,9 @@ const LABELS_SUBTIPO = {
   'sin-fin-biselado':           'Banda sin fin biselado',
 
   'extremos-preparados-z':      'Banda extremos preparados Z',
+  'extremos-preparados-solapada': 'Banda extremos preparados solapada',
+  'extremos-preparados-biselado': 'Banda extremos preparados biselado',
+  'extremos-preparados-doble': 'Banda extremos preparados doble Z'
 
 }
 
