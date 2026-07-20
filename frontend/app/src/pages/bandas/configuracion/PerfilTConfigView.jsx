@@ -118,6 +118,8 @@ function PerfilTConfigView() {
       return alert('Asegúrese de haber seleccionado un código de perfil')
     }
 
+    setDistancia(distancia.toFixed(2))
+
     const ruta = siguienteRuta(state.seleccion, 'perfil-transversal')
     navigate(ruta, {
         state: {
@@ -229,9 +231,15 @@ function PerfilTConfigView() {
               </div>
             </div>
 
-            {ancho && anchoBanda && parseFloat(ancho) > anchoBanda && (
+            {parseFloat(ancho) > 1600 && (
               <p style={{ fontSize: 13, color: '#e57373' }}>
-                El ancho del perfil no puede superar los 1600 mm
+                El ancho de perfil no puede superar los 1600 mm
+              </p>
+            )}
+
+            {parseFloat(ancho) > anchoBanda && (
+              <p style={{ fontSize: 13, color: '#e57373' }}>
+                El ancho de perfil no puede ser mayor que el ancho de la banda ({anchoBanda} mm)
               </p>
             )}
 
