@@ -449,8 +449,8 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
     if perfil is None:
         raise ValueError("Perfil L no encontrado")
     
-    if n_perfiles > 3:
-        raise ValueError("No se admiten más de 3 perfiles longitudinales")
+    # if n_perfiles > 3:
+    #    raise ValueError("No se admiten más de 3 perfiles longitudinales")
     
     # - Calculo precio perfil -
 
