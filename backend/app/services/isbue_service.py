@@ -1,16 +1,20 @@
 # services/isbue_service.py
 
+import os
 import requests
 from datetime import datetime, timedelta
 from app.services import carrito_service
+from dotenv import load_dotenv
+from pathlib import Path
 
+env_path = Path(__file__).resolve().parent.parent / "credentials.env"
+print(f"DEBUG: buscando .env en {env_path}, existe: {env_path.exists()}")
+load_dotenv(dotenv_path=env_path)
 
-API_URL = "https://api2.isbue.io/api"
-
-USERNAME = "gustavo@sucesordeperezverdu.com"
-PASSWORD = "80456201"
-INSTALLATION_COD = 355
-
+API_URL = os.getenv("ISBUE_API_URL")
+USERNAME = os.getenv("ISBUE_USERNAME")
+PASSWORD = os.getenv("ISBUE_PASSWORD")
+INSTALLATION_COD = os.getenv("ISBUE_INSTALLATION_COD")
 
 class IsbueService:
 

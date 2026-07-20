@@ -1,0 +1,24 @@
+# Entornos y credenciales
+.env
+credentials.env
+*.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node / React
+node_modules/
+dist/
+build/
+
+# Bases de datos locales
+*.db
+*.sqlite
+*.sqlite3
+
+# Editor / SO
+.vscode/
+.DS_Store
