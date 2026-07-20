@@ -127,7 +127,7 @@ function ResumenView() {
                 <li>Perfil: {resultado.codigo_perfilT}</li>
                 <li>Nº perfiles: {resultado.n_perfilesT}</li>
                 <li>Ancho del perfil: {resultado.ancho_perfilT} mm</li>
-                <li>Distancia paso: {resultado.distancia_paso} mm</li>
+                <li>Distancia paso: {state.perfilT.distancia} mm</li>
                 <li>Margen lateral: {resultado.margen_lateral} mm</li>
                 <li>Nº hileras: {resultado.n_hileras}</li>
                 {resultado.n_hileras > 1 && <>

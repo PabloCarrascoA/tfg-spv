@@ -80,11 +80,11 @@ function PerfilTConfigView() {
       if (!anchoBanda || !ancho) return
 
       const margenCalculado = (anchoBanda - parseFloat(ancho)) / 2
-      if (margenCalculado >= 0) {
+      // if (margenCalculado >= 0) {
         editando.current = 'ancho'
         setMargen(String(margenCalculado))
         setTimeout(() => { editando.current = null }, 0)
-      }
+      // }
     }, [anchoBanda, ancho])
 
     useEffect(() => {
@@ -93,11 +93,11 @@ function PerfilTConfigView() {
 
       const anchoCalculado = (anchoBanda - 2 * parseFloat(margen))
 
-      if (anchoCalculado >= 0) {
+      // if (anchoCalculado >= 0) {
         editando.current = 'margen'
         setAncho(String(anchoCalculado))
         setTimeout(() => {editando.current = null}, 0)
-      }
+      // }
     }, [anchoBanda, margen])
 
     useEffect(() => {
@@ -118,7 +118,7 @@ function PerfilTConfigView() {
       return alert('Asegúrese de haber seleccionado un código de perfil')
     }
 
-    setDistancia(distancia.toFixed(2))
+    // setDistancia(distancia.toFixed(2))
 
     const ruta = siguienteRuta(state.seleccion, 'perfil-transversal')
     navigate(ruta, {
