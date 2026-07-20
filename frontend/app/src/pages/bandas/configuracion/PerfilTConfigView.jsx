@@ -175,11 +175,21 @@ function PerfilTConfigView() {
               </div>
               <div className="form-group">
                 <label className="form-label">Número de perfiles</label>
-                <div className="counter">
+                <input
+                  type="number"
+                  className="form-input"
+                  placeholder="1"
+                  value={cantidad}
+                  onChange={e => setCantidad(e.target.value)}
+                />
+                {/* VERSIÓN CON CONTADOR
+                  <div className="counter">
                   <button className="counter-btn" onClick={() => setCantidad(c => Math.max(1, c - 1))}>−</button>
                   <span className="counter-value">{cantidad}</span>
                   <button className="counter-btn" onClick={() => setCantidad(c => c + 1)}>+</button>
                 </div>
+                */}
+                
               </div>
             </div>
 
