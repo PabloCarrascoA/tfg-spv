@@ -4,6 +4,7 @@ import { calcularPedido } from '../../services/api'
 import { guardarPedido } from '../../services/api'
 import { añadirLineaCarrito } from '../../services/api'
 import { guardarClienteCarrito } from '../../services/api'
+import { FiShoppingCart, FiCalendar, FiShoppingBag, FiEye } from 'react-icons/fi'
 
 function ResumenView() {
   const { state } = useLocation()
@@ -62,8 +63,8 @@ function ResumenView() {
         {/* cabecera */}
         <div className="resumen-cabecera">
           <div className="resumen-cabecera-left">
-            <span className="resumen-pedido-titulo">⚙ Pedido</span>
-            <span className="resumen-fecha">📅 {fecha}</span>
+            <span className="resumen-pedido-titulo"><FiShoppingBag size={11} /> Pedido</span>
+            <span className="resumen-fecha"><FiCalendar size={11}/> {fecha}</span>
             <span>Banda: {resultado.banda?.codigo_barras}</span>
             <span className="resumen-precio-total">Precio Total: <strong>{resultado.precio_total} €</strong></span>
           </div>
