@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getClientes } from '../../services/api'
+import { getClientes, vaciarCarrito } from '../../services/api'
 import { getClienteCarrito, vaciarClienteCarrito } from '../../services/api'
 
 
@@ -207,7 +207,14 @@ function BandaView() {
   }, [seleccion])
 
   async function handleDesbloquearCliente() {
+
+    if (!window.confirm(`¿Desea cambiar de cliente? Esta acción eliminará las líneas que se encuentran actualmente configuradas en el carrito para el cliente ${cliente?.nombre}`)) {
+      return
+    }
+
     try {
+
+      await vaciarCarrito()
       await vaciarClienteCarrito()
       setCliente(null)
       setClienteBloqueado(false)
