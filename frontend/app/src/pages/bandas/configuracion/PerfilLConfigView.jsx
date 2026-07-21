@@ -331,7 +331,13 @@ function PerfilLConfigView() {
               <p className="config-side-sketch-title">Cobertura superior</p>
               <div className="config-side-img-wrapper">
                 <img
-                  src={superior.cantidad > 1 ? '/images/sketch-longitud-CS-2.svg' : '/images/sketch-longitud-CS-1.svg'}
+                  src={
+                    superior.cantidad > 2
+                      ? '/images/sketch-longitud-CS-3.svg'
+                      : superior.cantidad > 1
+                        ? '/images/sketch-longitud-CS-2.svg'
+                        : '/images/sketch-longitud-CS-1.svg'
+                  }
                   alt="Esquema perfil longitudinal superior"
                   className="config-side-img"
                 />
@@ -363,7 +369,13 @@ function PerfilLConfigView() {
               <p className="config-side-sketch-title">Cobertura inferior</p>
               <div className="config-side-img-wrapper">
                 <img
-                  src={inferior.cantidad > 1 ? '/images/sketch-longitud-CI-2.svg' : '/images/sketch-longitud-CI-1.svg'}
+                  src={
+                    inferior.cantidad > 2
+                      ? '/images/sketch-longitud-CS-3.svg'
+                      : inferior.cantidad > 1
+                        ? '/images/sketch-longitud-CS-2.svg'
+                        : '/images/sketch-longitud-CS-1.svg'
+                  }
                   alt="Esquema perfil longitudinal inferior"
                   className="config-side-img"
                 />
