@@ -114,18 +114,46 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                   type="radio"
                   name={`centrado_${label}`}
                   checked={perfil.centrado === false}
-                  onChange={() => setPerfil(p => ({ ...p, centrado: false, distanciaBordeCentro: '' }))}
+                  onChange={() => setPerfil(p => ({ ...p, centrado: false, extremos: false, distanciaBordeCentro: '' }))}
                 />
                 No
               </label>
             </div>
           </div>
 
+          {/*PREGUNTA DE LOS EXTREMOS*/}
+
+          {perfil.cantidad > 1 && (
+              <div className="form-group">
+                <label className="form-label">¿Los perfiles van a los extremos?</label>
+                <div className="radio-group">
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name={`extremos_${label}`}
+                      checked={perfil.extremos === true}
+                      onChange={() => setPerfil(p => ({ ...p, extremos: true, centrado: true }))}
+                    />
+                    Sí
+                  </label>
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name={`extremos_${label}`}
+                      checked={perfil.extremos === false}
+                      onChange={() => setPerfil(p => ({ ...p, extremos: false, distanciaBordeCentro: '', distancia: '' }))}
+                    />
+                    No
+                  </label>
+                </div>
+              </div>
+            )}
+
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">
                 Distancia borde - centro (mm)
-                {perfil.centrado && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
+                {perfil.centrado || perfil.extremos && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
               </label>
               <input
                 type="number"
@@ -140,13 +168,16 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
 
             {perfil.cantidad > 1 && (
               <div className="form-group">
-                <label className="form-label">Distancia entre centros (mm)</label>
+                <label className="form-label">Distancia entre centros (mm)
+                  {perfil.extremos && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
+                </label>
                 <input
                   type="number"
                   className="form-input"
                   placeholder="0"
                   value={perfil.distancia}
-                  onChange={e => setPerfil(p => ({ ...p, distancia: e.target.value }))}
+                  readOnly={perfil.extremos ? { background: '#f5f6f8', color: '#6b7280' } : {}}
+                  onChange={e => !perfil.extremos && setPerfil(p => ({ ...p, distancia: e.target.value }))}
                 />
               </div>
             )}
