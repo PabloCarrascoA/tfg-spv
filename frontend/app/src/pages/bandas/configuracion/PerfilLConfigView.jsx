@@ -21,6 +21,25 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
     }))
   }
 
+  // --- autocalculo cuando los perfiles van a los extremos ---
+  useEffect(() => {
+    if (!perfil.extremos) return
+    if (!anchoBanda || Number.isNaN(anchoPerfil)) return
+
+    const bordeCentroCalculado = anchoPerfil / 2
+
+    setPerfil(p => {
+      const actualizado = { ...p, distanciaBordeCentro: String(bordeCentroCalculado) }
+
+      if (p.cantidad > 1) {
+        const distanciaCalculada = ((anchoBanda - anchoPerfil) / (p.cantidad - 1)).toFixed(2)
+        actualizado.distancia = distanciaCalculada >= 0 ? String(distanciaCalculada) : ''
+      }
+
+      return actualizado
+    })
+  }, [perfil.extremos, perfil.cantidad, anchoBanda, anchoPerfil])
+
   const superaBanda =
     Boolean(anchoBanda) &&
     !Number.isNaN(distanciaBordeCentro) &&
@@ -42,7 +61,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
     perfil.cantidad > 1 &&
     !Number.isNaN(distanciaCentros) &&
     !Number.isNaN(anchoPerfil) &&
-    distanciaCentros > (anchoBanda - (perfil.cantidad * anchoPerfil))
+    distanciaCentros > ((anchoBanda - (perfil.cantidad * anchoPerfil)) + anchoPerfil)
 
   return (
     <div className="perfil-bloque">
@@ -176,7 +195,8 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                   className="form-input"
                   placeholder="0"
                   value={perfil.distancia}
-                  readOnly={perfil.extremos ? { background: '#f5f6f8', color: '#6b7280' } : {}}
+                  readOnly={perfil.extremos}
+                  style={perfil.extremos ? {background: '#f5f6f8', color: '#6b7280' } : {}}
                   onChange={e => !perfil.extremos && setPerfil(p => ({ ...p, distancia: e.target.value }))}
                 />
               </div>
@@ -223,6 +243,7 @@ function PerfilLConfigView() {
     distancia: '',
     distanciaBordeCentro: '',
     centrado: false,
+    extremos: false,
     tipo: '',
     color: '',
   })
@@ -233,6 +254,7 @@ function PerfilLConfigView() {
     distancia: '',
     distanciaBordeCentro: '',
     centrado: false,
+    extremos: false,
     tipo: '',
     color: '',
   })
@@ -248,6 +270,7 @@ function PerfilLConfigView() {
 
   useEffect(() => {
     if (!inferior.activo || !anchoBanda) return
+    if (inferior.extremos) return
 
     if (inferior.centrado) {
       if (inferior.cantidad === 1) {
@@ -266,6 +289,7 @@ function PerfilLConfigView() {
 
   useEffect(() => {
     if (!superior.activo || !anchoBanda) return
+    if (superior.extremos) return
 
     if (superior.centrado) {
       if (superior.cantidad === 1) {

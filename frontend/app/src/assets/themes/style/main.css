@@ -395,7 +395,7 @@ a {
   font-weight: 600;
   color: #2c4f6b;
   text-align: center;
-  width: 70px; 
+  width: 90px; 
 }
 
 /* ajustes de posición de los labels según el tipo de banda */
@@ -451,7 +451,7 @@ a {
 
 .config-banda-distancia-centros {
   top: 30%;   
-  left: 35%; 
+  left: 30%; 
 }
 
 /* panel lateral --> RUNER */
