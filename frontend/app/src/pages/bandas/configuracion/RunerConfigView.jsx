@@ -142,9 +142,9 @@ function RunerConfigView() {
                   opciones={runers}
                   valorSeleccionado={runers.find(r => r.codigo === codigoRuner) ?? null}
                   onSeleccionar={runer => {
-                    setCodigoRuner(runer.codigo ?? '')
-                    setColor(runer.color ?? '')
-                    setTipoRuner(runer.tipo ?? '')
+                    setCodigoRuner(runer?.codigo ?? '')
+                    setColor(runer?.color ?? '')
+                    setTipoRuner(runer?.tipo ?? '')
                     setLuz('')
                     setMargen('')
                     //console.log('Color del runer seleccionado:', runer?.color)

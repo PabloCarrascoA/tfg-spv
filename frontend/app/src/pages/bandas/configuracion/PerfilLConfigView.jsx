@@ -88,9 +88,9 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                 valorSeleccionado = {perfiles.find(p => p.codigo === perfil.codigo) ?? null}
                 onSeleccionar = {perfil => setPerfil(p => ({ 
                   ...p, 
-                  codigo: perfil.codigo ?? '', 
-                  tipo: perfil.tipo ?? '', 
-                  color: perfil.color ?? ''
+                  codigo: perfil?.codigo ?? '', 
+                  tipo: perfil?.tipo ?? '', 
+                  color: perfil?.color ?? ''
                   }))} 
                   getLabel = {perfil => `${perfil.codigo} - ${perfil.tipo}`}
                   getKey = {perfil => perfil.codigo}

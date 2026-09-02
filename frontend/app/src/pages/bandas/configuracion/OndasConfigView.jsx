@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getOndas } from '../../../services/api'
+import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
 
 function OndaConfigView() {
