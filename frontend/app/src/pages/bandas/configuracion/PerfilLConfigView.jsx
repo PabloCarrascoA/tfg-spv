@@ -82,18 +82,21 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">Código de perfil</label>
-              <select
-                className="form-select"
-                value={perfil.codigo}
-                onChange={handleCodigoPerfilChange}
-              >
-                <option value="">- Seleccione un perfil -</option>
-                {perfiles.map(perf => (
-                  <option key={perf.codigo} value={perf.codigo}>
-                    {perf.codigo} - {perf.tipo}
-                  </option>
-                ))}
-              </select>
+
+              <AutocompleteSelect
+                opciones = {perfiles}
+                valorSeleccionado = {perfiles.find(p => p.codigo === perfil.codigo) ?? null}
+                onSeleccionar = {perfil => setPerfil(p => ({ 
+                  ...p, 
+                  codigo: perfil.codigo ?? '', 
+                  tipo: perfil.tipo ?? '', 
+                  color: perfil.color ?? ''
+                  }))} 
+                  getLabel = {perfil => `${perfil.codigo} - ${perfil.tipo}`}
+                  getKey = {perfil => perfil.codigo}
+                  placeholder = "Busqueda por código o tipo de perfil"
+                  />
+             
             </div>
             <div className="form-group">
               <label className="form-label">Número de perfiles</label>

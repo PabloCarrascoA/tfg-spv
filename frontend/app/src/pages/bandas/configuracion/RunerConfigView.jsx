@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getRuners } from '../../../services/api'
+import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
 function RunerConfigView() {
 
@@ -28,6 +29,7 @@ function RunerConfigView() {
 
   const anchoBanda = parseFloat(state.banda?.ancho) || null
 
+  // -----  Función en desuso por el AutocompleteSelect -----
   function handleCodigoRunerChange(e) {
     const nuevoCodigo = e.target.value
     const runerSeleccionado = runers.find(runer => runer.codigo === nuevoCodigo)
@@ -37,9 +39,8 @@ function RunerConfigView() {
     setTipoRuner(runerSeleccionado?.tipo ?? '')
     setLuz('')
     setMargen('')
-    console.log('Color del runer seleccionado:', runerSeleccionado?.color)
-    console.log('Tipo del runer seleccionado:', runerSeleccionado?.tipo)
   }
+  // ------------
 
   useEffect(() => {
     getRuners()
@@ -136,18 +137,24 @@ function RunerConfigView() {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Código de Runer</label>
-                <select
-                  className="form-select"
-                  value={codigoRuner}
-                  onChange={handleCodigoRunerChange}
-                >
-                  <option value="">- Seleccione un runer -</option>
-                  {runers.map(runer => (
-                    <option key={runer.codigo} value={runer.codigo}>
-                      {runer.codigo} - {runer.tipo}
-                    </option>
-                  ))}
-                </select>
+
+                <AutocompleteSelect
+                  opciones={runers}
+                  valorSeleccionado={runers.find(r => r.codigo === codigoRuner) ?? null}
+                  onSeleccionar={runer => {
+                    setCodigoRuner(runer.codigo ?? '')
+                    setColor(runer.color ?? '')
+                    setTipoRuner(runer.tipo ?? '')
+                    setLuz('')
+                    setMargen('')
+                    //console.log('Color del runer seleccionado:', runer?.color)
+                    //console.log('Tipo del runer seleccionado:', runer?.tipo)
+                  }}
+                  getLabel={runer => `${runer.codigo} - ${runer.tipo}`}
+                  getKey={runer => runer.codigo}
+                  placeholder="Busqueda por código o tipo de runer"
+                />
+                  
               </div>
 
               <div className="form-group">
