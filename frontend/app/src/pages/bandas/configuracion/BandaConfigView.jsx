@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getBandas, getSubtiposEmpalme, getPrecioEmpalme } from '../../../services/api'
+import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
 const TIPOS_EMPALME = [
   { value: 'banda-abierta',       label: 'Banda abierta'       },
@@ -173,18 +174,14 @@ function BandaConfigView() {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Código de banda</label>
-                <select
-                  className="form-select"
-                  value={banda?.id ?? ""}
-                  onChange={handleBandaChange}
-                >
-                  <option value="">- Seleccione una banda -</option>
-                  {bandas.map(banda => (
-                    <option key={banda.id} value={banda.id}>
-                      {banda.codigo_barras} - {banda.descripcion}
-                    </option>
-                  ))}
-                </select>
+                <AutocompleteSelect
+                  opciones={bandas}
+                  valorSeleccionado={banda}
+                  onSeleccionar={setBanda}
+                  getLabel={b => `${b.codigo_barras} - ${b.descripcion}`}
+                  getKey={b => b.id}
+                  placeholder="Busca por código o descripción..."
+                />
               </div>
 
               <div className="form-group">

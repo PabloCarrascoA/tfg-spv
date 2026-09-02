@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getPerfilesTransversales } from '../../../services/api'
+import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
 function PerfilTConfigView() {
   const { state } = useLocation()

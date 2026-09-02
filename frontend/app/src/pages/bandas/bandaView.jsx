@@ -180,7 +180,6 @@ function BandaView() {
   const [clienteBloqueado, setClienteBloqueado] = useState(false)
   const [trabajo, setTrabajo] = useState(3)
 
-  // el estado inicial marca como seleccionado banda y empalme que es obligatorio
   const [seleccion, setSeleccion] = useState(
     COMPONENTES
       .filter(c => c.obligatorio)
