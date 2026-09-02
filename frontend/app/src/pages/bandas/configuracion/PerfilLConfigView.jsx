@@ -176,7 +176,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
             <div className="form-group">
               <label className="form-label">
                 Distancia borde - centro (mm)
-                {perfil.centrado || perfil.extremos && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
+                {(perfil.centrado || perfil.extremos) && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
               </label>
               <input
                 type="number"
