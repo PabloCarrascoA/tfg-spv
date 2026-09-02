@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getPerfilesLongitudinales } from '../../../services/api'
+import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
 function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
   const distanciaBordeCentro = parseFloat(perfil.distanciaBordeCentro)

@@ -163,18 +163,18 @@ function PerfilTConfigView() {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Código de perfil</label>
-                <select 
-                    className="form-select"
-                    value={codigoPerfil}
-                    onChange={handleCodigoPerfilChange}
-                >
-                  <option value="">- Seleccione un perfil -</option>
-                  {perfilesT.map(perfil => (
-                    <option key={perfil.codigo} value={perfil.codigo}>
-                      {perfil.codigo} - {perfil.tipo}
-                    </option>
-                  ))}
-                </select>
+                <AutocompleteSelect
+                  opciones = {perfilesT}
+                  valorSeleccionado = {perfilesT.find(p => p.codigo === codigoPerfil) ?? null}
+                  onSeleccionar = {perfil => {
+                    setCodigoPerfil(perfil?.codigo ?? '')
+                    setColor(perfil?.color ?? '')
+                    setTipoPerfil(perfil?.tipo ?? '')
+                  }}
+                  getLabel = {perfil => `${perfil.codigo} - ${perfil.tipo}`}
+                  getKey = {perfil => perfil.codigo}
+                  placeholder = "Busqueda por código o tipo de perfil"
+                />
               </div>
               <div className="form-group">
                 <label className="form-label">Número de perfiles</label>
