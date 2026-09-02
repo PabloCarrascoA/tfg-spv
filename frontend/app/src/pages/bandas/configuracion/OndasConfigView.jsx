@@ -80,18 +80,18 @@ function OndaConfigView() {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Código de la onda</label>
-                <select
-                  className="form-select"
-                  value={codigoOnda}
-                  onChange={e => setCodigoOnda(e.target.value)}
-                >
-                  <option value="">- Seleccione una onda -</option>
-                  {ondas.map(onda => (
-                    <option key={onda.codigo} value={onda.codigo}>
-                      {onda.codigo} - {onda.tipo}
-                    </option>
-                  ))}
-                </select>
+                
+                <AutocompleteSelect
+                  opciones={ondas}
+                  valorSeleccionado={ondas.find(o => o.codigo === codigoOnda) ?? null}
+                  onSeleccionar={onda => {
+                    setCodigoOnda(onda?.codigo ?? '')
+                  }}
+                  getLabel={onda => `${onda.codigo} - ${onda.tipo}`}
+                  getKey={onda => onda.codigo}
+                  placeholder="Busqueda por código o tipo de onda"
+                />
+
               </div>
               <div className="form-group">
                 <label className="form-label">Cantidad de ondas</label>
