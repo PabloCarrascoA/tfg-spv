@@ -180,7 +180,7 @@ function BandaConfigView() {
                   onSeleccionar={setBanda}
                   getLabel={b => `${b.codigo_barras} - ${b.descripcion}`}
                   getKey={b => b.id}
-                  placeholder="Busca por código o descripción..."
+                  placeholder="Busqueda por código o descripción..."
                 />
               </div>
 

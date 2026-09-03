@@ -107,11 +107,13 @@ function ResumenView() {
                   <li>Perfil superior: {resultado.codigo_perfil_superior}</li>
                   <li>Nº perfiles sup.: {resultado.n_perfiles_superior}</li>
                   <li>Distancia borde-centro sup.: {resultado.distancia_margen_superior} mm</li>
+                  <li>Color del perfil: {state.perfilL?.colorPerfilSuperior}</li>
                 </>}
                 {resultado.codigo_perfil_inferior && <>
                   <li>Perfil inferior: {resultado.codigo_perfil_inferior}</li>
                   <li>Nº perfiles inf.: {resultado.n_perfiles_inferior}</li>
                   <li>Distancia borde-centro inf.: {resultado.distancia_margen_inferior} mm</li>
+                  <li>Color del perfil: {state.perfilL?.colorPerfilInferior}</li>
                 </>}
                 <li>Precio perfiles: {resultado.precio_perfilL_final} €</li>
                 {state.perfilL?.comentarios && <li>Comentarios: {state.perfilL.comentarios}</li>}

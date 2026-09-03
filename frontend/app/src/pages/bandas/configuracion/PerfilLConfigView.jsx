@@ -4,23 +4,18 @@ import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getPerfilesLongitudinales } from '../../../services/api'
 import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
+const COLORES = [
+  { value: 'NEGRO', label: 'Negro' },
+  { value: 'BLANCO', label: 'Blanco' },
+  { value: 'AZUL', label: 'Azul' },
+  { value: 'VERDE', label: 'Verde'}
+]
+
 function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
   const distanciaBordeCentro = parseFloat(perfil.distanciaBordeCentro)
   const distanciaCentros = parseFloat(perfil.distancia)
   const perfilSeleccionado = perfiles.find(perf => perf.codigo === perfil.codigo)
   const anchoPerfil = parseFloat(perfilSeleccionado?.ancho)
-
-  function handleCodigoPerfilChange(e) {
-    const nuevoCodigo = e.target.value
-    const nuevoPerfilSeleccionado = perfiles.find(perf => perf.codigo === nuevoCodigo)
-
-    setPerfil(p => ({
-      ...p,
-      codigo: nuevoCodigo,
-      tipo: nuevoPerfilSeleccionado?.tipo ?? '',
-      color: nuevoPerfilSeleccionado?.color ?? '',
-    }))
-  }
 
   // --- autocalculo cuando los perfiles van a los extremos ---
   useEffect(() => {
@@ -89,8 +84,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                 onSeleccionar = {perfil => setPerfil(p => ({ 
                   ...p, 
                   codigo: perfil?.codigo ?? '', 
-                  tipo: perfil?.tipo ?? '', 
-                  color: perfil?.color ?? ''
+                  tipo: perfil?.tipo ?? ''
                   }))} 
                   getLabel = {perfil => `${perfil.codigo} - ${perfil.tipo}`}
                   getKey = {perfil => perfil.codigo}
@@ -119,6 +113,24 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
               </div>
             </div>
           </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Seleccione el color del perfil</label>
+                <select className="form-select" 
+                        value={perfil.color}
+                        onChange={e => setPerfil(p => ({ ...p, color: e.target.value }))}>
+                  <option value="">- Seleccione un color -</option>
+                  {COLORES?.map(color => (
+                    <option key={color.value} value={color.value}>{color.label}</option>
+                  ))}
+                </select>
+
+                
+            </div>
+          </div>
+
+          {console.log('color del perfil:', perfil.color)}
 
           <div className="form-group">
             <label className="form-label">¿Perfil centrado?</label>
