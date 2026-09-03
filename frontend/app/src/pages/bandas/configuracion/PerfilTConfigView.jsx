@@ -4,6 +4,13 @@ import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getPerfilesTransversales } from '../../../services/api'
 import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
+const COLORES = [
+  { value: 'NEGRO', label: 'Negro' },
+  { value: 'BLANCO', label: 'Blanco' },
+  { value: 'AZUL', label: 'Azul' },
+  { value: 'VERDE', label: 'Verde'}
+]
+
 function PerfilTConfigView() {
   const { state } = useLocation()
   const navigate = useNavigate()
@@ -168,7 +175,6 @@ function PerfilTConfigView() {
                   valorSeleccionado = {perfilesT.find(p => p.codigo === codigoPerfil) ?? null}
                   onSeleccionar = {perfil => {
                     setCodigoPerfil(perfil?.codigo ?? '')
-                    setColor(perfil?.color ?? '')
                     setTipoPerfil(perfil?.tipo ?? '')
                   }}
                   getLabel = {perfil => `${perfil.codigo} - ${perfil.tipo}`}
@@ -195,6 +201,22 @@ function PerfilTConfigView() {
                 
               </div>
             </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Seleccione el color del perfil</label>
+                  <select className="form-select" 
+                          value={color}
+                          onChange={e => setColor(e.target.value)}>
+                    <option value="">- Seleccione un color -</option>
+                    {COLORES?.map(color => (
+                      <option key={color.value} value={color.value}>{color.label}</option>
+                    ))}
+                  </select>
+
+                
+            </div>
+          </div>
 
             {cantidad > 1 && (
               <div className="form-group">

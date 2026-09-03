@@ -128,6 +128,7 @@ function ResumenView() {
               <ul className="resumen-lista">
                 <li>Perfil: {resultado.codigo_perfilT}</li>
                 <li>Nº perfiles: {resultado.n_perfilesT}</li>
+                <li>Color del perfil: {state.perfilT?.color}</li>
                 <li>Ancho del perfil: {resultado.ancho_perfilT} mm</li>
                 <li>Distancia paso: {state.perfilT.distancia} mm</li>
                 <li>Margen lateral: {resultado.margen_lateral} mm</li>
@@ -149,6 +150,7 @@ function ResumenView() {
             {resultado.codigo_runer ? (
               <ul className="resumen-lista">
                 <li>Runer: {resultado.codigo_runer}</li>
+                <li>Color del runer: {state.runer?.color}</li>
                 <li>Nº runers: {resultado.n_perfiles_runer}</li>
                 <li>Luz: {resultado.luz_runer} mm</li>
                 <li>Margen: {resultado.margen_runer} mm</li>

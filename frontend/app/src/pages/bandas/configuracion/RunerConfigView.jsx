@@ -4,6 +4,13 @@ import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getRuners } from '../../../services/api'
 import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
+const COLORES = [
+  { value: 'NEGRO', label: 'Negro' },
+  { value: 'BLANCO', label: 'Blanco' },
+  { value: 'AZUL', label: 'Azul' },
+  { value: 'VERDE', label: 'Verde'}
+]
+
 function RunerConfigView() {
 
   const { state } = useLocation()
@@ -143,7 +150,6 @@ function RunerConfigView() {
                   valorSeleccionado={runers.find(r => r.codigo === codigoRuner) ?? null}
                   onSeleccionar={runer => {
                     setCodigoRuner(runer?.codigo ?? '')
-                    setColor(runer?.color ?? '')
                     setTipoRuner(runer?.tipo ?? '')
                     setLuz('')
                     setMargen('')
@@ -166,6 +172,22 @@ function RunerConfigView() {
                 </div>
               </div>
             </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Seleccione el color del runer</label>
+                  <select className="form-select" 
+                          value={color}
+                          onChange={e => setColor(e.target.value)}>
+                    <option value="">- Seleccione un color -</option>
+                    {COLORES?.map(color => (
+                      <option key={color.value} value={color.value}>{color.label}</option>
+                    ))}
+                  </select>
+              </div>
+            </div>
+
+            
 
             {/* solo muestra los campos si hay runer seleccionado y ancho de banda disponible */}
 

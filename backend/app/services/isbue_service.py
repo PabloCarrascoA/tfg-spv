@@ -77,6 +77,7 @@ class IsbueService:
         perfil_t_state = state_frontend.get("perfilT", {})
         runer_state = state_frontend.get("runer", {})
 
+        # COLOR/TIPO PERFIL LONGITUDINAL
         tipo_perfil_superior = (
             perfil_l_state.get("tipoPerfilSuperior")
             or perfil_l_state.get("superior", {}).get("tipo")
@@ -93,8 +94,11 @@ class IsbueService:
             perfil_l_state.get("colorPerfilInferior")
             or perfil_l_state.get("inferior", {}).get("color")
         )
+        # COLOR/TIPO PERFIL TRANSVERSAL
         tipo_perfilT = perfil_t_state.get("tipoPerfilT")
         color_perfilT = perfil_t_state.get("color")
+
+        # COLOR/TIPO RUNER
         tipo_runer = runer_state.get("tipo")
         color_runer = runer_state.get("color")
 

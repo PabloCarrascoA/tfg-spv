@@ -4,6 +4,13 @@ import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getOndas } from '../../../services/api'
 import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
+const COLORES = [
+  { value: 'NEGRO', label: 'Negro' },
+  { value: 'BLANCO', label: 'Blanco' },
+  { value: 'AZUL', label: 'Azul' },
+  { value: 'VERDE', label: 'Verde'}
+]
+
 
 function OndaConfigView() {
   const { state } = useLocation()
@@ -21,6 +28,7 @@ function OndaConfigView() {
   const [anchoOnda, setAnchoOnda]       = useState('')
   const [pisada, setPisada]             = useState('')
   const [comentarios, setComentarios]   = useState('')
+  const [color, setColor]               = useState('')
 
   const anchoBanda = Number(state.banda?.ancho)
   const largoBanda = Number(state.banda?.longitud)
@@ -80,7 +88,7 @@ function OndaConfigView() {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Código de la onda</label>
-                
+
                 <AutocompleteSelect
                   opciones={ondas}
                   valorSeleccionado={ondas.find(o => o.codigo === codigoOnda) ?? null}
