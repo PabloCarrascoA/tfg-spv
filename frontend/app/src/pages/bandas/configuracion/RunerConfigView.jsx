@@ -66,11 +66,7 @@ function RunerConfigView() {
 
   let luzCalculada
 
-   if (cantidad === 2) {
-    luzCalculada = anchoBanda - 2 * parseFloat(margen) - cantidad * anchoRuner
-  }
-
-  else if (cantidad >= 3) {
+  if (cantidad >= 1) {
     luzCalculada = (anchoBanda - 2 * parseFloat(margen) - cantidad * anchoRuner) / (cantidad - 1)
   }
 
@@ -89,10 +85,6 @@ function RunerConfigView() {
   if (!anchoBanda || !anchoRuner || !luz) return
 
   let margenCalculado
-
-  if (cantidad === 2) {
-    margenCalculado = (anchoBanda - parseFloat(luz) - cantidad * anchoRuner) / 2
-  }
 
   if (cantidad >= 3) {
     margenCalculado = (anchoBanda - (cantidad - 1) * parseFloat(luz) - cantidad * anchoRuner) / 2
