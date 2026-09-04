@@ -70,8 +70,8 @@ function RunerConfigView() {
     luzCalculada = anchoBanda - 2 * parseFloat(margen) - cantidad * anchoRuner
   }
 
-  else if (cantidad === 3) {
-    luzCalculada = (anchoBanda - 2 * parseFloat(margen) - cantidad * anchoRuner) / 2
+  else if (cantidad >= 3) {
+    luzCalculada = (anchoBanda - 2 * parseFloat(margen) - cantidad * anchoRuner) / (cantidad - 1)
   }
 
   editando.current = 'margen'
@@ -94,8 +94,8 @@ function RunerConfigView() {
     margenCalculado = (anchoBanda - parseFloat(luz) - cantidad * anchoRuner) / 2
   }
 
-  if (cantidad === 3) {
-    margenCalculado = (anchoBanda - 2 * parseFloat(luz) - cantidad * anchoRuner) / 2
+  if (cantidad >= 3) {
+    margenCalculado = (anchoBanda - (cantidad - 1) * parseFloat(luz) - cantidad * anchoRuner) / 2
   }
 
   editando.current = 'luz'
@@ -274,7 +274,7 @@ function RunerConfigView() {
 
             <div className="config-side-img-wrapper">
               <img
-                src={cantidad === 3 ? '/images/sketch-runer-2.svg' : '/images/sketch-runer-1.svg'}
+                src={cantidad >= 3 ? '/images/sketch-runer-2.svg' : '/images/sketch-runer-1.svg'}
                 alt="Esquema de runers"
                 className="config-side-img"
               />
