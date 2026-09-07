@@ -86,7 +86,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                   codigo: perfil?.codigo ?? '', 
                   tipo: perfil?.tipo ?? ''
                   }))} 
-                  getLabel = {perfil => `${perfil.codigo} - ${perfil.tipo}`}
+                  getLabel = {perfil => `${perfil.tipo}`}
                   getKey = {perfil => perfil.codigo}
                   placeholder = "Busqueda por código o tipo de perfil"
                   />
