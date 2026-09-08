@@ -259,8 +259,9 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
 
           {/*ACOTAMIENTO*/}
 
-          {perfil.cantidad > 1 && (
-            <div className="form-row">
+          {perfil.cantidad > 1 && ( 
+            perfil.codigo ? (
+              <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Seleccione el acotado</label>
                   <select className="form-select" 
@@ -275,6 +276,14 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                   
               </div>
             </div>
+
+            ) : (
+              <p style={{ fontSize: 13, color: '#e57373' }}>
+                Seleccione primero un tipo de perfil para poder elegir el acotado.
+              </p>
+            )
+            
+            
           )}
 
           <div className="form-row">
