@@ -11,6 +11,15 @@ const COLORES = [
   { value: 'VERDE', label: 'Verde'}
 ]
 
+const ACOTADOS = [
+  { value: 1, label: 'Canto banda / Canto perfil' },
+  { value: 2, label: 'Canto centro-banda / Canto perfil' },
+  { value: 3, label: 'Centro / Centro'},
+  { value: 4, label: 'Interior / Interior'}
+
+
+]
+
 function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
   const distanciaBordeCentro = parseFloat(perfil.distanciaBordeCentro)
   const distanciaCentros = parseFloat(perfil.distancia)
@@ -59,6 +68,70 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
     !Number.isNaN(anchoPerfil) &&
     distanciaCentros > ((anchoBanda - (perfil.cantidad * anchoPerfil)) + anchoPerfil)
 
+  
+  function calcularCascadaAcotado(campoEditado, valorTexto, p) {
+    const n = p.cantidad
+    const v = parseFloat(valorTexto)
+
+    if (Number.isNaN(v) || !anchoBanda || Number.isNaN(anchoPerfil) || n <= 1) {
+      return { [campoEditado]: valorTexto }
+    }
+
+    let bordeCentro
+    let distanciaEntreCentros
+
+    switch (campoEditado) {
+      case 'distanciaBordeCentro':
+        bordeCentro = v
+        distanciaEntreCentros = (anchoBanda - 2 * v) / (n - 1)
+        break
+      case 'distanciaBordeBanda':
+        bordeCentro = v + anchoPerfil / 2
+        distanciaEntreCentros = (anchoBanda - 2 * bordeCentro) / (n - 1)
+        break
+      case 'distancia':
+        distanciaEntreCentros = v
+        bordeCentro = (anchoBanda - (n - 1) * v) / 2
+        break
+      case 'distanciaEntreBandas':
+        distanciaEntreCentros = v + anchoPerfil
+        bordeCentro = (anchoBanda - (n - 1) * distanciaEntreCentros) / 2
+        break
+      default:
+        return { [campoEditado]: valorTexto }
+    }
+
+    const bordeBanda = bordeCentro - anchoPerfil / 2
+    const entreBandas = distanciaEntreCentros - anchoPerfil
+
+    return {
+      [campoEditado]: valorTexto,
+      distanciaBordeCentro: bordeCentro >= 0 ? String(bordeCentro) : '',
+      distanciaBordeBanda: String(bordeBanda),
+      distancia: distanciaEntreCentros >= 0 ? String(distanciaEntreCentros) : '',
+      distanciaEntreBandas: String(entreBandas),
+    }
+    }
+
+    
+  function handleDistanciaBordeCentroChange(value) {
+    setPerfil(p => ({ ...p, ...calcularCascadaAcotado('distanciaBordeCentro', value, p) }))
+  }
+
+  function handleDistanciaBordeBandaChange(value) {
+    setPerfil(p => ({ ...p, ...calcularCascadaAcotado('distanciaBordeBanda', value, p) }))
+  }
+
+  function handleDistanciaChange(value) {
+    setPerfil(p => ({ ...p, ...calcularCascadaAcotado('distancia', value, p) }))
+  }
+
+  function handleDistanciaEntreBandasChange(value) {
+    setPerfil(p => ({ ...p, ...calcularCascadaAcotado('distanciaEntreBandas', value, p) }))
+  }
+
+
+
   return (
     <div className="perfil-bloque">
       <label className="perfil-check-label">
@@ -98,7 +171,14 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                 <button
                   type="button"
                   className="counter-btn"
-                  onClick={() => setPerfil(p => ({ ...p, cantidad: Math.max(1, p.cantidad - 1), distancia: '' }))}
+                  onClick={() => setPerfil(p => {
+                    const nuevaCantidad = Math.max(1, p.cantidad - 1)
+                    const cruzaFrontera = (p.cantidad === 1) !== (nuevaCantidad === 1)
+
+                    return cruzaFrontera
+                      ? { ...p, cantidad: nuevaCantidad, distancia: '', distanciaBordeCentro: '', distanciaBordeBanda: '', distanciaEntreBandas: '', acotado: '' }
+                      : { ...p, cantidad: nuevaCantidad }
+                  })}
                 >
                   −
                 </button>
@@ -106,7 +186,14 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                 <button
                   type="button"
                   className="counter-btn"
-                  onClick={() => setPerfil(p => ({ ...p, cantidad: p.cantidad + 1, distancia: '' }))}
+                  onClick={() => setPerfil(p => {
+                    const nuevaCantidad = p.cantidad + 1
+                    const cruzaFrontera = (p.cantidad === 1) !== (nuevaCantidad === 1)
+
+                    return cruzaFrontera
+                      ? { ...p, cantidad: nuevaCantidad, distancia: '', distanciaBordeCentro: '', distanciaBordeBanda: '', distanciaEntreBandas: '', acotado: '' }
+                      : { ...p, cantidad: nuevaCantidad }
+                  })}
                 >
                   +
                 </button>
@@ -132,7 +219,10 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
 
           {console.log('color del perfil:', perfil.color)}
 
-          <div className="form-group">
+          {/*PREGUNTA CENTRADO*/}
+
+          {perfil.cantidad == 1 && (
+            <div className="form-group">
             <label className="form-label">¿Perfil centrado?</label>
             <div className="radio-group">
               <label className="radio-label">
@@ -155,6 +245,100 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
               </label>
             </div>
           </div>
+          )}
+
+          {/*ACOTAMIENTO*/}
+
+          {perfil.cantidad > 1 && (
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Seleccione el acotado</label>
+                  <select className="form-select" 
+                          value={perfil.acotado}
+                          onChange={e => setPerfil(p => ({ ...p, acotado: Number(e.target.value) }))}>
+                    <option value="">- Seleccione un acotado -</option>
+                    {ACOTADOS?.map(acotado => (
+                      <option key={acotado.value} value={acotado.value}>{acotado.label}</option>
+                    ))}
+                  </select>
+
+                  
+              </div>
+            </div>
+          )}
+
+          <div className="form-row">
+            {(perfil.cantidad === 1 || perfil.acotado === 2) && (
+              <div className="form-group">
+                <label className="form-label">
+                  Distancia borde - centro banda (mm)
+                  {(perfil.centrado || perfil.extremos) && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
+                </label>
+                <input
+                  type="number"
+                  className="form-input"
+                  placeholder="0"
+                  value={perfil.distanciaBordeCentro}
+                  readOnly={perfil.centrado}
+                  style={perfil.centrado ? { background: '#f5f6f8', color: '#6b7280' } : {}}
+                  onChange={e => !perfil.centrado && handleDistanciaBordeCentroChange(e.target.value)}
+                />
+              </div>
+            )}
+            
+
+            {perfil.cantidad > 1 && perfil.acotado === 3 && (
+              <div className="form-group">
+                <label className="form-label">Distancia entre centros (mm)
+                  {perfil.extremos && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
+                </label>
+                <input
+                  type="number"
+                  className="form-input"
+                  placeholder="0"
+                  value={perfil.distancia}
+                  readOnly={perfil.extremos}
+                  style={perfil.extremos ? {background: '#f5f6f8', color: '#6b7280' } : {}}
+                  onChange={e => !perfil.extremos && handleDistanciaChange(e.target.value)}
+                />
+              </div>
+            )}
+
+            {perfil.cantidad > 1 && perfil.acotado === 1 && (
+              <div className="form-group">
+                <label className="form-label">Distancia borde - banda (mm)
+                  {perfil.extremos && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
+                </label>
+                <input
+                  type="number"
+                  className="form-input"
+                  placeholder="0"
+                  value={perfil.distanciaBordeBanda}
+                  readOnly={perfil.extremos}
+                  style={perfil.extremos ? {background: '#f5f6f8', color: '#6b7280' } : {}}
+                  onChange={e => !perfil.extremos && handleDistanciaBordeBandaChange(e.target.value)}
+                />
+              </div>
+            )}
+
+            {perfil.cantidad > 1 && perfil.acotado === 4 && (
+              <div className="form-group">
+                <label className="form-label">Distancia entre bandas (mm)
+                  {perfil.extremos && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
+                </label>
+                <input
+                  type="number"
+                  className="form-input"
+                  placeholder="0"
+                  value={perfil.distanciaEntreBandas}
+                  readOnly={perfil.extremos}
+                  style={perfil.extremos ? {background: '#f5f6f8', color: '#6b7280' } : {}}
+                  onChange={e => !perfil.extremos && handleDistanciaEntreBandasChange(e.target.value)}
+                />
+              </div>
+            )}
+
+          </div>
 
           {/*PREGUNTA DE LOS EXTREMOS*/}
 
@@ -176,48 +360,13 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                       type="radio"
                       name={`extremos_${label}`}
                       checked={perfil.extremos === false}
-                      onChange={() => setPerfil(p => ({ ...p, extremos: false, distanciaBordeCentro: '', distancia: '' }))}
+                      onChange={() => setPerfil(p => ({ ...p, extremos: false, distanciaBordeCentro: '', distancia: '', distanciaBordeBanda: '', distanciaEntreBandas: '' }))}
                     />
                     No
                   </label>
                 </div>
               </div>
             )}
-
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">
-                Distancia borde - centro (mm)
-                {(perfil.centrado || perfil.extremos) && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
-              </label>
-              <input
-                type="number"
-                className="form-input"
-                placeholder="0"
-                value={perfil.distanciaBordeCentro}
-                readOnly={perfil.centrado}
-                style={perfil.centrado ? { background: '#f5f6f8', color: '#6b7280' } : {}}
-                onChange={e => !perfil.centrado && setPerfil(p => ({ ...p, distanciaBordeCentro: e.target.value }))}
-              />
-            </div>
-
-            {perfil.cantidad > 1 && (
-              <div className="form-group">
-                <label className="form-label">Distancia entre centros (mm)
-                  {perfil.extremos && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
-                </label>
-                <input
-                  type="number"
-                  className="form-input"
-                  placeholder="0"
-                  value={perfil.distancia}
-                  readOnly={perfil.extremos}
-                  style={perfil.extremos ? {background: '#f5f6f8', color: '#6b7280' } : {}}
-                  onChange={e => !perfil.extremos && setPerfil(p => ({ ...p, distancia: e.target.value }))}
-                />
-              </div>
-            )}
-          </div>
 
           {superaBanda && (
             <p style={{ fontSize: 13, color: '#e57373' }}>
@@ -258,10 +407,13 @@ function PerfilLConfigView() {
     cantidad: 1,
     distancia: '',
     distanciaBordeCentro: '',
+    distanciaBordeBanda: '',
+    distanciaEntreBandas: '',
     centrado: false,
     extremos: false,
     tipo: '',
     color: '',
+    acotado: '',
   })
   const [superior, setSuperior] = useState({
     activo: false,
@@ -269,10 +421,13 @@ function PerfilLConfigView() {
     cantidad: 1,
     distancia: '',
     distanciaBordeCentro: '',
+    distanciaBordeBanda: '',
+    distanciaEntreBandas: '',
     centrado: false,
     extremos: false,
     tipo: '',
     color: '',
+    acotado: '',
   })
   const [comentarios, setComentarios] = useState('')
 
@@ -346,6 +501,8 @@ function PerfilLConfigView() {
           tipoPerfilInferior: inferior.tipo,
           colorPerfilSuperior: superior.color,
           colorPerfilInferior: inferior.color,
+          acotacionSuperior: superior.acotado,
+          acotacionInferior: inferior.acotado,
         }
       }
     })
@@ -431,6 +588,18 @@ function PerfilLConfigView() {
                   </span>
                 )}
 
+                {superior.cantidad > 1 && (
+                  <span className="config-banda-label config-banda-borde-banda">
+                    {superior.distanciaBordeBanda || '—'} mm
+                  </span>
+                )}
+
+                {superior.cantidad > 1 && (
+                  <span className="config-banda-label config-banda-entre-bandas">
+                    {superior.distanciaEntreBandas || '—'} mm
+                  </span>
+                )}
+
               </div>
             </div>
           )}
@@ -466,6 +635,18 @@ function PerfilLConfigView() {
                 {inferior.cantidad > 1 && (
                   <span className="config-banda-label config-banda-distancia-centros">
                     {inferior.distancia || '—'} mm
+                  </span>
+                )}
+
+                {inferior.cantidad > 1 && (
+                  <span className="config-banda-label config-banda-borde-banda">
+                    {inferior.distanciaBordeBanda || '—'} mm
+                  </span>
+                )}
+
+                {inferior.cantidad > 1 && (
+                  <span className="config-banda-label config-banda-entre-bandas">
+                    {inferior.distanciaEntreBandas || '—'} mm
                   </span>
                 )}
               </div>

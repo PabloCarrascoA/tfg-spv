@@ -472,8 +472,18 @@ a {
 }
 
 .config-banda-distancia-centros {
-  top: 30%;   
+  top: 37%;   
   left: 30%; 
+}
+
+.config-banda-borde-banda {
+  top: 73%;  
+  left: 10%;  
+}
+
+.config-banda-entre-bandas {
+  top: 9%;   
+  left: 32%;
 }
 
 /* panel lateral --> RUNER */
