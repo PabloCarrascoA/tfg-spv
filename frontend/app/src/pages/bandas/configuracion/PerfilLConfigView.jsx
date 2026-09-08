@@ -20,6 +20,16 @@ const ACOTADOS = [
 
 ]
 
+function esCotaActiva(acotado, campo) {
+  const mapa = {
+    1: 'distanciaBordeBanda',
+    2: 'distanciaBordeCentro',
+    3: 'distancia',
+    4: 'distanciaEntreBandas',
+  }
+  return mapa[acotado] === campo
+}
+
 function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
   const distanciaBordeCentro = parseFloat(perfil.distanciaBordeCentro)
   const distanciaCentros = parseFloat(perfil.distancia)
@@ -577,25 +587,25 @@ function PerfilLConfigView() {
                 )}
 
                 {superior.cantidad > 1 && (
-                  <span className="config-banda-label config-banda-borde-centro-2">
+                  <span className={`config-banda-label config-banda-borde-centro-2 ${esCotaActiva(superior.acotado, 'distanciaBordeCentro') ? 'cota-activa' : ''}`}>
                     {superior.distanciaBordeCentro || '—'} mm
                   </span>
                 )}
 
                 {superior.cantidad > 1 && (
-                  <span className="config-banda-label config-banda-distancia-centros">
+                  <span className={`config-banda-label config-banda-distancia-centros ${esCotaActiva(superior.acotado, 'distancia') ? 'cota-activa' : ''} `}>
                     {superior.distancia || '—'} mm
                   </span>
                 )}
 
                 {superior.cantidad > 1 && (
-                  <span className="config-banda-label config-banda-borde-banda">
-                    {superior.distanciaBordeBanda || '—'} mm
+                  <span className={`config-banda-label config-banda-borde-banda ${esCotaActiva(superior.acotado, 'distanciaBordeBanda') ? 'cota-activa' : ''}`}>
+                    {superior.distanciaBordeBanda || '—'} 
                   </span>
                 )}
 
                 {superior.cantidad > 1 && (
-                  <span className="config-banda-label config-banda-entre-bandas">
+                  <span className={`config-banda-label config-banda-entre-bandas ${esCotaActiva(superior.acotado, 'distanciaEntreBandas') ? 'cota-activa' : ''}`}>
                     {superior.distanciaEntreBandas || '—'} mm
                   </span>
                 )}
@@ -627,25 +637,25 @@ function PerfilLConfigView() {
                 )}
 
                 {inferior.cantidad > 1 && (
-                  <span className="config-banda-label config-banda-borde-centro-2">
+                  <span className={`config-banda-label config-banda-borde-centro-2 ${esCotaActiva(inferior.acotado, 'distanciaBordeCentro') ? 'cota-activa' : ''}`}>
                     {inferior.distanciaBordeCentro || '—'} mm
                   </span>
                 )}
 
                 {inferior.cantidad > 1 && (
-                  <span className="config-banda-label config-banda-distancia-centros">
+                  <span className={`config-banda-label config-banda-distancia-centros ${esCotaActiva(inferior.acotado, 'distancia') ? 'cota-activa' : ''} `}>
                     {inferior.distancia || '—'} mm
                   </span>
                 )}
 
                 {inferior.cantidad > 1 && (
-                  <span className="config-banda-label config-banda-borde-banda">
+                  <span className={`config-banda-label config-banda-borde-banda ${esCotaActiva(inferior.acotado, 'distanciaBordeBanda') ? 'cota-activa' : ''}`}>
                     {inferior.distanciaBordeBanda || '—'} mm
                   </span>
                 )}
 
                 {inferior.cantidad > 1 && (
-                  <span className="config-banda-label config-banda-entre-bandas">
+                  <span className={`config-banda-label config-banda-entre-bandas ${esCotaActiva(inferior.acotado, 'distanciaEntreBandas') ? 'cota-activa' : ''}`}>
                     {inferior.distanciaEntreBandas || '—'} mm
                   </span>
                 )}
