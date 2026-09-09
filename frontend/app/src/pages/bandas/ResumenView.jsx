@@ -6,6 +6,31 @@ import { añadirLineaCarrito } from '../../services/api'
 import { guardarClienteCarrito } from '../../services/api'
 import { FiShoppingCart, FiCalendar, FiShoppingBag, FiEye } from 'react-icons/fi'
 
+const ACOTADOS = [
+  { value: 1, label: 'Canto banda / Canto perfil' },
+  { value: 2, label: 'Canto centro-banda / Canto perfil' },
+  { value: 3, label: 'Centro / Centro' },
+  { value: 4, label: 'Interior / Interior' },
+  { value: 5, label: 'Según plano' },
+  { value: 6, label: 'Perfiles a los extremos' },
+]
+
+const CAMPO_POR_ACOTADO = {
+  1: 'distanciaBordeBanda',
+  2: 'distanciaBordeCentro',
+  3: 'distancia',
+  4: 'distanciaEntreBandas',
+}
+
+function getLabelAcotado(acotado) {
+  return ACOTADOS.find(a => a.value === acotado)?.label ?? 'canto centro-banda / Canto perfil'
+}
+
+function getValorAcotado(perfilState, acotado) {
+  const campo = CAMPO_POR_ACOTADO[acotado]
+  return campo ? perfilState?.[campo] : null
+}
+
 function ResumenView() {
   const { state } = useLocation()
   const navigate = useNavigate()
@@ -106,13 +131,20 @@ function ResumenView() {
                 {resultado.codigo_perfil_superior && <>
                   <li>Perfil superior: {resultado.codigo_perfil_superior}</li>
                   <li>Nº perfiles sup.: {resultado.n_perfiles_superior}</li>
-                  <li>Distancia borde-centro sup.: {resultado.distancia_margen_superior} mm</li>
+                  <li>Distancia {getLabelAcotado(state.perfilL?.acotacionSuperior)} sup.: {getValorAcotado(state.perfilL?.superior, state.perfilL?.acotacionSuperior) ?? resultado.distancia_margen_superior} {state.perfilL?.inferior?.acotado !== 6 && "mm"}
+                  </li>
                   <li>Color del perfil: {state.perfilL?.colorPerfilSuperior}</li>
                 </>}
                 {resultado.codigo_perfil_inferior && <>
                   <li>Perfil inferior: {resultado.codigo_perfil_inferior}</li>
                   <li>Nº perfiles inf.: {resultado.n_perfiles_inferior}</li>
-                  <li>Distancia borde-centro inf.: {resultado.distancia_margen_inferior} mm</li>
+                  <li>
+                    {state.perfilL?.inferior?.acotado !== 6 && <>Distancia </>} 
+                    {getLabelAcotado(state.perfilL?.acotacionInferior)} inf.: 
+                    {getValorAcotado(state.perfilL?.inferior, state.perfilL?.acotacionInferior) ?? resultado.distancia_margen_inferior} 
+                    {console.log('DEBUG acotado:', state.perfilL?.inferior?.acotado)}
+                    {state.perfilL?.inferior?.acotado !== 6 && " mm"}
+                  </li>
                   <li>Color del perfil: {state.perfilL?.colorPerfilInferior}</li>
                 </>}
                 <li>Precio perfiles: {resultado.precio_perfilL_final} €</li>

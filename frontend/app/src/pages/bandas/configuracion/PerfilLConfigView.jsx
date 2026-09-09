@@ -5,18 +5,22 @@ import { getPerfilesLongitudinales } from '../../../services/api'
 import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
 const COLORES = [
+
   { value: 'NEGRO', label: 'Negro' },
   { value: 'BLANCO', label: 'Blanco' },
   { value: 'AZUL', label: 'Azul' },
   { value: 'VERDE', label: 'Verde'}
+
 ]
 
 const ACOTADOS = [
+
   { value: 1, label: 'Canto banda / Canto perfil' },
   { value: 2, label: 'Canto centro-banda / Canto perfil' },
   { value: 3, label: 'Centro / Centro'},
-  { value: 4, label: 'Interior / Interior'}
-
+  { value: 4, label: 'Interior / Interior'},
+  { value: 5, label: 'Según plano'},
+  { value: 6, label: 'Perfiles a los extremos'}
 
 ]
 
@@ -360,8 +364,8 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
           </div>
 
           {/*PREGUNTA DE LOS EXTREMOS*/}
-
-          {perfil.cantidad > 1 && (
+          
+          {/*perfil.cantidad > 1 && (
               <div className="form-group">
                 <label className="form-label">¿Los perfiles van a los extremos?</label>
                 <div className="radio-group">
@@ -385,7 +389,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                   </label>
                 </div>
               </div>
-            )}
+            )*/}
 
           {superaBanda && (
             <p style={{ fontSize: 13, color: '#e57373' }}>
@@ -575,15 +579,25 @@ function PerfilLConfigView() {
 
           {superior.activo && (
             <div className="config-side-sketch">
-              <p className="config-side-sketch-title">Cobertura superior</p>
+              {superior.acotado !== 6 && (
+                <p className="config-side-sketch-title">Cobertura superior</p>
+              )}
+
+              {superior.acotado === 6 && (
+                <p className="config-side-sketch-title">Cobertura superior - EXTREMOS</p>
+              )}
+
               <div className="config-side-img-wrapper">
                 <img
                   src={
-                    superior.cantidad > 2
-                      ? '/images/sketch-longitud-CS-3.svg'
-                      : superior.cantidad > 1
-                        ? '/images/sketch-longitud-CS-2.svg'
-                        : '/images/sketch-longitud-CS-1.svg'
+                    superior.acotado === 6
+                      ? '/images/sketch-longitud-CS-extremos.svg'
+                      : superior.cantidad > 2
+                        ? '/images/sketch-longitud-CS-3.svg'
+                        : superior.cantidad > 1
+                          ? '/images/sketch-longitud-CS-2.svg'
+                          : '/images/sketch-longitud-CS-1.svg'
+                      
                   }
                   alt="Esquema perfil longitudinal superior"
                   className="config-side-img"
@@ -595,25 +609,25 @@ function PerfilLConfigView() {
                   </span>
                 )}
 
-                {superior.cantidad > 1 && (
+                {(superior.cantidad > 1 && superior.acotado !== 6 && superior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-borde-centro-2 ${esCotaActiva(superior.acotado, 'distanciaBordeCentro') ? 'cota-activa' : ''}`}>
                     {superior.distanciaBordeCentro || '—'} mm
                   </span>
                 )}
 
-                {superior.cantidad > 1 && (
+                {(superior.cantidad > 1 && superior.acotado !== 6 && superior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-distancia-centros ${esCotaActiva(superior.acotado, 'distancia') ? 'cota-activa' : ''} `}>
                     {superior.distancia || '—'} mm
                   </span>
                 )}
 
-                {superior.cantidad > 1 && (
+                {(superior.cantidad > 1 && superior.acotado !== 6 && superior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-borde-banda ${esCotaActiva(superior.acotado, 'distanciaBordeBanda') ? 'cota-activa' : ''}`}>
-                    {superior.distanciaBordeBanda || '—'} 
+                    {superior.distanciaBordeBanda || '—'} mm
                   </span>
                 )}
 
-                {superior.cantidad > 1 && (
+                {(superior.cantidad > 1 && superior.acotado !== 6 && superior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-entre-bandas ${esCotaActiva(superior.acotado, 'distanciaEntreBandas') ? 'cota-activa' : ''}`}>
                     {superior.distanciaEntreBandas || '—'} mm
                   </span>
@@ -625,15 +639,25 @@ function PerfilLConfigView() {
 
           {inferior.activo && (
             <div className="config-side-sketch">
-              <p className="config-side-sketch-title">Cobertura inferior</p>
+
+              {inferior.acotado !== 6 && (
+                <p className="config-side-sketch-title">Cobertura inferior</p>
+              )}
+
+              {inferior.acotado === 6 && (
+                <p className="config-side-sketch-title">Cobertura inferior - EXTREMOS</p>
+              )}
+              
               <div className="config-side-img-wrapper">
                 <img
                   src={
-                    inferior.cantidad > 2
-                      ? '/images/sketch-longitud-CS-3.svg'
-                      : inferior.cantidad > 1
-                        ? '/images/sketch-longitud-CS-2.svg'
-                        : '/images/sketch-longitud-CS-1.svg'
+                    inferior.acotado === 6
+                      ? '/images/sketch-longitud-CS-extremos.svg'
+                      : inferior.cantidad > 2
+                        ? '/images/sketch-longitud-CS-3.svg'
+                        : inferior.cantidad > 1
+                          ? '/images/sketch-longitud-CS-2.svg'
+                          : '/images/sketch-longitud-CS-1.svg'
                   }
                   alt="Esquema perfil longitudinal inferior"
                   className="config-side-img"
@@ -645,25 +669,25 @@ function PerfilLConfigView() {
                   </span>
                 )}
 
-                {inferior.cantidad > 1 && (
+                {(inferior.cantidad > 1 && inferior.acotado !== 6 && inferior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-borde-centro-2 ${esCotaActiva(inferior.acotado, 'distanciaBordeCentro') ? 'cota-activa' : ''}`}>
                     {inferior.distanciaBordeCentro || '—'} mm
                   </span>
                 )}
 
-                {inferior.cantidad > 1 && (
+                {(inferior.cantidad > 1 && inferior.acotado !== 6 && inferior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-distancia-centros ${esCotaActiva(inferior.acotado, 'distancia') ? 'cota-activa' : ''} `}>
                     {inferior.distancia || '—'} mm
                   </span>
                 )}
 
-                {inferior.cantidad > 1 && (
+                {(inferior.cantidad > 1 && inferior.acotado !== 6 && inferior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-borde-banda ${esCotaActiva(inferior.acotado, 'distanciaBordeBanda') ? 'cota-activa' : ''}`}>
                     {inferior.distanciaBordeBanda || '—'} mm
                   </span>
                 )}
 
-                {inferior.cantidad > 1 && (
+                {(inferior.cantidad > 1 && inferior.acotado !== 6 && inferior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-entre-bandas ${esCotaActiva(inferior.acotado, 'distanciaEntreBandas') ? 'cota-activa' : ''}`}>
                     {inferior.distanciaEntreBandas || '—'} mm
                   </span>
