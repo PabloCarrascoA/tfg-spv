@@ -440,14 +440,14 @@ def calcular_precio_empalme(db, tipo_empalme, subtipo, ancho, cliente_id = None)
     }
 
 
-def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, largo, ancho, n_perfiles, distancia_margen, cliente_id = None):
+def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, largo, ancho, n_perfiles, distancia_margen = None, cliente_id = None):
 
     print(f"DEBUG: cantidad_bandas: {cantidad_bandas}")
 
     perfil = obtener_perfil_longitudinal_por_codigo(db, codigo_perfil)
 
     if perfil is None:
-        raise ValueError("Perfil L no encontrado")
+        raise ValueError("Perfil Longitudinal no encontrado")
     
     # if n_perfiles > 3:
     #    raise ValueError("No se admiten más de 3 perfiles longitudinales")
@@ -521,6 +521,9 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
     print(f"DEBUG: precio preparación *: {precio_preparacion}")
     
     precio_final = precio_perfil_total + precio_soldadura_total + precio_preparacion
+
+    if distancia_margen is None:
+        distancia_margen = 0
 
     return {
         "codigo_perfil": codigo_perfil,
@@ -855,11 +858,15 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
     precio_soldaduraT = 0
     precio_perfilT_final = 0
 
-    if distancia_margen_superior is not None or distancia_margen_inferior is not None:
+    # PERFILES LONGITUDINALES
 
-        if distancia_margen_superior is not None:
-            if codigo_perfil_superior is None or n_perfiles_superior is None:
-                raise ValueError("Debes indicar código y número de perfiles para el perfil longitudinal superior")
+    if codigo_perfil_superior is not None or codigo_perfil_inferior is not None:
+
+        if codigo_perfil_superior is not None:
+
+            if n_perfiles_superior is None:
+                raise ValueError("Debes indicar el número de perfiles para el perfil longitudinal superior")
+            
             resultado_perfil_superior = calcular_precio_perfil_longitudinal(
                 db,
                 cantidad_bandas,
@@ -874,13 +881,17 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
 
             precio_soldaduraL += resultado_perfil_superior["precio_soldadura_total"]
 
-            precio_perfilL_final += resultado_perfil_superior["precio_final"]
-
             precio_preparacionL += resultado_perfil_superior["precio_preparacion_PL"]
 
-        if distancia_margen_inferior is not None:
-            if codigo_perfil_inferior is None or n_perfiles_inferior is None:
-                raise ValueError("Debes indicar código y número de perfiles para el perfil longitudinal inferior")
+            precio_perfilL_final += resultado_perfil_superior["precio_final"]
+
+            print(f"DEBUG: precio_perfilL superior: {precio_perfilL_final}")
+
+        if codigo_perfil_inferior is not None:
+
+            if n_perfiles_inferior is None:
+                raise ValueError("Debes indicar el número de perfiles para el perfil longitudinal inferior")
+
             resultado_perfil_inferior = calcular_precio_perfil_longitudinal(
                 db,
                 cantidad_bandas,
@@ -899,6 +910,10 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
 
             precio_perfilL_final += resultado_perfil_inferior["precio_final"]
 
+            print(f"DEBUG: precio_perfilL inferior: {resultado_perfil_inferior["precio_final"]}")
+
+            # - Calcular el total de perfiles longitudinales -
+
         total_perfiles_longitudinales = 0
 
         if n_perfiles_superior is not None:
@@ -908,6 +923,8 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
         if n_perfiles_inferior is not None:
 
             total_perfiles_longitudinales += n_perfiles_inferior
+    
+    # PERFILES TRANSVERSALES
 
     if codigo_perfilT is not None and (distancia_paso is not None or n_perfilesT is not None):
 

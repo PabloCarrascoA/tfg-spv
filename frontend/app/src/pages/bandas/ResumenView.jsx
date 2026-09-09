@@ -129,14 +129,15 @@ function ResumenView() {
             {resultado.codigo_perfil_superior || resultado.codigo_perfil_inferior ? (
               <ul className="resumen-lista">
                 {resultado.codigo_perfil_superior && <>
-                  <li>Perfil superior: {resultado.codigo_perfil_superior}</li>
+                  <li style="font-weight: bold;">Perfil superior: {resultado.codigo_perfil_superior}</li>
                   <li>Nº perfiles sup.: {resultado.n_perfiles_superior}</li>
                   <li>Distancia {getLabelAcotado(state.perfilL?.acotacionSuperior)} sup.: {getValorAcotado(state.perfilL?.superior, state.perfilL?.acotacionSuperior) ?? resultado.distancia_margen_superior} {state.perfilL?.inferior?.acotado !== 6 && "mm"}
                   </li>
-                  <li>Color del perfil: {state.perfilL?.colorPerfilSuperior}</li>
+                  <li>Color del perfil: {state.perfilL?.colorPerfilSuperior} {"\n"}</li>
                 </>}
+
                 {resultado.codigo_perfil_inferior && <>
-                  <li>Perfil inferior: {resultado.codigo_perfil_inferior}</li>
+                  <li style="font-weight: bold;">Perfil inferior: {resultado.codigo_perfil_inferior}</li>
                   <li>Nº perfiles inf.: {resultado.n_perfiles_inferior}</li>
                   <li>
                     {state.perfilL?.inferior?.acotado !== 6 && <>Distancia </>} 
@@ -145,8 +146,9 @@ function ResumenView() {
                     {console.log('DEBUG acotado:', state.perfilL?.inferior?.acotado)}
                     {state.perfilL?.inferior?.acotado !== 6 && " mm"}
                   </li>
-                  <li>Color del perfil: {state.perfilL?.colorPerfilInferior}</li>
+                  <li>Color del perfil: {state.perfilL?.colorPerfilInferior} {"\n"}</li>
                 </>}
+
                 <li>Precio perfiles: {resultado.precio_perfilL_final} €</li>
                 {state.perfilL?.comentarios && <li>Comentarios: {state.perfilL.comentarios}</li>}
               </ul>
