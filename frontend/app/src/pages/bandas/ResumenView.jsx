@@ -128,7 +128,7 @@ function ResumenView() {
             {resultado.codigo_perfil_superior || resultado.codigo_perfil_inferior ? (
               <ul className="resumen-lista">
                 {resultado.codigo_perfil_superior && <>
-                  <li style={{ fontWeight: 'bold' }}>Perfil superior: {resultado.codigo_perfil_superior}</li>
+                  <li style={{ fontWeight: 'bold' }}>Perfil superior: {state.perfilL?.superior?.tipo ?? 'No hay tipo disponible'}</li>
                   <li>Nº perfiles sup.: {resultado.n_perfiles_superior}</li>
                   <li>Distancia {getLabelAcotado(state.perfilL?.acotacionSuperior)} sup.: {getValorAcotado(state.perfilL?.superior, state.perfilL?.acotacionSuperior) ?? resultado.distancia_margen_superior} {state.perfilL?.inferior?.acotado !== 6 && "mm"}
                   </li>
@@ -136,7 +136,7 @@ function ResumenView() {
                 </>}
 
                 {resultado.codigo_perfil_inferior && <>
-                  <li style={{ fontWeight: 'bold' }}>Perfil inferior: {resultado.codigo_perfil_inferior}</li>
+                  <li style={{ fontWeight: 'bold' }}>Perfil inferior: {state.perfilL?.inferior?.tipo ?? 'No hay tipo disponible'}</li>
                   <li>Nº perfiles inf.: {resultado.n_perfiles_inferior}</li>
                   <li>
                     {state.perfilL?.inferior?.acotado !== 6 && <>Distancia </>} 
