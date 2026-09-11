@@ -145,8 +145,8 @@ class IsbueService:
             if acotacion_inferior == 3:
                 observaciones.append(
                     f"CON {n_inf} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_inferior} "
-                    f"{color_perfil_inferior}] "
+                    f"TIPO {tipo_perfil_inferior} "
+                    f"{color_perfil_inferior} "
                     f"COLOCADOS A {distancia_entre_centros_I} mm ENTRE CENTROS DE PERFIL "
                     f"POR LA PARTE INFERIOR"
                 )
@@ -156,8 +156,8 @@ class IsbueService:
             if acotacion_inferior == 2:
                 observaciones.append(
                     f"CON {n_inf} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_inferior} "
-                    f"{color_perfil_inferior}] "
+                    f"TIPO {tipo_perfil_inferior} "
+                    f"{color_perfil_inferior} "
                     f"COLOCADOS A {distancia_borde_centro_I} mm CANTO CINTA CENTRO PERFIL " # ?
                     f"POR LA PARTE INFERIOR"
                 )
@@ -167,8 +167,8 @@ class IsbueService:
             if acotacion_inferior == 1:
                 observaciones.append(
                     f"CON {n_inf} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_inferior} "
-                    f"{color_perfil_inferior}] "
+                    f"TIPO {tipo_perfil_inferior} "
+                    f"{color_perfil_inferior} "
                     f"COLOCADOS A {distancia_borde_banda_I} mm CANTO BANDA CANTO PERFIL "
                     f"POR LA PARTE INFERIOR"
                 )
@@ -178,8 +178,8 @@ class IsbueService:
             if acotacion_inferior == 4:
                 observaciones.append(
                     f"CON {n_inf} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_inferior} "
-                    f"{color_perfil_inferior}] "
+                    f"TIPO {tipo_perfil_inferior} "
+                    f"{color_perfil_inferior} "
                     f"COLOCADOS A {distancia_entre_bandas_I} mm DE INTERIOR A INTERIOR DE PERFIL "
                     f"POR LA PARTE INFERIOR"
                 )
@@ -189,8 +189,8 @@ class IsbueService:
             if acotacion_inferior == 5:
                 observaciones.append(
                     f"CON {n_inf} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_inferior} "
-                    f"{color_perfil_inferior}] "
+                    f"TIPO {tipo_perfil_inferior} "
+                    f"{color_perfil_inferior} "
                     f"COLOCADOS SEGÚN PLANO "
                     f"POR LA PARTE INFERIOR"
                 )
@@ -200,8 +200,8 @@ class IsbueService:
             if acotacion_inferior == 6:
                 observaciones.append(
                     f"CON {n_inf} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_inferior} "
-                    f"{color_perfil_inferior}] "
+                    f"TIPO {tipo_perfil_inferior} "
+                    f"{color_perfil_inferior} "
                     f"COLOCADOS EN LOS EXTREMOS DE LA BANDA "
                     f"POR LA PARTE INFERIOR"
                 )
@@ -210,8 +210,8 @@ class IsbueService:
             if n_inf == 1:
                 observaciones.append(
                     f"CON 1 PERFIL LONGITUDINAL "
-                    f"TIPO [{tipo_perfil_inferior} "
-                    f"{color_perfil_inferior}] "
+                    f"TIPO {tipo_perfil_inferior} "
+                    f"{color_perfil_inferior} "
                     f"COLOCADO EN {resultado.get('distancia_margen_inferior')} mm "
                     f"DEL EXTREMO POR LA PARTE INFERIOR"
                 )
@@ -225,8 +225,8 @@ class IsbueService:
             if acotacion_superior == 3:
                 observaciones.append(
                     f"CON {n_sup} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_superior} "
-                    f"{color_perfil_superior}] "
+                    f"TIPO {tipo_perfil_superior} "
+                    f"{color_perfil_superior} "
                     f"COLOCADOS A {distancia_entre_centros_S} mm ENTRE CENTROS DE PERFIL "
                     f"POR LA PARTE SUPERIOR"
                 )
@@ -236,8 +236,8 @@ class IsbueService:
             if acotacion_superior == 2:
                 observaciones.append(
                     f"CON {n_sup} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_superior} "
-                    f"{color_perfil_superior}] "
+                    f"TIPO {tipo_perfil_superior} "
+                    f"{color_perfil_superior} "
                     f"COLOCADOS A {distancia_borde_centro_S} mm CANTO CINTA CENTRO PERFIL " # ?
                     f"POR LA PARTE SUPERIOR"
                 )
@@ -247,8 +247,8 @@ class IsbueService:
             if acotacion_superior == 1:
                 observaciones.append(
                     f"CON {n_sup} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_superior} "
-                    f"{color_perfil_superior}] "
+                    f"TIPO {tipo_perfil_superior} "
+                    f"{color_perfil_superior} "
                     f"COLOCADOS A {distancia_borde_banda_S} mm CANTO BANDA CANTO PERFIL "
                     f"POR LA PARTE SUPERIOR"
                 )
@@ -258,8 +258,8 @@ class IsbueService:
             if acotacion_superior == 4:
                 observaciones.append(
                     f"CON {n_sup} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_superior} "
-                    f"{color_perfil_superior}] "
+                    f"TIPO {tipo_perfil_superior} "
+                    f"{color_perfil_superior} "
                     f"COLOCADOS A {distancia_entre_bandas_S} mm DE INTERIOR A INTERIOR DE PERFIL "
                     f"POR LA PARTE SUPERIOR"
                 )
@@ -269,8 +269,8 @@ class IsbueService:
             if acotacion_superior == 5:
                 observaciones.append(
                     f"CON {n_sup} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_superior} "
-                    f"{color_perfil_superior}] "
+                    f"TIPO {tipo_perfil_superior} "
+                    f"{color_perfil_superior} "
                     f"COLOCADOS SEGÚN PLANO "
                     f"POR LA PARTE SUPERIOR"
                 )
@@ -280,8 +280,8 @@ class IsbueService:
             if acotacion_superior == 6:
                 observaciones.append(
                     f"CON {n_sup} PERFILES LONGITUDINALES "
-                    f"TIPO [{tipo_perfil_superior} "
-                    f"{color_perfil_superior}] "
+                    f"TIPO {tipo_perfil_superior} "
+                    f"{color_perfil_superior} "
                     f"COLOCADOS EN LOS EXTREMOS DE LA BANDA "
                     f"POR LA PARTE SUPERIOR"
                 )

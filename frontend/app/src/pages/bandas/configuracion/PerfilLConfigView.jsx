@@ -16,8 +16,8 @@ const COLORES = [
 const ACOTADOS = [
 
   { value: 1, label: 'Canto banda / Canto perfil' },
-  { value: 2, label: 'Canto centro-banda / Canto perfil' },
-  { value: 3, label: 'Centro / Centro'},
+  { value: 2, label: 'Canto banda / Centro perfil' },
+  { value: 3, label: 'Entre centros de perfiles'},
   { value: 4, label: 'Interior / Interior'},
   { value: 5, label: 'Según plano'},
   { value: 6, label: 'Perfiles a los extremos'}
