@@ -98,6 +98,9 @@ class IsbueService:
         acotacion_superior = perfil_l_state.get("superior", {}).get("acotado")
         acotacion_inferior = perfil_l_state.get("inferior", {}).get("acotado")
 
+        centrado_S = perfil_l_state.get("superior", {}).get("centrado")
+        centrado_I = perfil_l_state.get("inferior", {}).get("centrado")
+
         # Distancias superiores
 
         if acotacion_superior != 6 or acotacion_superior != 5:
@@ -151,7 +154,7 @@ class IsbueService:
                     f"POR LA PARTE INFERIOR"
                 )
 
-            # ACOTACIÓN 2 (CANTO CENTRO-BANDA / CANTO PERFIL)
+            # ACOTACIÓN 2 (CANTO BANDA / CENTRO PERFIL)
 
             if acotacion_inferior == 2:
                 observaciones.append(
@@ -180,7 +183,7 @@ class IsbueService:
                     f"CON {n_inf} PERFILES LONGITUDINALES "
                     f"TIPO {tipo_perfil_inferior} "
                     f"{color_perfil_inferior} "
-                    f"COLOCADOS A {distancia_entre_bandas_I} mm DE INTERIOR A INTERIOR DE PERFIL "
+                    f"COLOCADOS A {distancia_entre_bandas_I} mm DE INTERIOR A INTERIOR DEL PERFIL "
                     f"POR LA PARTE INFERIOR"
                 )
 
@@ -208,13 +211,28 @@ class IsbueService:
 
             # falta ver lo de si es centrado
             if n_inf == 1:
-                observaciones.append(
-                    f"CON 1 PERFIL LONGITUDINAL "
-                    f"TIPO {tipo_perfil_inferior} "
-                    f"{color_perfil_inferior} "
-                    f"COLOCADO EN {resultado.get('distancia_margen_inferior')} mm "
-                    f"DEL EXTREMO POR LA PARTE INFERIOR"
-                )
+
+                if centrado_I == True:
+
+                    observaciones.append(
+                        f"CON 1 PERFIL LONGITUDINAL "
+                        f"TIPO {tipo_perfil_inferior} "
+                        f"{color_perfil_inferior} "
+                        f"COLOCADO CENTRADO "
+                        f"POR LA PARTE INFERIOR"
+                    )
+
+                else:
+                    observaciones.append(
+                        f"CON 1 PERFIL LONGITUDINAL "
+                        f"TIPO {tipo_perfil_inferior} "
+                        f"{color_perfil_inferior} "
+                        f"COLOCADO A {distancia_borde_centro_I} mm CANTO CINTA CENTRO PERFIL " # ?
+                        f"POR LA PARTE INFERIOR"
+                    )
+
+                
+
 
         if resultado.get("codigo_perfil_superior"):
 
@@ -288,13 +306,28 @@ class IsbueService:
 
             # falta ver lo de si es centrado
             if n_sup == 1:
-                observaciones.append(
-                    f"CON 1 PERFIL LONGITUDINAL "
-                    f"{tipo_perfil_superior} "
-                    f"{color_perfil_superior} "
-                    f"COLOCADO EN {resultado.get('distancia_margen_superior')} mm "
-                    f"DEL EXTREMO POR LA PARTE SUPERIOR"
-                )
+
+                if centrado_S == True:
+
+                    observaciones.append(
+                        f"CON 1 PERFIL LONGITUDINAL "
+                        f"TIPO {tipo_perfil_superior} "
+                        f"{color_perfil_superior} "
+                        f"COLOCADO CENTRADO "
+                        f"POR LA PARTE SUPERIOR"
+                    )
+
+                else:
+
+                    observaciones.append(
+                        f"CON 1 PERFIL LONGITUDINAL "
+                        f"TIPO {tipo_perfil_superior} "
+                        f"{color_perfil_superior} "
+                        f"COLOCADO A {distancia_borde_centro_S} mm CANTO CINTA CENTRO PERFIL " # ?
+                        f"POR LA PARTE SUPERIOR"
+                    )
+
+                
 
         #
         # PERFILES TRANSVERSALES
