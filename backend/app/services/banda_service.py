@@ -862,6 +862,8 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
 
     if codigo_perfil_superior is not None or codigo_perfil_inferior is not None:
 
+        precio_perfilL_S = 0
+
         if codigo_perfil_superior is not None:
 
             if n_perfiles_superior is None:
@@ -883,10 +885,15 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
 
             precio_preparacionL += resultado_perfil_superior["precio_preparacion_PL"]
 
+            precio_perfilL_S = resultado_perfil_superior["precio_final"]
+
             precio_perfilL_final += resultado_perfil_superior["precio_final"]
 
             print(f"DEBUG: precio_perfilL superior: {precio_perfilL_final}")
 
+                
+        precio_perfilL_I = 0
+       
         if codigo_perfil_inferior is not None:
 
             if n_perfiles_inferior is None:
@@ -908,9 +915,14 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
 
             precio_preparacionL += resultado_perfil_inferior["precio_preparacion_PL"]
 
+            precio_perfilL_I = resultado_perfil_inferior["precio_final"]
+
+            if precio_perfilL_I is None:
+                precio_perfilL_I = 0
+
             precio_perfilL_final += resultado_perfil_inferior["precio_final"]
 
-            print(f"DEBUG: precio_perfilL inferior: {resultado_perfil_inferior["precio_final"]}")
+            print(f"DEBUG: precio_perfilL inferior: {precio_perfilL_I}")
 
             # - Calcular el total de perfiles longitudinales -
 
@@ -1019,6 +1031,8 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
         "precio_perfilL": round(precio_perfilL, 2),
         "precio_soldaduraL": round(precio_soldaduraL, 2),
         "precio_perfilL_final": round(precio_perfilL_final, 2),
+        "precio_perfilL_S": round(precio_perfilL_S, 2),
+        "precio_perfilL_I": round(precio_perfilL_I, 2),
         "codigo_perfilT": codigo_perfilT,
         "n_perfilesT": n_perfilesT,
         "margen_lateral": margen_lateral,

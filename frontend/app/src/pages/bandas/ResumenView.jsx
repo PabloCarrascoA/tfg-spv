@@ -132,6 +132,7 @@ function ResumenView() {
                   <li>Nº perfiles sup.: {resultado.n_perfiles_superior}</li>
                   <li>Distancia {getLabelAcotado(state.perfilL?.acotacionSuperior)} sup.: {getValorAcotado(state.perfilL?.superior, state.perfilL?.acotacionSuperior) ?? resultado.distancia_margen_superior} {state.perfilL?.inferior?.acotado !== 6 && "mm"}
                   </li>
+                  <li>Precio perfil superior: {resultado.precio_perfilL_S} €</li>
                   <li style={{ marginBottom: '10px' }}>Color del perfil: {state.perfilL?.colorPerfilSuperior}</li>
                 </>}
 
@@ -145,10 +146,10 @@ function ResumenView() {
                     {console.log('DEBUG acotado:', state.perfilL?.inferior?.acotado)}
                     {state.perfilL?.inferior?.acotado !== 6 && " mm"}
                   </li>
+                  <li>Precio perfil inferior: {resultado.precio_perfilL_I} €</li>
                   <li style={{ marginBottom: '10px' }}>Color del perfil: {state.perfilL?.colorPerfilInferior}</li>
                 </>}
-
-                <li>Precio perfiles: {resultado.precio_perfilL_final} €</li>
+                {resultado.codigo_perfil_superior && resultado.codigo_perfil_inferior && <li>Precio perfiles: {resultado.precio_perfilL_final} €</li>}
                 {state.perfilL?.comentarios && <li>Comentarios: {state.perfilL.comentarios}</li>}
               </ul>
             ) : <NoConfigurado />}

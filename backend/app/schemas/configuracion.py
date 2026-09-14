@@ -125,6 +125,8 @@ class CalculoBandaResponse(BaseModel):
     distancia_margen_inferior: Optional[float] = None
     precio_perfilL: Optional[float] = None
     precio_soldaduraL: Optional[float] = None
+    precio_perfilL_S: Optional[float] = None
+    precio_perfilL_I: Optional[float] = None
     precio_perfilL_final: Optional[float] = None
 
     codigo_perfilT: Optional[str] = None
