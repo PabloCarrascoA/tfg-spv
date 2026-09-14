@@ -323,7 +323,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
           )}
 
           <div className="form-row">
-            {(perfil.cantidad === 1 || perfil.acotado === 2) && (
+            {(perfil.acotado === 2) && (
               <div className="form-group">
                 <label className="form-label">
                   Distancia borde - centro banda (mm)
@@ -359,19 +359,19 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
               </div>
             )}
 
-            {perfil.cantidad > 1 && perfil.acotado === 1 && (
+            {perfil.acotado === 1 && (
               <div className="form-group">
                 <label className="form-label">Distancia borde - banda (mm)
-                  {perfil.extremos && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
+                  {perfil.centrado && <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 6 }}>- calculada</span>}
                 </label>
                 <input
                   type="number"
                   className="form-input"
                   placeholder="0"
                   value={perfil.distanciaBordeBanda}
-                  readOnly={perfil.extremos}
-                  style={perfil.extremos ? {background: '#f5f6f8', color: '#6b7280' } : {}}
-                  onChange={e => !perfil.extremos && handleDistanciaBordeBandaChange(e.target.value)}
+                  readOnly={perfil.centrado}
+                  style={perfil.centrado ? {background: '#f5f6f8', color: '#6b7280' } : {}}
+                  onChange={e => !perfil.centrado && handleDistanciaBordeBandaChange(e.target.value)}
                 />
               </div>
             )}
@@ -486,6 +486,12 @@ function PerfilLConfigView() {
   })
   const [comentarios, setComentarios] = useState('')
 
+  const perfilSeleccionadoInferior = perfiles.find(perf => perf.codigo === inferior.codigo)
+  const anchoPerfilInferior = parseFloat(perfilSeleccionadoInferior?.ancho)
+
+  const perfilSeleccionadoSuperior = perfiles.find(perf => perf.codigo === superior.codigo)
+  const anchoPerfilSuperior = parseFloat(perfilSeleccionadoSuperior?.ancho)
+
   useEffect(() => {
     getPerfilesLongitudinales()
       .then(data => setPerfiles(data))
@@ -500,10 +506,11 @@ function PerfilLConfigView() {
 
     if (inferior.centrado) {
       if (inferior.cantidad === 1) {
-        // un perfil centrado → mitad del ancho
+        // un perfil centrado -> mitad del ancho
         setInferior(p => ({ ...p, distanciaBordeCentro: String(anchoBanda / 2) }))
+        setInferior(p => ({ ...p, distanciaBordeBanda: String((anchoBanda / 2) - (anchoPerfilInferior / 2))}))
       } else {
-        // varios perfiles centrados → depende de distancia entre centros
+        // varios perfiles centrados -> depende de distancia entre centros
         if (!inferior.distancia) return
         const bordeCentro = (anchoBanda - (inferior.cantidad - 1) * parseFloat(inferior.distancia)) / 2
         setInferior(p => ({ ...p, distanciaBordeCentro: bordeCentro >= 0 ? String(bordeCentro) : '' }))
@@ -520,6 +527,7 @@ function PerfilLConfigView() {
     if (superior.centrado) {
       if (superior.cantidad === 1) {
         setSuperior(p => ({ ...p, distanciaBordeCentro: String(anchoBanda / 2) }))
+        setSuperior(p => ({ ...p, distanciaBordeBanda: String((anchoBanda / 2) - (anchoPerfilSuperior / 2))}))
       } else {
         if (!superior.distancia) return
         const bordeCentro = (anchoBanda - (superior.cantidad - 1) * parseFloat(superior.distancia)) / 2
