@@ -64,6 +64,19 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
     })
   }, [perfil.extremos, perfil.cantidad, anchoBanda, anchoPerfil])
 
+  useEffect(() => {
+    setPerfil(p => ({
+      ...p,
+      distanciaBordeCentro: '',
+      distanciaBordeBanda: '',
+      distancia: '',
+      distanciaEntreBandas: '',
+      centrado: false,
+      extremos: false,
+      acotado: '',
+    }))
+  }, [perfil.codigo])
+
   const superaBanda =
     Boolean(anchoBanda) &&
     !Number.isNaN(distanciaBordeCentro) &&
@@ -706,15 +719,24 @@ function PerfilLConfigView() {
                         ? '/images/sketch-longitud-CS-3.svg'
                         : inferior.cantidad > 1
                           ? '/images/sketch-longitud-CS-2.svg'
-                          : '/images/sketch-longitud-CS-1.svg'
+                          : inferior.acotado === 2
+                            ? '/images/sketch-longitud-CS-1.svg'
+                            : '/images/sketch-longitud-CS-1-1.svg'
                   }
                   alt="Esquema perfil longitudinal inferior"
                   className="config-side-img"
                 />
 
-                {inferior.cantidad === 1 && (
+                {inferior.cantidad === 1 && inferior.acotado === 2 && (
                   <span className="config-banda-label config-banda-borde-centro-1">
                     {inferior.distanciaBordeCentro || '—'} mm
+                  </span>
+                )}
+
+                {/* CANTO BANDA - CANTO PERFIL */}
+                {inferior.cantidad === 1 && inferior.acotado === 1 && (
+                  <span className="config-banda-label config-banda-borde-centro-1">
+                    {inferior.distanciaBordeBanda || '—'} mm
                   </span>
                 )}
 
