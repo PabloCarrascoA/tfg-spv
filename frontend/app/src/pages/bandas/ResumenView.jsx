@@ -8,8 +8,8 @@ import { FiShoppingCart, FiCalendar, FiShoppingBag, FiEye } from 'react-icons/fi
 
 const ACOTADOS = [
   { value: 1, label: 'Canto banda / Canto perfil' },
-  { value: 2, label: 'Canto centro-banda / Canto perfil' },
-  { value: 3, label: 'Centro / Centro' },
+  { value: 2, label: 'Canto banda / Centro perfil' },
+  { value: 3, label: 'Entre centros de perfiles' },
   { value: 4, label: 'Interior / Interior' },
   { value: 5, label: 'Según plano' },
   { value: 6, label: 'Perfiles a los extremos' },
@@ -23,7 +23,7 @@ const CAMPO_POR_ACOTADO = {
 }
 
 function getLabelAcotado(acotado) {
-  return ACOTADOS.find(a => a.value === acotado)?.label ?? 'canto centro-banda / Canto perfil'
+  return ACOTADOS.find(a => a.value === acotado)?.label ?? 'Canto banda / Centro perfil'
 }
 
 function getValorAcotado(perfilState, acotado) {
@@ -149,7 +149,7 @@ function ResumenView() {
                   <li>Precio perfil inferior: {resultado.precio_perfilL_I} €</li>
                   <li style={{ marginBottom: '10px' }}>Color del perfil: {state.perfilL?.colorPerfilInferior}</li>
                 </>}
-                {resultado.codigo_perfil_superior && resultado.codigo_perfil_inferior && <li>Precio perfiles: {resultado.precio_perfilL_final} €</li>}
+                {resultado.codigo_perfil_superior && resultado.codigo_perfil_inferior && <li> <span style={{ fontWeight: 'bold '}}>Precio total perfiles:</span> {resultado.precio_perfilL_final} €</li>}
                 {state.perfilL?.comentarios && <li>Comentarios: {state.perfilL.comentarios}</li>}
               </ul>
             ) : <NoConfigurado />}
