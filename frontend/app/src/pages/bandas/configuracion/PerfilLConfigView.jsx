@@ -24,6 +24,11 @@ const ACOTADOS = [
 
 ]
 
+const ACOTADOS_S = [
+  { value: 1, label: 'Canto banda / Canto perfil' },
+  { value: 2, label: 'Canto banda / Centro perfil' }
+]
+
 function esCotaActiva(acotado, campo) {
   const mapa = {
     1: 'distanciaBordeBanda',
@@ -233,9 +238,36 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
 
           {console.log('color del perfil:', perfil.color)}
 
+          {perfil.cantidad === 1 && ( 
+            perfil.codigo ? (
+              <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Seleccione el acotado</label>
+                  <select className="form-select" 
+                          value={perfil.acotado}
+                          onChange={e => setPerfil(p => ({ ...p, acotado: Number(e.target.value) }))}>
+                    <option value="">- Seleccione un acotado -</option>
+                    {ACOTADOS_S?.map(acotado => (
+                      <option key={acotado.value} value={acotado.value}>{acotado.label}</option>
+                    ))}
+                  </select>
+
+                  
+              </div>
+            </div>
+
+            ) : (
+              <p style={{ fontSize: 13, color: '#e57373' }}>
+                Seleccione primero un tipo de perfil para poder elegir el acotado.
+              </p>
+            )
+            
+            
+          )}
+
           {/*PREGUNTA CENTRADO*/}
 
-          {perfil.cantidad == 1 && (
+          {perfil.cantidad === 1 && (
             <div className="form-group">
             <label className="form-label">¿Perfil centrado?</label>
             <div className="radio-group">
@@ -596,16 +628,25 @@ function PerfilLConfigView() {
                         ? '/images/sketch-longitud-CS-3.svg'
                         : superior.cantidad > 1
                           ? '/images/sketch-longitud-CS-2.svg'
-                          : '/images/sketch-longitud-CS-1.svg'
+                          : superior.acotado === 2
+                            ? '/images/sketch-longitud-CS-1.svg'
+                            : '/images/sketch-longitud-CS-1-1.svg'
                       
                   }
                   alt="Esquema perfil longitudinal superior"
                   className="config-side-img"
                 />
 
-                {superior.cantidad === 1 && (
+                {superior.cantidad === 1 && superior.acotado === 2 && (
                   <span className="config-banda-label config-banda-borde-centro-1">
                     {superior.distanciaBordeCentro || '—'} mm
+                  </span>
+                )}
+
+                {/* CANTO BANDA - CANTO PERFIL */}
+                {superior.cantidad === 1 && superior.acotado === 1 && (
+                  <span className="config-banda-label config-banda-borde-centro-1">
+                    {superior.distanciaBordeBanda || '—'} mm
                   </span>
                 )}
 
