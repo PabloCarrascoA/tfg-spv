@@ -108,7 +108,7 @@ function ResumenView() {
             <p className="resumen-seccion-titulo">1. Banda cortada y empalme</p>
             {state.banda?.banda?.codigo_barras ? (
               <ul className="resumen-lista">
-                <li>Banda: {state.banda.banda.descripcion}</li>
+                <li>Banda: {state.banda.banda.codigo_barras} - {state.banda.banda.descripcion}</li>
                 <li>Cantidad: {resultado.cantidad_bandas}</li>
                 <li>Largo: {resultado.largo_banda} mm</li>
                 <li>Ancho: {state.banda?.ancho} mm</li>
