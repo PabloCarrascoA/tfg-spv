@@ -853,16 +853,18 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
     precio_soldaduraL = 0
     precio_preparacionL = 0
     precio_perfilL_final = 0
+    precio_perfilL_I = 0
+    precio_perfilL_S = 0
 
     precio_perfilT = 0
     precio_soldaduraT = 0
     precio_perfilT_final = 0
 
+    
+
     # PERFILES LONGITUDINALES
 
     if codigo_perfil_superior is not None or codigo_perfil_inferior is not None:
-
-        precio_perfilL_S = 0
 
         if codigo_perfil_superior is not None:
 
@@ -891,8 +893,6 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
 
             print(f"DEBUG: precio_perfilL superior: {precio_perfilL_final}")
 
-                
-        precio_perfilL_I = 0
        
         if codigo_perfil_inferior is not None:
 

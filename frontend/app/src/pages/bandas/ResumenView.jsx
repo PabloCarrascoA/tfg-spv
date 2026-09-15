@@ -141,7 +141,7 @@ function ResumenView() {
                   <li>Nº perfiles inf.: {resultado.n_perfiles_inferior}</li>
                   <li>
                     {state.perfilL?.inferior?.acotado !== 6 && <>Distancia </>} 
-                    {getLabelAcotado(state.perfilL?.acotacionInferior)} inf.: 
+                    {getLabelAcotado(state.perfilL?.acotacionInferior)} inf.:
                     {getValorAcotado(state.perfilL?.inferior, state.perfilL?.acotacionInferior) ?? resultado.distancia_margen_inferior} 
                     {console.log('DEBUG acotado:', state.perfilL?.inferior?.acotado)}
                     {state.perfilL?.inferior?.acotado !== 6 && " mm"}
