@@ -271,7 +271,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
                   type="radio"
                   name={`centrado_${label}`}
                   checked={perfil.centrado === false}
-                  onChange={() => setPerfil(p => ({ ...p, centrado: false, extremos: false, distanciaBordeCentro: '', distanciaBordeBanda: '' }))}
+                  onChange={() => setPerfil(p => ({ ...p, centrado: false, extremos: false, distanciaBordeCentro: '', distanciaBordeBanda: '', acotado: 0 }))}
                 />
                 No
               </label>
