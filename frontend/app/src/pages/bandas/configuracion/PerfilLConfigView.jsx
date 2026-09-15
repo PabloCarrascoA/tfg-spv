@@ -77,6 +77,16 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
     }))
   }, [perfil.codigo])
 
+  useEffect(() => {
+    if (perfil.cantidad !== 1) return
+
+    setPerfil(p => ({
+      ...p,
+      distanciaBordeCentro: '',
+      distanciaBordeBanda: '',
+    }))
+  }, [perfil.acotado])
+
   const superaBanda =
     Boolean(anchoBanda) &&
     !Number.isNaN(distanciaBordeCentro) &&
