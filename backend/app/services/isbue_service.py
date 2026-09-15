@@ -163,7 +163,7 @@ class IsbueService:
                         f"CON {n_inf} PERFILES LONGITUDINALES "
                         f"TIPO {tipo_perfil_inferior} "
                         f"{color_perfil_inferior} "
-                        f"COLOCADOS A {distancia_borde_centro_I} mm CANTO CINTA CENTRO PERFIL " # ?
+                        f"COLOCADOS A {distancia_borde_centro_I} mm CANTO BANDA CENTRO PERFIL " # ?
                         f"POR LA PARTE INFERIOR"
                     )
 
@@ -232,7 +232,7 @@ class IsbueService:
                             f"CON 1 PERFIL LONGITUDINAL "
                             f"TIPO {tipo_perfil_inferior} "
                             f"{color_perfil_inferior} "
-                            f"COLOCADO A {distancia_borde_centro_I} mm CANTO BANDA CANTO PERFIL " # ?
+                            f"COLOCADO A {distancia_borde_banda_I} mm CANTO BANDA CANTO PERFIL " # ?
                             f"POR LA PARTE INFERIOR"
                         )
 
@@ -273,7 +273,7 @@ class IsbueService:
                         f"CON {n_sup} PERFILES LONGITUDINALES "
                         f"TIPO {tipo_perfil_superior} "
                         f"{color_perfil_superior} "
-                        f"COLOCADOS A {distancia_borde_centro_S} mm CANTO CINTA CENTRO PERFIL " # ?
+                        f"COLOCADOS A {distancia_borde_centro_S} mm CANTO BANDA CENTRO PERFIL " # ?
                         f"POR LA PARTE SUPERIOR"
                     )
 
@@ -342,7 +342,7 @@ class IsbueService:
                             f"CON 1 PERFIL LONGITUDINAL "
                             f"TIPO {tipo_perfil_superior} "
                             f"{color_perfil_superior} "
-                            f"COLOCADO A {distancia_borde_centro_S} mm CANTO BANDA CANTO PERFIL " # ?
+                            f"COLOCADO A {distancia_borde_banda_S} mm CANTO BANDA CANTO PERFIL " # ?
                             f"POR LA PARTE SUPERIOR"
                         )
                     

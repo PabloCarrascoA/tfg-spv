@@ -251,7 +251,35 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
 
           {console.log('color del perfil:', perfil.color)}
 
-          {perfil.cantidad === 1 && ( 
+          {/*PREGUNTA CENTRADO*/}
+
+          {perfil.cantidad === 1 && (
+            <div className="form-group">
+            <label className="form-label">¿Perfil centrado?</label>
+            <div className="radio-group">
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  name={`centrado_${label}`}
+                  checked={perfil.centrado === true}
+                  onChange={() => setPerfil(p => ({ ...p, centrado: true, distanciaBordeCentro: '', acotado: 2 }))}
+                />
+                Sí
+              </label>
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  name={`centrado_${label}`}
+                  checked={perfil.centrado === false}
+                  onChange={() => setPerfil(p => ({ ...p, centrado: false, extremos: false, distanciaBordeCentro: '', distanciaBordeBanda: '' }))}
+                />
+                No
+              </label>
+            </div>
+          </div>
+          )}
+
+          {perfil.cantidad === 1 && perfil.centrado === false && ( 
             perfil.codigo ? (
               <div className="form-row">
               <div className="form-group">
@@ -276,34 +304,6 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
             )
             
             
-          )}
-
-          {/*PREGUNTA CENTRADO*/}
-
-          {perfil.cantidad === 1 && (
-            <div className="form-group">
-            <label className="form-label">¿Perfil centrado?</label>
-            <div className="radio-group">
-              <label className="radio-label">
-                <input
-                  type="radio"
-                  name={`centrado_${label}`}
-                  checked={perfil.centrado === true}
-                  onChange={() => setPerfil(p => ({ ...p, centrado: true, distanciaBordeCentro: '' }))}
-                />
-                Sí
-              </label>
-              <label className="radio-label">
-                <input
-                  type="radio"
-                  name={`centrado_${label}`}
-                  checked={perfil.centrado === false}
-                  onChange={() => setPerfil(p => ({ ...p, centrado: false, extremos: false, distanciaBordeCentro: '' }))}
-                />
-                No
-              </label>
-            </div>
-          </div>
           )}
 
           {/*ACOTAMIENTO*/}
