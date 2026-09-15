@@ -460,7 +460,7 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
 
           {superaBandaCantoPerfil && (
             <p style={{ fontSize: 13, color: '#e57373' }}>
-              La distancia canto banda - canto perfil supera la mitad del ancho de la banda ({anchoBanda / 2} mm) más la mitad del ancho del perfil ({anchoPerfil / 2} mm)
+              La distancia canto banda - canto perfil supera la mitad del ancho de la banda ({anchoBanda / 2} mm) menos la mitad del ancho del perfil ({anchoPerfil / 2} mm)
             </p>
           )}
 
