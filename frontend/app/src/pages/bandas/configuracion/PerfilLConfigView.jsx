@@ -41,6 +41,7 @@ function esCotaActiva(acotado, campo) {
 
 function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
   const distanciaBordeCentro = parseFloat(perfil.distanciaBordeCentro)
+  const distanciaBordeBanda = parseFloat(perfil.distanciaBordeBanda)
   const distanciaCentros = parseFloat(perfil.distancia)
   const perfilSeleccionado = perfiles.find(perf => perf.codigo === perfil.codigo)
   const anchoPerfil = parseFloat(perfilSeleccionado?.ancho)
@@ -91,6 +92,11 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
     Boolean(anchoBanda) &&
     !Number.isNaN(distanciaBordeCentro) &&
     distanciaBordeCentro > anchoBanda / 2
+
+  const superaBandaCantoPerfil =
+    Boolean(anchoBanda) &&
+    !Number.isNaN(distanciaBordeBanda) &&
+    distanciaBordeBanda > ((anchoBanda / 2) - (anchoPerfil / 2))
 
   // Si la distancia entre centros + 2 veces la distancia borde-centro supera el ancho de la banda, muestra alterta
   
@@ -449,6 +455,12 @@ function BloquePerfilL({ label, perfil, setPerfil, perfiles, anchoBanda }) {
           {superaBanda && (
             <p style={{ fontSize: 13, color: '#e57373' }}>
               La distancia borde-centro supera la mitad del ancho de la banda ({anchoBanda / 2} mm)
+            </p>
+          )}
+
+          {superaBandaCantoPerfil && (
+            <p style={{ fontSize: 13, color: '#e57373' }}>
+              La distancia canto banda - canto perfil supera la mitad del ancho de la banda ({anchoBanda / 2} mm) más la mitad del ancho del perfil ({anchoPerfil / 2} mm)
             </p>
           )}
 
