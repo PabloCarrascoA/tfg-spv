@@ -536,7 +536,7 @@ def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, larg
         "distancia_margen": distancia_margen
     }
 
-def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho, largo, n_perfiles=None, distancia_paso=None, ancho_perfil=None, cliente_id = None):
+def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho, largo, n_perfiles=None, distancia_paso=None, ancho_perfil=None, n_hileras=None, cliente_id = None):
 
     perfil = obtener_perfil_transversal_por_codigo(db, codigo_perfil)
 
@@ -603,7 +603,7 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
     if ancho <= 1000:
         precio_soldadura_mL = perfil["precioSoldar_AnchoHasta1300"]
 
-    elif ancho >= 1000 and ancho <= 1400:
+    elif ancho > 1000:
         precio_soldadura_mL = perfil["precioSoldar_AnchoMayor1300"]
 
     else:
@@ -621,9 +621,9 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
 
     # - Calculo preparación -
 
-    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_transversales")
+    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_transversales", ancho_perfil, n_hileras)
 
-    print(f"DEBUG preparación perfil transversal - ancho_perfil: {ancho_perfil}")
+    print(f"DEBUG TARIFA preparación perfil transversal: {tarifa_preparacion}")
     precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_perfil)
 
 
@@ -942,7 +942,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
 
         print(f"DEBUG: {codigo_perfilT}")
 
-        resultado_perfil = calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfilT, ancho, largo, n_perfilesT, distancia_paso, ancho_perfilT, cliente_id)
+        resultado_perfil = calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfilT, ancho, largo, n_perfilesT, distancia_paso, ancho_perfilT, n_hileras, cliente_id)
 
         precio_perfilT = resultado_perfil["precio_perfil_total"]
         precio_soldaduraT = resultado_perfil["precio_soldadura_total"]
