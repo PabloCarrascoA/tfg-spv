@@ -177,7 +177,7 @@ function PerfilTConfigView() {
                     setCodigoPerfil(perfil?.codigo ?? '')
                     setTipoPerfil(perfil?.tipo ?? '')
                   }}
-                  getLabel = {perfil => `${perfil.codigo} - ${perfil.tipo}`}
+                  getLabel = {perfil => `${perfil.tipo}`}
                   getKey = {perfil => perfil.codigo}
                   placeholder = "Busqueda por código o tipo de perfil"
                 />
