@@ -61,7 +61,7 @@ function PerfilTConfigView() {
     if (!identico) return
     if (!ancho || !luz) return
 
-    const anchoCalculado = (parseFloat(ancho) - parseFloat(luz)) / 2
+    const anchoCalculado = (parseFloat(ancho) - (parseFloat(luz) * (hileras - 1))) / hileras
     if (anchoCalculado > 0) {
         setAncho1(String(anchoCalculado))
         setAncho2(String(anchoCalculado))
@@ -321,11 +321,14 @@ function PerfilTConfigView() {
                                 style={{ background: '#f5f6f8', color: '#6b7280' }} />
                                 {console.log('ancho1 calculado:', ancho1)}
                             </div>
-                            <div className="form-group">
-                            <label className="form-label">Ancho perfil 2 (mm) — calculado</label>
-                            <input type="number" className="form-input" value={ancho2} readOnly
-                                style={{ background: '#f5f6f8', color: '#6b7280' }} />
-                            </div>
+                            {hileras < 3 && (
+                              <div className="form-group">
+                                <label className="form-label">Ancho perfil 2 (mm) — calculado</label>
+                                <input type="number" className="form-input" value={ancho2} readOnly
+                                    style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                              </div>
+                            )}
+                            
                         </div>
                         )}
 
