@@ -34,7 +34,7 @@ def obtener_banda_por_codigo(db, codigo: str):
 def obtener_perfil_transversal_por_codigo(db, codigo: str):
     cursor = db.cursor()
     cursor.execute(
-        "SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Lhasta1000, precioSoldar_L1000_1400, precioSoldar_Especial FROM perfiles_transversales WHERE codigo = ?",
+        "SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_AnchoHasta1300, precioSoldar_AnchoMayor1300, precioSoldar_Especial FROM perfiles_transversales WHERE codigo = ?",
         (codigo,)
     )
 
@@ -51,8 +51,8 @@ def obtener_perfil_transversal_por_codigo(db, codigo: str):
         "proveedor": row[4],
         "material": row[5],
         "precio_material": row[6],
-        "precioSoldar_Lhasta1000": row[7],
-        "precioSoldar_L1000_1400": row[8],
+        "precioSoldar_AnchoHasta1300": row[7],
+        "precioSoldar_AnchoMayor1300": row[8],
         "precioSoldar_Especial": row[9]
     }
     
@@ -172,7 +172,7 @@ def obtener_precio_empalme(db, tipo, subtipo, ancho):
 
 def obtener_perfiles_transversales(db):
     cursor = db.cursor()
-    cursor.execute("SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_Lhasta1000, precioSoldar_L1000_1400, precioSoldar_Especial FROM perfiles_transversales")
+    cursor.execute("SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_AnchoHasta1300, precioSoldar_AnchoMayor1300, precioSoldar_Especial FROM perfiles_transversales")
 
     rows = cursor.fetchall()
 
@@ -186,8 +186,8 @@ def obtener_perfiles_transversales(db):
             "proveedor": row[4],
             "material": row[5],
             "precio_material": row[6],
-            "precioSoldar_Lhasta1000": row[7],
-            "precioSoldar_L1000_1400": row[8],
+            "precioSoldar_AnchoHasta1300": row[7],
+            "precioSoldar_AnchoMayor1300": row[8],
             "precioSoldar_Especial": row[9]
         })
 
@@ -601,10 +601,10 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
     # - Calculo soldadura -
 
     if ancho <= 1000:
-        precio_soldadura_mL = perfil["precioSoldar_Lhasta1000"]
+        precio_soldadura_mL = perfil["precioSoldar_AnchoHasta1300"]
 
     elif ancho >= 1000 and ancho <= 1400:
-        precio_soldadura_mL = perfil["precioSoldar_L1000_1400"]
+        precio_soldadura_mL = perfil["precioSoldar_AnchoMayor1300"]
 
     else:
         precio_soldadura_mL = perfil["precioSoldar_Especial"]

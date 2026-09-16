@@ -38,8 +38,8 @@ with get_db_connection() as conn:
             proveedor TEXT,
             material TEXT,
             precio_material REAL,
-            precioSoldar_Lhasta1000 REAL,
-            precioSoldar_L1000_1400 REAL,
+            precioSoldar_AnchoHasta1300 REAL,
+            precioSoldar_AnchoMayor1300 REAL,
             precioSoldar_Especial REAL
         )
     """)

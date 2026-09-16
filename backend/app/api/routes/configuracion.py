@@ -145,8 +145,8 @@ def obtener_perfil_transversal(codigo: str, db = Depends(get_db)):
         "proveedor": perfil["proveedor"],
         "material": perfil["material"],
         "precio_material": perfil["precio_material"],
-        "precioSoldar_Lhasta1000": perfil["precioSoldar_Lhasta1000"],
-        "precioSoldar_L1000_1400": perfil["precioSoldar_L1000_1400"],
+        "precioSoldar_AnchoHasta1300": perfil["precioSoldar_AnchoHasta1300"],
+        "precioSoldar_AnchoMayor1300": perfil["precioSoldar_AnchoMayor1300"],
         "precioSoldar_Especial": perfil["precioSoldar_Especial"]
     }
 

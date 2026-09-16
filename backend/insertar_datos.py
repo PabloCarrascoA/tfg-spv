@@ -15,8 +15,8 @@ perfiles_longitudinales = [
 ]
 
 perfiles_transversales = [
-    {"tipo": "Trapezoidal 1", "color": "Verde", "proveedor": "ProveedorX", "material": "PVC", "codigo": "PT01", "precio_material": 25.0, "precioSoldar_Lhasta1000": 5.0, "precioSoldar_L1000_1400": 7.5, "precioSoldar_Especial": 10.0},
-    {"tipo": "Trapezoidal 2", "color": "Azul", "proveedor": "ProveedorY", "material": "PVC", "codigo": "PT02", "precio_material": 35.0, "precioSoldar_Lhasta1000": 5.0, "precioSoldar_L1000_1400": 7.5, "precioSoldar_Especial": 10.0}
+    {"tipo": "Trapezoidal 1", "color": "Verde", "proveedor": "ProveedorX", "material": "PVC", "codigo": "PT01", "precio_material": 25.0, "precioSoldar_AnchoHasta1300": 5.0, "precioSoldar_AnchoMayor1300": 7.5, "precioSoldar_Especial": 10.0},
+    {"tipo": "Trapezoidal 2", "color": "Azul", "proveedor": "ProveedorY", "material": "PVC", "codigo": "PT02", "precio_material": 35.0, "precioSoldar_AnchoHasta1300": 5.0, "precioSoldar_AnchoMayor1300": 7.5, "precioSoldar_Especial": 10.0}
 ]
 
 sin_fin = [
@@ -167,7 +167,7 @@ with get_db_connection() as conn:
 
     for perfil_t in perfiles_transversales:
         cursor.execute("""
-            INSERT INTO perfiles_transversales (tipo, codigo, color, proveedor, material, precio_material, precioSoldar_Lhasta1000, precioSoldar_L1000_1400, precioSoldar_Especial)
+            INSERT INTO perfiles_transversales (tipo, codigo, color, proveedor, material, precio_material, precioSoldar_AnchoHasta1300, precioSoldar_AnchoMayor1300, precioSoldar_Especial)
             VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             perfil_t.get("tipo", ""),
@@ -176,8 +176,8 @@ with get_db_connection() as conn:
             perfil_t.get("proveedor", ""),
             perfil_t.get("material", ""),
             perfil_t.get("precio_material", 0.0),
-            perfil_t.get("precioSoldar_Lhasta1000", 0.0),
-            perfil_t.get("precioSoldar_L1000-1400", 0.0),
+            perfil_t.get("precioSoldar_AnchoHasta1300", 0.0),
+            perfil_t.get("precioSoldar_AnchoMayor1300", 0.0),
             perfil_t.get("precioSoldar_Especial", 0.0),
         ))
 
