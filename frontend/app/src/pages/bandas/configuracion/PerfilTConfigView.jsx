@@ -63,8 +63,8 @@ function PerfilTConfigView() {
 
     const anchoCalculado = (parseFloat(ancho) - (parseFloat(luz) * (hileras - 1))) / hileras
     if (anchoCalculado > 0) {
-        setAncho1(String(anchoCalculado))
-        setAncho2(String(anchoCalculado))
+        setAncho1(String(anchoCalculado.toFixed(2)))
+        setAncho2(String(anchoCalculado.toFixed(2)))
     }
     }, [luz, ancho, identico])
 
