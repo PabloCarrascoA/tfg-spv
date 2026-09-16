@@ -119,6 +119,17 @@ function PerfilTConfigView() {
       setDistancia(paso.toFixed(2))  
     }, [cantidad, state.banda?.longitud])
 
+    useEffect(() => {
+      if (hileras > 2) {
+        setIdentico(true)
+      }
+
+      setAncho1('')
+      setAncho2('')
+      setLuz('')
+
+    }, [hileras])
+
 
   function handleSiguiente() {
 
@@ -284,105 +295,122 @@ function PerfilTConfigView() {
 
             </div>
 
-            {hileras > 1 && ancho &&(
-                <>
-                    <div className="form-row">
+            {hileras > 2 && (
+              <p style={{ fontSize: 13, color: '#4a6f8a', textDecoration: 'underline' }}>
+                Para más de 2 hileras se asume que los perfiles resultantes son indénticos.
+              </p>
+            )}
+
+            {hileras == 2 && ancho && (
+
+              <div className="form-row">
+                <div className="form-group">
+                    <label className="form-label">¿Son los perfiles idénticos?</label>
+                    <div className="radio-group">
+                    <label className="radio-label">
+                        <input type="radio" name="identico" checked={identico === true}
+                        onChange={() => { setIdentico(true); setAncho1(''); setAncho2(''); setLuz('') }} />
+                        Sí
+                    </label>
+                    <label className="radio-label">
+                        <input type="radio" name="identico" checked={identico === false}
+                        onChange={() => { setIdentico(false); setAncho1(''); setAncho2(''); setLuz('') }} />
+                        No
+                    </label>
+                    </div>
+                </div>
+              </div>
+
+            )}
+
+            {(identico && hileras > 1 && ancho) ? (
+
+            // idéntico: usuario introduce luz, anchos se calculan solos
+            <>
+                <div className="form-group">
+                <label className="form-label">Luz interior (mm)</label>
+                <input type="number" className="form-input" placeholder="0"
+                    value={luz} onChange={e => setLuz(e.target.value)} />
+                </div>
+                {luz && (parseFloat(luz) < parseFloat(ancho)) && (luz < (ancho / (hileras - 1))) &&(
+                <div className="form-row">
                     <div className="form-group">
-                        <label className="form-label">¿Son los perfiles idénticos?</label>
-                        <div className="radio-group">
-                        <label className="radio-label">
-                            <input type="radio" name="identico" checked={identico === true}
-                            onChange={() => { setIdentico(true); setAncho1(''); setAncho2(''); setLuz('') }} />
-                            Sí
-                        </label>
-                        <label className="radio-label">
-                            <input type="radio" name="identico" checked={identico === false}
-                            onChange={() => { setIdentico(false); setAncho1(''); setAncho2(''); setLuz('') }} />
-                            No
-                        </label>
-                        </div>
+                    <label className="form-label">Ancho perfil {hileras < 3 && (
+                      <span>1</span>
+                    )} (mm) — calculado</label>
+                    <input type="number" className="form-input" value={ancho1} readOnly
+                        style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                        {console.log('ancho1 calculado:', ancho1)}
                     </div>
-                    </div>
-
-                    {identico ? (
-
-                    // idéntico: usuario introduce luz, anchos se calculan solos
-                    <>
-                        <div className="form-group">
-                        <label className="form-label">Luz interior (mm)</label>
-                        <input type="number" className="form-input" placeholder="0"
-                            value={luz} onChange={e => setLuz(e.target.value)} />
-                        </div>
-                        {luz && (parseFloat(luz) < parseFloat(ancho)) && (
-                        <div className="form-row">
-                            <div className="form-group">
-                            <label className="form-label">Ancho perfil 1 (mm) — calculado</label>
-                            <input type="number" className="form-input" value={ancho1} readOnly
-                                style={{ background: '#f5f6f8', color: '#6b7280' }} />
-                                {console.log('ancho1 calculado:', ancho1)}
-                            </div>
-                            {hileras < 3 && (
-                              <div className="form-group">
-                                <label className="form-label">Ancho perfil 2 (mm) — calculado</label>
-                                <input type="number" className="form-input" value={ancho2} readOnly
-                                    style={{ background: '#f5f6f8', color: '#6b7280' }} />
-                              </div>
-                            )}
-                            
-                        </div>
-                        )}
-
-                        {hileras > 1 && (parseFloat(luz) >= parseFloat(ancho)) && (
-                            console.log('luz:', luz, 'ancho:', ancho),
-                        <p style={{ fontSize: 13, color: '#e57373' }}>
-                            El ancho de la luz excede o es igual al ancho total del perfil
-                        </p>
-                        )}
-
-                    </>
-                    ) : (
-                    // no idéntico: usuario introduce ancho1 y ancho2, luz se calcula sola
-                    <>
-                        <div className="form-row">
-                        <div className="form-group">
-                            <label className="form-label">Ancho perfil 1 (mm)</label>
-                            <input type="number" className="form-input" placeholder="0"
-                            value={ancho1} onChange={e => setAncho1(e.target.value)} />
-                        </div>
-                        <div className="form-group">
-                            <label className="form-label">Ancho perfil 2 (mm)</label>
-                            <input type="number" className="form-input" placeholder="0"
-                            value={ancho2} onChange={e => setAncho2(e.target.value)} />
-                        </div>
-                        </div>
-                        {ancho1 && ancho2 && ((parseFloat(ancho1) < parseFloat(ancho)) && (parseFloat(ancho2) < parseFloat(ancho))) && ((parseFloat(ancho1) + parseFloat(ancho2)) < parseFloat(ancho)) &&  (
-
-                        <div className="form-group">
-                            <label className="form-label">Luz interior (mm) — calculada</label>
-                            <input type="number" className="form-input" value={luz} readOnly
+                    {hileras < 3 && (
+                      <div className="form-group">
+                        <label className="form-label">Ancho perfil 2 (mm) — calculado</label>
+                        <input type="number" className="form-input" value={ancho2} readOnly
                             style={{ background: '#f5f6f8', color: '#6b7280' }} />
-                        </div>
-                        
-                        )}
-
-                        {hileras > 1 && ((parseFloat(ancho1) > parseFloat(ancho)) || (parseFloat(ancho2) > parseFloat(ancho))) && (
-                            console.log('luz:', luz, 'ancho:', ancho),
-                        <p style={{ fontSize: 13, color: '#e57373' }}>
-                            El ancho de los perfiles excede el ancho total del perfil
-                        </p>
-                        )}
-
-                        {hileras > 1 && ((parseFloat(ancho1) + parseFloat(ancho2)) > ancho) && (
-                            console.log('luz:', luz, 'ancho:', ancho),
-                        <p style={{ fontSize: 13, color: '#e57373' }}>
-                            La suma del ancho de los perfiles excede el ancho total del perfil
-                        </p>
-                        )}
-                        
-                    </>
+                      </div>
                     )}
-                </>
+                    
+                </div>
                 )}
+
+                {hileras > 1 && (parseFloat(luz) >= parseFloat(ancho)) && (
+                    console.log('luz:', luz, 'ancho:', ancho),
+                <p style={{ fontSize: 13, color: '#e57373' }}>
+                    El ancho de la luz excede o es igual al ancho total del perfil
+                </p>
+                )}
+
+                {hileras > 1 && (luz >= (ancho / (hileras - 1))) && (
+                  <p style={{ fontSize: 13, color: '#e57373' }}>
+                    El ancho de la luz introducido es demasiado grande, no es compatible con el número actual de hileras
+                </p>
+                )}
+
+            </>
+            ) : (hileras > 1 && ancho) ? (
+            // no idéntico: usuario introduce ancho1 y ancho2, luz se calcula sola
+            <>
+                <div className="form-row">
+                <div className="form-group">
+                    <label className="form-label">Ancho perfil 1 (mm)</label>
+                    <input type="number" className="form-input" placeholder="0"
+                    value={ancho1} onChange={e => setAncho1(e.target.value)} />
+                </div>
+                <div className="form-group">
+                    <label className="form-label">Ancho perfil 2 (mm)</label>
+                    <input type="number" className="form-input" placeholder="0"
+                    value={ancho2} onChange={e => setAncho2(e.target.value)} />
+                </div>
+                </div>
+                {ancho1 && ancho2 && ((parseFloat(ancho1) < parseFloat(ancho)) && (parseFloat(ancho2) < parseFloat(ancho))) && ((parseFloat(ancho1) + parseFloat(ancho2)) < parseFloat(ancho)) &&  (
+
+                <div className="form-group">
+                    <label className="form-label">Luz interior (mm) — calculada</label>
+                    <input type="number" className="form-input" value={luz} readOnly
+                    style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                </div>
+                
+                )}
+
+                {hileras > 1 && ((parseFloat(ancho1) > parseFloat(ancho)) || (parseFloat(ancho2) > parseFloat(ancho))) && (
+                    console.log('luz:', luz, 'ancho:', ancho),
+                <p style={{ fontSize: 13, color: '#e57373' }}>
+                    El ancho de los perfiles excede el ancho total del perfil
+                </p>
+                )}
+
+                {hileras > 1 && ((parseFloat(ancho1) + parseFloat(ancho2)) > ancho) && (
+                    console.log('luz:', luz, 'ancho:', ancho),
+                <p style={{ fontSize: 13, color: '#e57373' }}>
+                    La suma del ancho de los perfiles excede el ancho total del perfil
+                </p>
+                )}
+                
+            </>
+            ) : (
+              <span></span>
+            )}
+          
 
                 {hileras > 1 && !ancho && (
                     <p style={{ fontSize: 13, color: '#e57373' }}>
