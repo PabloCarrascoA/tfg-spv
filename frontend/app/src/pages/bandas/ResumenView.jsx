@@ -160,11 +160,11 @@ function ResumenView() {
             <p className="resumen-seccion-titulo">3. Perfiles Transversales</p>
             {resultado.codigo_perfilT ? (
               <ul className="resumen-lista">
-                <li>Perfil: {resultado.codigo_perfilT}</li>
+                <li>Perfil: {state.perfilT?.tipoPerfilT}</li>
                 <li>Nº perfiles: {resultado.n_perfilesT}</li>
                 <li>Color del perfil: {state.perfilT?.color}</li>
                 <li>Ancho del perfil: {resultado.ancho_perfilT} mm</li>
-                <li>Distancia paso: {state.perfilT.distancia} mm</li>
+                {state.perfilT.distancia && <li>Distancia paso: {state.perfilT.distancia} mm</li>}
                 <li>Margen lateral: {resultado.margen_lateral} mm</li>
                 <li>Nº hileras: {resultado.n_hileras}</li>
                 {resultado.n_hileras > 1 && <>

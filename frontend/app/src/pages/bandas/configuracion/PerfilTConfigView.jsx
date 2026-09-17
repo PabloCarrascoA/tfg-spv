@@ -25,6 +25,7 @@ function PerfilTConfigView() {
   const [margen, setMargen]             = useState('')
   const [luz, setLuz]                   = useState('')
   const [identico, setIdentico]         = useState(true)
+  const [centrado, setCentrado]         = useState(true)
   const [ancho1, setAncho1]             = useState('')
   const [ancho2, setAncho2]             = useState('')
   const [comentarios, setComentarios]   = useState('')
@@ -72,13 +73,14 @@ function PerfilTConfigView() {
 
     useEffect(() => {
     if (identico) return
+    if (centrado !== true) return
     if (!ancho || !ancho1 || !ancho2) return
 
     const luzCalculada = parseFloat(ancho) - parseFloat(ancho1) - parseFloat(ancho2)
     if (luzCalculada >= 0) {
         setLuz(String(luzCalculada))
     }
-    }, [ancho1, ancho2, ancho, identico])
+    }, [ancho1, ancho2, ancho, identico, centrado])
 
     const editando = useRef(null)
     const anchoBanda = parseFloat(state.banda?.ancho) || null
@@ -130,11 +132,24 @@ function PerfilTConfigView() {
 
     }, [hileras])
 
+  
+    useEffect(() => {
+      setCentrado(null)
+    }, [hileras, identico])
+
+     useEffect(() => {
+      setLuz('')
+    }, [centrado])
+
 
   function handleSiguiente() {
 
     if (!codigoPerfil) {
       return alert('Asegúrese de haber seleccionado un código de perfil')
+    }
+
+    if (!color) {
+      return alert('¡Acuérdese de elegir un color para el perfil!')
     }
 
     // setDistancia(distancia.toFixed(2))
@@ -151,6 +166,7 @@ function PerfilTConfigView() {
             margen,
             hileras,
             identico,
+            centrado,
             ancho1,
             ancho2,
             luz,
@@ -323,100 +339,147 @@ function PerfilTConfigView() {
 
             )}
 
-            {(identico && hileras > 1 && ancho) ? (
-
-            // idéntico: usuario introduce luz, anchos se calculan solos
-            <>
+            {hileras > 1 && ancho && identico && (
+              // idéntico: usuario introduce luz, anchos se calculan solos
+              <>
                 <div className="form-group">
-                <label className="form-label">Luz interior (mm)</label>
-                <input type="number" className="form-input" placeholder="0"
+                  <label className="form-label">Luz interior (mm)</label>
+                  <input type="number" className="form-input" placeholder="0"
                     value={luz} onChange={e => setLuz(e.target.value)} />
                 </div>
-                {luz && (parseFloat(luz) < parseFloat(ancho)) && (luz < (ancho / (hileras - 1))) &&(
-                <div className="form-row">
+                {luz && (parseFloat(luz) < parseFloat(ancho)) && (luz < (ancho / (hileras - 1))) && (
+                  <div className="form-row">
                     <div className="form-group">
-                    <label className="form-label">Ancho perfil {hileras < 3 && (
-                      <span>1</span>
-                    )} (mm) — calculado</label>
-                    <input type="number" className="form-input" value={ancho1} readOnly
+                      <label className="form-label">Ancho perfil {hileras < 3 && <span>1</span>} (mm) — calculado</label>
+                      <input type="number" className="form-input" value={ancho1} readOnly
                         style={{ background: '#f5f6f8', color: '#6b7280' }} />
-                        {console.log('ancho1 calculado:', ancho1)}
                     </div>
                     {hileras < 3 && (
                       <div className="form-group">
                         <label className="form-label">Ancho perfil 2 (mm) — calculado</label>
                         <input type="number" className="form-input" value={ancho2} readOnly
-                            style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                          style={{ background: '#f5f6f8', color: '#6b7280' }} />
                       </div>
                     )}
-                    
-                </div>
+                  </div>
                 )}
 
-                {hileras > 1 && (parseFloat(luz) >= parseFloat(ancho)) && (
-                    console.log('luz:', luz, 'ancho:', ancho),
-                <p style={{ fontSize: 13, color: '#e57373' }}>
+                {parseFloat(luz) >= parseFloat(ancho) && (
+                  <p style={{ fontSize: 13, color: '#e57373' }}>
                     El ancho de la luz excede o es igual al ancho total del perfil
-                </p>
+                  </p>
                 )}
 
-                {hileras > 1 && (luz >= (ancho / (hileras - 1))) && (
+                {luz >= (ancho / (hileras - 1)) && (
                   <p style={{ fontSize: 13, color: '#e57373' }}>
                     El ancho de la luz introducido es demasiado grande, no es compatible con el número actual de hileras
-                </p>
+                  </p>
                 )}
+              </>
+            )}
 
-            </>
-            ) : (hileras > 1 && ancho) ? (
-            // no idéntico: usuario introduce ancho1 y ancho2, luz se calcula sola
-            <>
+            {hileras > 1 && ancho && !identico && (
+              // no idéntico: usuario introduce ancho1 y ancho2 primero
+              <>
                 <div className="form-row">
-                <div className="form-group">
+                  <div className="form-group">
                     <label className="form-label">Ancho perfil 1 (mm)</label>
                     <input type="number" className="form-input" placeholder="0"
-                    value={ancho1} onChange={e => setAncho1(e.target.value)} />
-                </div>
-                <div className="form-group">
+                      value={ancho1} onChange={e => setAncho1(e.target.value)} />
+                  </div>
+                  <div className="form-group">
                     <label className="form-label">Ancho perfil 2 (mm)</label>
                     <input type="number" className="form-input" placeholder="0"
-                    value={ancho2} onChange={e => setAncho2(e.target.value)} />
+                      value={ancho2} onChange={e => setAncho2(e.target.value)} />
+                  </div>
                 </div>
-                </div>
-                {ancho1 && ancho2 && ((parseFloat(ancho1) < parseFloat(ancho)) && (parseFloat(ancho2) < parseFloat(ancho))) && ((parseFloat(ancho1) + parseFloat(ancho2)) < parseFloat(ancho)) &&  (
 
-                <div className="form-group">
-                    <label className="form-label">Luz interior (mm) — calculada</label>
-                    <input type="number" className="form-input" value={luz} readOnly
-                    style={{ background: '#f5f6f8', color: '#6b7280' }} />
-                </div>
-                
-                )}
-
-                {hileras > 1 && ((parseFloat(ancho1) > parseFloat(ancho)) || (parseFloat(ancho2) > parseFloat(ancho))) && (
-                    console.log('luz:', luz, 'ancho:', ancho),
-                <p style={{ fontSize: 13, color: '#e57373' }}>
+                {((parseFloat(ancho1) > parseFloat(ancho)) || (parseFloat(ancho2) > parseFloat(ancho))) && (
+                  <p style={{ fontSize: 13, color: '#e57373' }}>
                     El ancho de los perfiles excede el ancho total del perfil
-                </p>
+                  </p>
                 )}
 
-                {hileras > 1 && ((parseFloat(ancho1) + parseFloat(ancho2)) > ancho) && (
-                    console.log('luz:', luz, 'ancho:', ancho),
-                <p style={{ fontSize: 13, color: '#e57373' }}>
-                    La suma del ancho de los perfiles excede el ancho total del perfil
-                </p>
+                {((parseFloat(ancho1) + parseFloat(ancho2)) > (parseFloat(ancho) - 2 * (parseFloat(margen)))) && (
+                  <p style={{ fontSize: 13, color: '#e57373' }}>
+                    La suma del ancho de los perfiles excede el ancho total del perfil más sus márgenes laterales.
+                  </p>
                 )}
-                
-            </>
-            ) : (
-              <span></span>
+
+                {((parseFloat(ancho1) + parseFloat(ancho2)) === parseFloat(ancho)) && (
+                  <p style={{ fontSize: 13, color: '#e57373' }}>
+                    La suma del ancho de los perfiles no da margen para añadir la interrupción.
+                  </p>
+                )}
+
+                {ancho1 && ancho2 &&
+                  (parseFloat(ancho1) < parseFloat(ancho)) &&
+                  (parseFloat(ancho2) < parseFloat(ancho)) &&
+                  ((parseFloat(ancho1) + parseFloat(ancho2)) < parseFloat(ancho)) && (
+
+                  // pregunta si van centrados
+                  <>
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label className="form-label">¿Los perfiles van centrados?</label>
+                        <div className="radio-group">
+                          <label className="radio-label">
+                            <input type="radio" name="centrado" checked={centrado === true}
+                              onChange={() => setCentrado(true)} />
+                            Sí
+                          </label>
+                          <label className="radio-label">
+                            <input type="radio" name="centrado" checked={centrado === false}
+                              onChange={() => setCentrado(false)} />
+                            No
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {centrado === true && (parseFloat(luz) < parseFloat(ancho)) && (
+                      <div className="form-group">
+                        <label className="form-label">Luz interior (mm) — calculada</label>
+                        <input type="number" className="form-input" value={luz} readOnly
+                          style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                      </div>
+                    )}
+
+
+                    {centrado === false && (
+                      <div className="form-group">
+                        <label className="form-label">Luz interior (mm)</label>
+                        <input type="number" className="form-input" placeholder="0"
+                          value={luz} onChange={e => setLuz(e.target.value)} />
+                      </div>
+                    )}
+
+                    {(parseFloat(luz) > (parseFloat(ancho) - 2 * parseFloat(margen) - parseFloat(ancho1) - parseFloat(ancho2)) ) && (
+                      <p style={{ fontSize: 13, color: '#e57373' }}>
+                        La luz introducida es mayor a la suma de los perfiles y márgenes.
+                      </p>
+                    )}
+
+                    {console.log("ancho:", ancho, "margen:", margen, "ancho1:", ancho1, "ancho2:", ancho2)}
+                    {console.log("LUZ DEBUG:", luz)}
+
+                    {(parseFloat(luz) > parseFloat(ancho)) && (
+                      <p style={{ fontSize: 13, color: '#e57373' }}>
+                        La luz introducida es mayor al ancho total de la banda.
+                      </p>
+                    )}
+
+                  </>
+                )}
+              </>
             )}
           
 
-                {hileras > 1 && !ancho && (
-                    <p style={{ fontSize: 13, color: '#e57373' }}>
-                        Introduce primero el ancho del perfil para calcular las hileras
-                    </p>
-                    )}
+            {hileras > 1 && !ancho && (
+                <p style={{ fontSize: 13, color: '#e57373' }}>
+                    Introduce primero el ancho del perfil para calcular las hileras
+                </p>
+                )}
 
             <div className="form-group">
               <label className="form-label">Comentarios</label>
