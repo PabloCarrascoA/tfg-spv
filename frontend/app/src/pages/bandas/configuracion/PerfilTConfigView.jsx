@@ -28,6 +28,22 @@ function PerfilTConfigView() {
   const [centrado, setCentrado]         = useState(true)
   const [ancho1, setAncho1]             = useState('')
   const [ancho2, setAncho2]             = useState('')
+
+  // TRESBOLILLO -> 2 HILERAS DE MOMENTO
+  const [tresbolillo, setTresbolillo]   = useState(false)
+  const [hilerasT, setHilerasT]         = useState(1)
+
+  const [anchoPerfH1, setAnchoPerfH1]   = useState('')
+  const [pasoH1, setPasoH1]             = useState('')
+  const [margenIzqH1, setMargenIzqH1]   = useState('')
+  const [margenDerH1, setMargenDerH1]   = useState('')
+
+  const [anchoPerfH2, setAnchoPerfH2]   = useState('')
+  const [pasoH2, setPasoH2]             = useState('')
+  const [margenIzqH2, setMargenIzqH2]   = useState('')
+  const [margenDerH2, setMargenDerH2]   = useState('')
+
+
   const [comentarios, setComentarios]   = useState('')
 
   const [color, setColor] = useState('')
@@ -137,10 +153,6 @@ function PerfilTConfigView() {
       setCentrado(null)
     }, [hileras, identico])
 
-     useEffect(() => {
-      setLuz('')
-    }, [centrado])
-
 
   function handleSiguiente() {
 
@@ -167,6 +179,7 @@ function PerfilTConfigView() {
             hileras,
             identico,
             centrado,
+            tresbolillo,
             ancho1,
             ancho2,
             luz,
@@ -400,7 +413,7 @@ function PerfilTConfigView() {
                   </p>
                 )}
 
-                {((parseFloat(ancho1) + parseFloat(ancho2)) > (parseFloat(ancho) - 2 * (parseFloat(margen)))) && (
+                {((parseFloat(ancho1) + parseFloat(ancho2)) > (parseFloat(anchoBanda) - 2 * (parseFloat(margen)))) && (
                   <p style={{ fontSize: 13, color: '#e57373' }}>
                     La suma del ancho de los perfiles excede el ancho total del perfil más sus márgenes laterales.
                   </p>
@@ -430,7 +443,7 @@ function PerfilTConfigView() {
                           </label>
                           <label className="radio-label">
                             <input type="radio" name="centrado" checked={centrado === false}
-                              onChange={() => setCentrado(false)} />
+                              onChange={() => {setCentrado(false); setLuz('')}} />
                             No
                           </label>
                         </div>
@@ -454,7 +467,7 @@ function PerfilTConfigView() {
                       </div>
                     )}
 
-                    {(parseFloat(luz) > (parseFloat(ancho) - 2 * parseFloat(margen) - parseFloat(ancho1) - parseFloat(ancho2)) ) && (
+                    {(parseFloat(luz) > (parseFloat(anchoBanda) - 2 * parseFloat(margen) - parseFloat(ancho1) - parseFloat(ancho2)) ) && (
                       <p style={{ fontSize: 13, color: '#e57373' }}>
                         La luz introducida es mayor a la suma de los perfiles y márgenes.
                       </p>
