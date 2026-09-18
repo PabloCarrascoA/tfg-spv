@@ -624,7 +624,7 @@ function PerfilTConfigView() {
                 )}
 
                 {tresbolillo === true && (
-                  <div className="form-group">
+                  <>
 
                     <div className="form-row">
                       <div className="form-group">
@@ -653,28 +653,34 @@ function PerfilTConfigView() {
                         </div>
 
                         {nPerfilesH1 > 1 && (
-                          <div className="form-group">
-                            <label className="form-label">Paso entre perfiles (mm)</label>
-                            <input
-                              type="number"
-                              className="form-input"
-                              value={pasoH1}
-                              readOnly
-                              style={{ background: '#f5f6f8', color: '#6b7280' }}
-                            />
+                          <div className="form-row">
+                            <div className="form-group">
+                              <label className="form-label">Paso entre perfiles (mm)</label>
+                              <input
+                                type="number"
+                                className="form-input"
+                                value={pasoH1}
+                                readOnly
+                                style={{ background: '#f5f6f8', color: '#6b7280' }}
+                              />
+                            </div>
                           </div>
+                          
                         )}
 
-                        <div className="form-group">
-                          <label className="form-label">Ancho del perfil (mm)</label>
-                          <input
-                            type="number"
-                            className="form-input"
-                            placeholder="0"
-                            value={anchoPerfH1}
-                            onChange={e => setAnchoPerfH1(e.target.value)}
-                          />
+                        <div className="form-row">
+                          <div className="form-group">
+                              <label className="form-label">Ancho del perfil (mm)</label>
+                              <input
+                                type="number"
+                                className="form-input"
+                                placeholder="0"
+                                value={anchoPerfH1}
+                                onChange={e => setAnchoPerfH1(e.target.value)}
+                              />
+                          </div>
                         </div>
+                        
 
                         <div className="form-row">
                           <div className="form-group">
@@ -765,7 +771,7 @@ function PerfilTConfigView() {
                       </>
                     )}
 
-                  </div>
+                 </>
                 )}
 
                 <div className="form-group">
