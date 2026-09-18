@@ -291,10 +291,21 @@ function PerfilTConfigView() {
             hileras,
             identico,
             centrado,
-            tresbolillo,
             ancho1,
             ancho2,
             luz,
+            tresbolillo,
+            hilerasT,
+            anchoPerfH1,
+            pasoH1,
+            margenIzqH1,
+            margenDerH1,
+            nPerfilesH1,
+            anchoPerfH2,
+            pasoH2,
+            margenIzqH2,
+            margenDerH2,
+            nPerfilesH2,
             comentarios,
             color,
             tipoPerfilT
@@ -399,7 +410,7 @@ function PerfilTConfigView() {
                       */}
                       
                     </div>
-                    
+
                     {cantidad > 1 && (
                       <div className="form-group">
                         <label className="form-label">Paso entre perfiles (mm)</label>
