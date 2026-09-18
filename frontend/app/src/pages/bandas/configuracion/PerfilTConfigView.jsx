@@ -37,11 +37,14 @@ function PerfilTConfigView() {
   const [pasoH1, setPasoH1]             = useState('')
   const [margenIzqH1, setMargenIzqH1]   = useState('')
   const [margenDerH1, setMargenDerH1]   = useState('')
+  const [nPerfilesH1, setNPerfilesH1] = useState(1)
+
 
   const [anchoPerfH2, setAnchoPerfH2]   = useState('')
   const [pasoH2, setPasoH2]             = useState('')
   const [margenIzqH2, setMargenIzqH2]   = useState('')
   const [margenDerH2, setMargenDerH2]   = useState('')
+  const [nPerfilesH2, setNPerfilesH2] = useState(1)
 
 
   const [comentarios, setComentarios]   = useState('')
@@ -64,7 +67,7 @@ function PerfilTConfigView() {
     console.log('Tipo del perfil seleccionado:', perfilSeleccionado?.tipo)
   }
 
-  // --- cargar perfiles transversales al montar ---
+  // CARGAR PERFILEST DE LA BASE DE DATOS
 
   useEffect(() => {
     getPerfilesTransversales()
@@ -72,7 +75,9 @@ function PerfilTConfigView() {
       .catch(err => console.error('Error cargando perfiles transversales:', err))
   }, [])
 
-  // cuando es idéntico: el usuario controla `luz`, se calculan ancho1 y ancho2
+  // ---------------- MANEJO DE PERRFILES IDÉNTICOS Y NO IDÉNTICOS (PERFILET NORMAL) ----- 
+
+  // cuando es idéntico el usuario controla luz, se calculan ancho1 y ancho2
 
     useEffect(() => {
     if (!identico) return
@@ -85,7 +90,7 @@ function PerfilTConfigView() {
     }
     }, [luz, ancho, identico])
 
-    // cuando no es idéntico: el usuario controla ancho1 y ancho2, se calcula luz
+    // cuando no es idéntico el usuario controla ancho1 y ancho2, se calcula luz
 
     useEffect(() => {
     if (identico) return
@@ -97,6 +102,8 @@ function PerfilTConfigView() {
         setLuz(String(luzCalculada))
     }
     }, [ancho1, ancho2, ancho, identico, centrado])
+
+    // -----------------------------------------------------------------------------------
 
     const editando = useRef(null)
     const anchoBanda = parseFloat(state.banda?.ancho) || null
@@ -137,6 +144,8 @@ function PerfilTConfigView() {
       setDistancia(paso.toFixed(2))  
     }, [cantidad, state.banda?.longitud])
 
+    // RESET DE LOS ANCHOS Y LA LUZ SI SE CAMBIA EL Nº DE HILERAS (PERFILT NORMAL) 
+
     useEffect(() => {
       if (hileras > 2) {
         setIdentico(true)
@@ -152,6 +161,109 @@ function PerfilTConfigView() {
     useEffect(() => {
       setCentrado(null)
     }, [hileras, identico])
+
+    // RESET DE LOS VALORES GLOBALES SI SE CAMBIA DE TRESBOLILLO A NORMAL
+
+    useEffect(() => {
+      if (tresbolillo === true) {
+        setAncho('')
+        setCantidad(1)
+        setMargen('')
+        setHileras(1)
+        setIdentico(true)
+        setCentrado(null)
+        setAncho1('')
+        setAncho2('')
+        setLuz('')
+      } else if (tresbolillo === false) {
+        setAnchoPerfH1('')
+        setPasoH1('')
+        setMargenIzqH1('')
+        setMargenDerH1('')
+        setAnchoPerfH2('')
+        setPasoH2('')
+        setMargenIzqH2('')
+        setMargenDerH2('')
+      }
+    }, [tresbolillo])
+
+    // RESET DE LOS VALORES SI SE CAMBIA EL Nº DE HILERAS (PERFILT TRESBOLILLO)
+
+    useEffect(() => {
+      if (hilerasT === 1) {
+        setNPerfilesH2(1)
+        setAnchoPerfH2('')
+        setPasoH2('')
+        setMargenIzqH2('')
+        setMargenDerH2('')
+      }
+    }, [hilerasT])
+
+    // CÁLCULO AUTOMÁTICO DE LOS PASOS ENTRE PERFILES (PERFILT TRESBOLILLO) 
+
+    useEffect(() => {
+      const largo = parseFloat(state.banda?.longitud)
+      if (!largo || nPerfilesH1 <= 1) {
+        setPasoH1('')
+        return
+      }
+      setPasoH1((largo / nPerfilesH1).toFixed(2))
+    }, [nPerfilesH1, state.banda?.longitud])
+
+    useEffect(() => {
+      const largo = parseFloat(state.banda?.longitud)
+      if (!largo || nPerfilesH2 <= 1) {
+        setPasoH2('')
+        return
+      }
+      setPasoH2((largo / nPerfilesH2).toFixed(2))
+    }, [nPerfilesH2, state.banda?.longitud])
+
+    // CÁLCULO AUTOMÁTICO DE LOS MÁRGENES LATERALES SEGÚN EL ANCHO (PERFILT TRESBOLILLO)
+
+    function calcularMargenOpuesto(valorEditado, anchoPerfil) {
+      const v = parseFloat(valorEditado)
+      const ap = parseFloat(anchoPerfil)
+
+      if (Number.isNaN(v) || Number.isNaN(ap) || !anchoBanda) return ''
+
+      const opuesto = anchoBanda - ap - v
+      return opuesto >= 0 ? String(opuesto) : ''
+    }
+
+    function handleMargenIzqH1Change(value) {
+      setMargenIzqH1(value)
+      setMargenDerH1(calcularMargenOpuesto(value, anchoPerfH1))
+    }
+
+    function handleMargenDerH1Change(value) {
+      setMargenDerH1(value)
+      setMargenIzqH1(calcularMargenOpuesto(value, anchoPerfH1))
+    }
+
+    function handleMargenIzqH2Change(value) {
+      setMargenIzqH2(value)
+      setMargenDerH2(calcularMargenOpuesto(value, anchoPerfH2))
+    }
+
+    function handleMargenDerH2Change(value) {
+      setMargenDerH2(value)
+      setMargenIzqH2(calcularMargenOpuesto(value, anchoPerfH2))
+    }
+
+
+    // RESET DE MÁRGENES AL CAMBIAR EL ANCHO DEL PERFIL (PERFILT TRESBOLILLO)
+
+    useEffect(() => {
+      setMargenIzqH1('')
+      setMargenDerH1('')
+    }, [anchoPerfH1])
+
+    useEffect(() => {
+      setMargenIzqH2('')
+      setMargenDerH2('')
+    }, [anchoPerfH2])
+
 
 
   function handleSiguiente() {
@@ -258,252 +370,416 @@ function PerfilTConfigView() {
             </div>
           </div>
 
-            {cantidad > 1 && (
-              <div className="form-group">
-                <label className="form-label">Paso entre perfiles (mm)</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  value={distancia}
-                  readOnly                                        
-                  style={{ background: '#f5f6f8', color: '#6b7280' }}  // ← visualmente deshabilitado
-                />
-              </div>
-            )}
+          {!color && (
+            <p style={{ fontSize: 13, color: '#e57373' }}>
+              Selecciona primero un color para continuar con la configuración.
+            </p>
+          )}
 
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Ancho del perfil (mm)</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  placeholder="0"
-                  value={ancho}
-                  onChange={e => setAncho(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Margen lateral (mm)</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  placeholder="0"
-                  value={margen}
-                  onChange={e => setMargen(e.target.value)}
-                />
-              </div>
-            </div>
-
-            {parseFloat(ancho) > 1600 && (
-              <p style={{ fontSize: 13, color: '#e57373' }}>
-                El ancho de perfil no puede superar los 1600 mm
-              </p>
-            )}
-
-            {parseFloat(ancho) > anchoBanda && (
-              <p style={{ fontSize: 13, color: '#e57373' }}>
-                El ancho de perfil no puede ser mayor que el ancho de la banda ({anchoBanda} mm)
-              </p>
-            )}
-
-            {margen && anchoBanda && 2 * (parseFloat(margen)) > anchoBanda && (
-              <p style={{ fontSize: 13, color: '#e57373' }}>
-                La suma de ambos márgenes laterales no puede superar el ancho de la banda ({anchoBanda} mm)
-              </p>
-            )}
-
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Número de hileras</label>
-                <div className="counter">
-                  <button className="counter-btn" onClick={() => setHileras(h => Math.max(1, h - 1))}>−</button>
-                  <span className="counter-value">{hileras}</span>
-                  <button className="counter-btn" onClick={() => setHileras(h => h + 1)}>+</button>
-                </div>
-              </div>
-
-            </div>
-
-            {hileras > 2 && (
-              <p style={{ fontSize: 13, color: '#4a6f8a', textDecoration: 'underline' }}>
-                Para más de 2 hileras se asume que los perfiles resultantes son indénticos.
-              </p>
-            )}
-
-            {hileras == 2 && ancho && (
-
-              <div className="form-row">
-                <div className="form-group">
-                    <label className="form-label">¿Son los perfiles idénticos?</label>
-                    <div className="radio-group">
-                    <label className="radio-label">
-                        <input type="radio" name="identico" checked={identico === true}
-                        onChange={() => { setIdentico(true); setAncho1(''); setAncho2(''); setLuz('') }} />
-                        Sí
-                    </label>
-                    <label className="radio-label">
-                        <input type="radio" name="identico" checked={identico === false}
-                        onChange={() => { setIdentico(false); setAncho1(''); setAncho2(''); setLuz('') }} />
-                        No
-                    </label>
-                    </div>
-                </div>
-              </div>
-
-            )}
-
-            {hileras > 1 && ancho && identico && (
-              // idéntico: usuario introduce luz, anchos se calculan solos
-              <>
-                <div className="form-group">
-                  <label className="form-label">Luz interior (mm)</label>
-                  <input type="number" className="form-input" placeholder="0"
-                    value={luz} onChange={e => setLuz(e.target.value)} />
-                </div>
-                {luz && (parseFloat(luz) < parseFloat(ancho)) && (luz < (ancho / (hileras - 1))) && (
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label className="form-label">Ancho perfil {hileras < 3 && <span>1</span>} (mm) — calculado</label>
-                      <input type="number" className="form-input" value={ancho1} readOnly
-                        style={{ background: '#f5f6f8', color: '#6b7280' }} />
-                    </div>
-                    {hileras < 3 && (
-                      <div className="form-group">
-                        <label className="form-label">Ancho perfil 2 (mm) — calculado</label>
-                        <input type="number" className="form-input" value={ancho2} readOnly
-                          style={{ background: '#f5f6f8', color: '#6b7280' }} />
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {parseFloat(luz) >= parseFloat(ancho) && (
-                  <p style={{ fontSize: 13, color: '#e57373' }}>
-                    El ancho de la luz excede o es igual al ancho total del perfil
-                  </p>
-                )}
-
-                {luz >= (ancho / (hileras - 1)) && (
-                  <p style={{ fontSize: 13, color: '#e57373' }}>
-                    El ancho de la luz introducido es demasiado grande, no es compatible con el número actual de hileras
-                  </p>
-                )}
-              </>
-            )}
-
-            {hileras > 1 && ancho && !identico && (
-              // no idéntico: usuario introduce ancho1 y ancho2 primero
+           {color && (
               <>
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">Ancho perfil 1 (mm)</label>
-                    <input type="number" className="form-input" placeholder="0"
-                      value={ancho1} onChange={e => setAncho1(e.target.value)} />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Ancho perfil 2 (mm)</label>
-                    <input type="number" className="form-input" placeholder="0"
-                      value={ancho2} onChange={e => setAncho2(e.target.value)} />
+                    <label className="form-label">¿Los perfiles van al tresbolillo?</label>
+                    <div className="radio-group">
+                      <label className="radio-label">
+                        <input type="radio" name="tresbolillo" checked={tresbolillo === true}
+                          onChange={() => setTresbolillo(true)} />
+                        Sí
+                      </label>
+                      <label className="radio-label">
+                        <input type="radio" name="tresbolillo" checked={tresbolillo === false}
+                          onChange={() => setTresbolillo(false)} />
+                        No
+                      </label>
+                    </div>
                   </div>
                 </div>
 
-                {((parseFloat(ancho1) > parseFloat(ancho)) || (parseFloat(ancho2) > parseFloat(ancho))) && (
-                  <p style={{ fontSize: 13, color: '#e57373' }}>
-                    El ancho de los perfiles excede el ancho total del perfil
-                  </p>
-                )}
-
-                {((parseFloat(ancho1) + parseFloat(ancho2)) > (parseFloat(anchoBanda) - 2 * (parseFloat(margen)))) && (
-                  <p style={{ fontSize: 13, color: '#e57373' }}>
-                    La suma del ancho de los perfiles excede el ancho total del perfil más sus márgenes laterales.
-                  </p>
-                )}
-
-                {((parseFloat(ancho1) + parseFloat(ancho2)) === parseFloat(ancho)) && (
-                  <p style={{ fontSize: 13, color: '#e57373' }}>
-                    La suma del ancho de los perfiles no da margen para añadir la interrupción.
-                  </p>
-                )}
-
-                {ancho1 && ancho2 &&
-                  (parseFloat(ancho1) < parseFloat(ancho)) &&
-                  (parseFloat(ancho2) < parseFloat(ancho)) &&
-                  ((parseFloat(ancho1) + parseFloat(ancho2)) < parseFloat(ancho)) && (
-
-                  // pregunta si van centrados
+                {tresbolillo === false && (
                   <>
+                    {cantidad > 1 && (
+                      <div className="form-group">
+                        <label className="form-label">Paso entre perfiles (mm)</label>
+                        <input
+                          type="number"
+                          className="form-input"
+                          value={distancia}
+                          readOnly
+                          style={{ background: '#f5f6f8', color: '#6b7280' }}
+                        />
+                      </div>
+                    )}
+
                     <div className="form-row">
                       <div className="form-group">
-                        <label className="form-label">¿Los perfiles van centrados?</label>
-                        <div className="radio-group">
-                          <label className="radio-label">
-                            <input type="radio" name="centrado" checked={centrado === true}
-                              onChange={() => setCentrado(true)} />
-                            Sí
-                          </label>
-                          <label className="radio-label">
-                            <input type="radio" name="centrado" checked={centrado === false}
-                              onChange={() => {setCentrado(false); setLuz('')}} />
-                            No
-                          </label>
+                        <label className="form-label">Ancho del perfil (mm)</label>
+                        <input
+                          type="number"
+                          className="form-input"
+                          placeholder="0"
+                          value={ancho}
+                          onChange={e => setAncho(e.target.value)}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Margen lateral (mm)</label>
+                        <input
+                          type="number"
+                          className="form-input"
+                          placeholder="0"
+                          value={margen}
+                          onChange={e => setMargen(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    {parseFloat(ancho) > 1600 && (
+                      <p style={{ fontSize: 13, color: '#e57373' }}>
+                        El ancho de perfil no puede superar los 1600 mm
+                      </p>
+                    )}
+
+                    {parseFloat(ancho) > anchoBanda && (
+                      <p style={{ fontSize: 13, color: '#e57373' }}>
+                        El ancho de perfil no puede ser mayor que el ancho de la banda ({anchoBanda} mm)
+                      </p>
+                    )}
+
+                    {margen && anchoBanda && 2 * (parseFloat(margen)) > anchoBanda && (
+                      <p style={{ fontSize: 13, color: '#e57373' }}>
+                        La suma de ambos márgenes laterales no puede superar el ancho de la banda ({anchoBanda} mm)
+                      </p>
+                    )}
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label className="form-label">Número de hileras</label>
+                        <div className="counter">
+                          <button className="counter-btn" onClick={() => setHileras(h => Math.max(1, h - 1))}>−</button>
+                          <span className="counter-value">{hileras}</span>
+                          <button className="counter-btn" onClick={() => setHileras(h => h + 1)}>+</button>
                         </div>
                       </div>
                     </div>
 
-                    {centrado === true && (parseFloat(luz) < parseFloat(ancho)) && (
-                      <div className="form-group">
-                        <label className="form-label">Luz interior (mm) — calculada</label>
-                        <input type="number" className="form-input" value={luz} readOnly
-                          style={{ background: '#f5f6f8', color: '#6b7280' }} />
-                      </div>
-                    )}
-
-
-                    {centrado === false && (
-                      <div className="form-group">
-                        <label className="form-label">Luz interior (mm)</label>
-                        <input type="number" className="form-input" placeholder="0"
-                          value={luz} onChange={e => setLuz(e.target.value)} />
-                      </div>
-                    )}
-
-                    {(parseFloat(luz) > (parseFloat(anchoBanda) - 2 * parseFloat(margen) - parseFloat(ancho1) - parseFloat(ancho2)) ) && (
-                      <p style={{ fontSize: 13, color: '#e57373' }}>
-                        La luz introducida es mayor a la suma de los perfiles y márgenes.
+                    {hileras > 2 && (
+                      <p style={{ fontSize: 13, color: '#4a6f8a', textDecoration: 'underline' }}>
+                        Para más de 2 hileras se asume que los perfiles resultantes son indénticos.
                       </p>
                     )}
 
-                    {console.log("ancho:", ancho, "margen:", margen, "ancho1:", ancho1, "ancho2:", ancho2)}
-                    {console.log("LUZ DEBUG:", luz)}
-
-                    {(parseFloat(luz) > parseFloat(ancho)) && (
-                      <p style={{ fontSize: 13, color: '#e57373' }}>
-                        La luz introducida es mayor al ancho total de la banda.
-                      </p>
+                    {hileras == 2 && ancho && (
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label className="form-label">¿Son los perfiles idénticos?</label>
+                          <div className="radio-group">
+                            <label className="radio-label">
+                              <input type="radio" name="identico" checked={identico === true}
+                                onChange={() => { setIdentico(true); setAncho1(''); setAncho2(''); setLuz('') }} />
+                              Sí
+                            </label>
+                            <label className="radio-label">
+                              <input type="radio" name="identico" checked={identico === false}
+                                onChange={() => { setIdentico(false); setAncho1(''); setAncho2(''); setLuz('') }} />
+                              No
+                            </label>
+                          </div>
+                        </div>
+                      </div>
                     )}
 
+                    {hileras > 1 && ancho && identico && (
+                      <>
+                        <div className="form-group">
+                          <label className="form-label">Luz interior (mm)</label>
+                          <input type="number" className="form-input" placeholder="0"
+                            value={luz} onChange={e => setLuz(e.target.value)} />
+                        </div>
+                        {luz && (parseFloat(luz) < parseFloat(ancho)) && (luz < (ancho / (hileras - 1))) && (
+                          <div className="form-row">
+                            <div className="form-group">
+                              <label className="form-label">Ancho perfil {hileras < 3 && <span>1</span>} (mm) — calculado</label>
+                              <input type="number" className="form-input" value={ancho1} readOnly
+                                style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                            </div>
+                            {hileras < 3 && (
+                              <div className="form-group">
+                                <label className="form-label">Ancho perfil 2 (mm) — calculado</label>
+                                <input type="number" className="form-input" value={ancho2} readOnly
+                                  style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {parseFloat(luz) >= parseFloat(ancho) && (
+                          <p style={{ fontSize: 13, color: '#e57373' }}>
+                            El ancho de la luz excede o es igual al ancho total del perfil
+                          </p>
+                        )}
+
+                        {luz >= (ancho / (hileras - 1)) && (
+                          <p style={{ fontSize: 13, color: '#e57373' }}>
+                            El ancho de la luz introducido es demasiado grande, no es compatible con el número actual de hileras
+                          </p>
+                        )}
+                      </>
+                    )}
+
+                    {hileras > 1 && ancho && !identico && (
+                      <>
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label className="form-label">Ancho perfil 1 (mm)</label>
+                            <input type="number" className="form-input" placeholder="0"
+                              value={ancho1} onChange={e => setAncho1(e.target.value)} />
+                          </div>
+                          <div className="form-group">
+                            <label className="form-label">Ancho perfil 2 (mm)</label>
+                            <input type="number" className="form-input" placeholder="0"
+                              value={ancho2} onChange={e => setAncho2(e.target.value)} />
+                          </div>
+                        </div>
+
+                        {((parseFloat(ancho1) > parseFloat(ancho)) || (parseFloat(ancho2) > parseFloat(ancho))) && (
+                          <p style={{ fontSize: 13, color: '#e57373' }}>
+                            El ancho de los perfiles excede el ancho total del perfil
+                          </p>
+                        )}
+
+                        {((parseFloat(ancho1) + parseFloat(ancho2)) > (parseFloat(anchoBanda) - 2 * (parseFloat(margen)))) && (
+                          <p style={{ fontSize: 13, color: '#e57373' }}>
+                            La suma del ancho de los perfiles excede el ancho total del perfil más sus márgenes laterales.
+                          </p>
+                        )}
+
+                        {((parseFloat(ancho1) + parseFloat(ancho2)) === parseFloat(ancho)) && (
+                          <p style={{ fontSize: 13, color: '#e57373' }}>
+                            La suma del ancho de los perfiles no da margen para añadir la interrupción.
+                          </p>
+                        )}
+
+                        {ancho1 && ancho2 &&
+                          (parseFloat(ancho1) < parseFloat(ancho)) &&
+                          (parseFloat(ancho2) < parseFloat(ancho)) &&
+                          ((parseFloat(ancho1) + parseFloat(ancho2)) < parseFloat(ancho)) && (
+                          <>
+                            <div className="form-row">
+                              <div className="form-group">
+                                <label className="form-label">¿Los perfiles van centrados?</label>
+                                <div className="radio-group">
+                                  <label className="radio-label">
+                                    <input type="radio" name="centrado" checked={centrado === true}
+                                      onChange={() => setCentrado(true)} />
+                                    Sí
+                                  </label>
+                                  <label className="radio-label">
+                                    <input type="radio" name="centrado" checked={centrado === false}
+                                      onChange={() => { setCentrado(false); setLuz('') }} />
+                                    No
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+
+                            {centrado === true && (parseFloat(luz) < parseFloat(ancho)) && (
+                              <div className="form-group">
+                                <label className="form-label">Luz interior (mm) — calculada</label>
+                                <input type="number" className="form-input" value={luz} readOnly
+                                  style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                              </div>
+                            )}
+
+                            {centrado === false && (
+                              <div className="form-group">
+                                <label className="form-label">Luz interior (mm)</label>
+                                <input type="number" className="form-input" placeholder="0"
+                                  value={luz} onChange={e => setLuz(e.target.value)} />
+                              </div>
+                            )}
+
+                            {(parseFloat(luz) > (parseFloat(anchoBanda) - 2 * parseFloat(margen) - parseFloat(ancho1) - parseFloat(ancho2))) && (
+                              <p style={{ fontSize: 13, color: '#e57373' }}>
+                                La luz introducida es mayor a la suma de los perfiles y márgenes.
+                              </p>
+                            )}
+
+                            {(parseFloat(luz) > parseFloat(ancho)) && (
+                              <p style={{ fontSize: 13, color: '#e57373' }}>
+                                La luz introducida es mayor al ancho total de la banda.
+                              </p>
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+
+                    {hileras > 1 && !ancho && (
+                      <p style={{ fontSize: 13, color: '#e57373' }}>
+                        Introduce primero el ancho del perfil para calcular las hileras
+                      </p>
+                    )}
                   </>
                 )}
-              </>
-            )}
-          
 
-            {hileras > 1 && !ancho && (
-                <p style={{ fontSize: 13, color: '#e57373' }}>
-                    Introduce primero el ancho del perfil para calcular las hileras
-                </p>
+                {tresbolillo === true && (
+                  <div className="form-group">
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label className="form-label">Número de hileras</label>
+                        <div className="counter">
+                          <button className="counter-btn" onClick={() => setHilerasT(h => Math.max(1, h - 1))}>−</button>
+                          <span className="counter-value">{hilerasT}</span>
+                          <button className="counter-btn" onClick={() => setHilerasT(h => Math.min(2, h + 1))}>+</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {hilerasT >= 1 && (
+                      <>
+                        <p className="config-step-label">Hilera 1</p>
+
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label className="form-label">Número de perfiles</label>
+                            <div className="counter">
+                              <button className="counter-btn" onClick={() => setNPerfilesH1(n => Math.max(1, n - 1))}>−</button>
+                              <span className="counter-value">{nPerfilesH1}</span>
+                              <button className="counter-btn" onClick={() => setNPerfilesH1(n => n + 1)}>+</button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {nPerfilesH1 > 1 && (
+                          <div className="form-group">
+                            <label className="form-label">Paso entre perfiles (mm)</label>
+                            <input
+                              type="number"
+                              className="form-input"
+                              value={pasoH1}
+                              readOnly
+                              style={{ background: '#f5f6f8', color: '#6b7280' }}
+                            />
+                          </div>
+                        )}
+
+                        <div className="form-group">
+                          <label className="form-label">Ancho del perfil (mm)</label>
+                          <input
+                            type="number"
+                            className="form-input"
+                            placeholder="0"
+                            value={anchoPerfH1}
+                            onChange={e => setAnchoPerfH1(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label className="form-label">Margen izquierdo (mm)</label>
+                            <input
+                              type="number"
+                              className="form-input"
+                              placeholder="0"
+                              value={margenIzqH1}
+                              onChange={e => handleMargenIzqH1Change(e.target.value)}
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label className="form-label">Margen derecho (mm)</label>
+                            <input
+                              type="number"
+                              className="form-input"
+                              placeholder="0"
+                              value={margenDerH1}
+                              onChange={e => handleMargenDerH1Change(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {hilerasT === 2 && (
+                      <>
+                        <p className="config-step-label">Hilera 2</p>
+
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label className="form-label">Número de perfiles</label>
+                            <div className="counter">
+                              <button className="counter-btn" onClick={() => setNPerfilesH2(n => Math.max(1, n - 1))}>−</button>
+                              <span className="counter-value">{nPerfilesH2}</span>
+                              <button className="counter-btn" onClick={() => setNPerfilesH2(n => n + 1)}>+</button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {nPerfilesH2 > 1 && (
+                          <div className="form-group">
+                            <label className="form-label">Paso entre perfiles (mm)</label>
+                            <input
+                              type="number"
+                              className="form-input"
+                              value={pasoH2}
+                              readOnly
+                              style={{ background: '#f5f6f8', color: '#6b7280' }}
+                            />
+                          </div>
+                        )}
+
+                        <div className="form-group">
+                          <label className="form-label">Ancho del perfil (mm)</label>
+                          <input
+                            type="number"
+                            className="form-input"
+                            placeholder="0"
+                            value={anchoPerfH2}
+                            onChange={e => setAnchoPerfH2(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="form-row">
+                          <div className="form-group">
+                            <label className="form-label">Margen izquierdo (mm)</label>
+                            <input
+                              type="number"
+                              className="form-input"
+                              placeholder="0"
+                              value={margenIzqH2}
+                              onChange={e => handleMargenIzqH2Change(e.target.value)}
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label className="form-label">Margen derecho (mm)</label>
+                            <input
+                              type="number"
+                              className="form-input"
+                              placeholder="0"
+                              value={margenDerH2}
+                              onChange={e => handleMargenDerH2Change(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                  </div>
                 )}
 
-            <div className="form-group">
-              <label className="form-label">Comentarios</label>
-              <textarea
-                className="form-textarea"
-                placeholder="Comentarios"
-                rows={3}
-                value={comentarios}
-                onChange={e => setComentarios(e.target.value)}
-              />
-            </div>
+                <div className="form-group">
+                  <label className="form-label">Comentarios</label>
+                  <textarea
+                    className="form-textarea"
+                    placeholder="Comentarios"
+                    rows={3}
+                    value={comentarios}
+                    onChange={e => setComentarios(e.target.value)}
+                  />
+                </div>
+              </>
+            )}
 
           </div>
 
@@ -515,7 +791,29 @@ function PerfilTConfigView() {
 
         <div className="config-side-panel">
 
-          {hileras <= 1 ? (
+          {tresbolillo === true && hilerasT > 1 ? (
+            <div className="config-side-img-wrapper-perfilT config-perfilT-tresbolillo-wrapper-2">
+              <img
+                src="/images/sketch-perfilT-tresbolillo.svg"
+                alt="Esquema de perfil transversal al tresbolillo"
+                className="config-side-img"
+              />
+              {/* etiquetas del tresbolillo, pendientes de definir junto con los campos */}
+            </div>
+          ) : (
+
+          tresbolillo === true && hilerasT === 1 ? (
+            <div className="config-side-img-wrapper-perfilT config-perfilT-tresbolillo-wrapper-1">
+              <img
+                src="/images/sketch-perfilT-tresbolillo-1.svg"
+                alt="Esquema de perfil transversal al tresbolillo con una hilera"
+                className="config-side-img"
+              />
+              {/* etiquetas del tresbolillo, pendientes de definir junto con los campos */}
+            </div>
+
+          ) : (hileras <= 1 ? (
+
             <div className="config-side-img-wrapper-perfilT config-perfilT1-wrapper">
               <img
                 src="/images/sketch-perfilT-1.svg"
@@ -532,7 +830,9 @@ function PerfilTConfigView() {
                 {margen || '—'} mm
               </span>
             </div>
+
           ) : (
+
             <div className="config-side-img-wrapper-perfilT config-perfilT2-wrapper">
               <img
                 src="/images/sketch-perfilT-2.svg"
@@ -558,7 +858,11 @@ function PerfilTConfigView() {
                 {ancho2 || '—'} mm
               </span>
             </div>
-          )}
+            
+          )
+        )
+          )
+            }
 
         </div>
 
