@@ -334,24 +334,6 @@ function PerfilTConfigView() {
                   placeholder = "Busqueda por código o tipo de perfil"
                 />
               </div>
-              <div className="form-group">
-                <label className="form-label">Número de perfiles</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  placeholder="1"
-                  value={cantidad}
-                  onChange={e => setCantidad(e.target.value)}
-                />
-                {/* VERSIÓN CON CONTADOR
-                  <div className="counter">
-                  <button className="counter-btn" onClick={() => setCantidad(c => Math.max(1, c - 1))}>−</button>
-                  <span className="counter-value">{cantidad}</span>
-                  <button className="counter-btn" onClick={() => setCantidad(c => c + 1)}>+</button>
-                </div>
-                */}
-                
-              </div>
             </div>
 
             <div className="form-row">
@@ -398,6 +380,26 @@ function PerfilTConfigView() {
 
                 {tresbolillo === false && (
                   <>
+                  
+                    <div className="form-group">
+                      <label className="form-label">Número de perfiles</label>
+                      <input
+                        type="number"
+                        className="form-input"
+                        placeholder="1"
+                        value={cantidad}
+                        onChange={e => setCantidad(e.target.value)}
+                      />
+                      {/* VERSIÓN CON CONTADOR
+                        <div className="counter">
+                        <button className="counter-btn" onClick={() => setCantidad(c => Math.max(1, c - 1))}>−</button>
+                        <span className="counter-value">{cantidad}</span>
+                        <button className="counter-btn" onClick={() => setCantidad(c => c + 1)}>+</button>
+                      </div>
+                      */}
+                      
+                    </div>
+                    
                     {cantidad > 1 && (
                       <div className="form-group">
                         <label className="form-label">Paso entre perfiles (mm)</label>
@@ -804,7 +806,32 @@ function PerfilTConfigView() {
                 alt="Esquema de perfil transversal al tresbolillo"
                 className="config-side-img"
               />
-              {/* etiquetas del tresbolillo, pendientes de definir junto con los campos */}
+              
+              <span className="config-perfilT-tresbolillo-label config-perfilT-tresbolillo-pasoH1">
+                {pasoH1 || '—'} mm
+              </span>
+
+              <span className="config-perfilT-tresbolillo-label config-perfilT-tresbolillo-margenDerH1">
+                {margenDerH1 || '—'} mm
+              </span>
+
+              <span className="config-perfilT-tresbolillo-label config-perfilT-tresbolillo-margenIzqH1">
+                {margenIzqH1|| '—'} mm
+              </span>
+
+
+              <span className="config-perfilT-tresbolillo-label config-perfilT-tresbolillo-pasoH2">
+                {pasoH2 || '—'} mm
+              </span>
+
+              <span className="config-perfilT-tresbolillo-label config-perfilT-tresbolillo-margenDerH2">
+                {margenDerH2 || '—'} mm
+              </span>
+
+              <span className="config-perfilT-tresbolillo-label config-perfilT-tresbolillo-margenIzqH2">
+                {margenIzqH2|| '—'} mm
+              </span>
+
             </div>
           ) : (
 
@@ -820,11 +847,11 @@ function PerfilTConfigView() {
                 {pasoH1 || '—'} mm
               </span>
 
-              <span className="config-perfilT-tresbolillo-label config-perfilT1-tresbolillo-margenDerH1">
+              <span className="config-perfilT-tresbolillo-label config-perfilT-tresbolillo-margenDerH1">
                 {margenDerH1 || '—'} mm
               </span>
 
-              <span className="config-perfilT-tresbolillo-label config-perfilT1--tresbolillo-margenIzqH1">
+              <span className="config-perfilT-tresbolillo-label config-perfilT-tresbolillo-margenIzqH1">
                 {margenIzqH1|| '—'} mm
               </span>
             </div>

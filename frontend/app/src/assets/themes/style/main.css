@@ -593,6 +593,47 @@ a {
   left: 22%;
 }
 
+/* - tresbolillo */
+
+.config-perfilT-tresbolillo-label {
+  position: absolute;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c4f6b;
+  text-align: center;
+  width: 90px;
+}
+
+.config-perfilT-tresbolillo-pasoH1 {
+  top: 26%;
+  left: 18.5%;
+}
+
+.config-perfilT-tresbolillo-margenDerH1 {
+  top: 8%;
+  left: 71%;
+}
+
+.config-perfilT-tresbolillo-margenIzqH1 {
+  top: 8%;
+  left: 21%;
+}
+
+.config-perfilT-tresbolillo-pasoH2 {
+  top: 36%;
+  left: 66.5%;
+}
+
+.config-perfilT-tresbolillo-margenDerH2 {
+  top: 55%;
+  left: 69%;
+}
+
+.config-perfilT-tresbolillo-margenIzqH2 {
+  top: 53.5%;
+  left: 18.5%;
+}
+
 /* --- panel lateral --> PERFORACIONES --- */
 
 .config-banda-perforaciones {
