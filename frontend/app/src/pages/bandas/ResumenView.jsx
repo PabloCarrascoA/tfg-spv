@@ -158,7 +158,8 @@ function ResumenView() {
           {/* 3. Perfiles Transversales */}
           <div className="resumen-seccion">
             <p className="resumen-seccion-titulo">3. Perfiles Transversales</p>
-            {resultado.codigo_perfilT ? (
+            {resultado.codigo_perfilT && state.perfilT?.tresbolillo === false ? (
+              
               <ul className="resumen-lista">
                 <li>Perfil: {state.perfilT?.tipoPerfilT}</li>
                 <li>Nº perfiles: {resultado.n_perfilesT}</li>
@@ -175,7 +176,17 @@ function ResumenView() {
                 <li>Precio perfiles: {resultado.precio_perfilT_final} €</li>
                 {state.perfilT?.comentarios && <li>Comentarios: {state.perfilT.comentarios}</li>}
               </ul>
-            ) : <NoConfigurado />}
+            ) : ( resultado.codigo_perfilT && state.perfilT?.tresbolillo === true ? (
+              <ul className="resumen-lista">
+                <li>Perfil: {state.perfilT?.tipoPerfilT}</li>
+                <li>Color del perfil: {state.perfilT?.color}</li>
+                <li>Resto del resumen del tresbolillo por configurar</li>
+              </ul>
+                
+            ) : (
+            <NoConfigurado />
+          )) 
+          }
           </div>
 
           {/* 4. Runer */}
