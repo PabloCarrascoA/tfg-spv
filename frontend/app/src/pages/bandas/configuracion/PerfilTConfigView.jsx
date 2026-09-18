@@ -639,7 +639,7 @@ function PerfilTConfigView() {
 
                     {hilerasT >= 1 && (
                       <>
-                        <p className="config-step-label">Hilera 1</p>
+                        <p className="config-step-label-t">Hilera 1</p>
 
                         <div className="form-row">
                           <div className="form-group">
@@ -703,7 +703,7 @@ function PerfilTConfigView() {
 
                     {hilerasT === 2 && (
                       <>
-                        <p className="config-step-label">Hilera 2</p>
+                        <p className="config-step-label-t">Hilera 2</p>
 
                         <div className="form-row">
                           <div className="form-group">
@@ -809,7 +809,18 @@ function PerfilTConfigView() {
                 alt="Esquema de perfil transversal al tresbolillo con una hilera"
                 className="config-side-img"
               />
-              {/* etiquetas del tresbolillo, pendientes de definir junto con los campos */}
+
+              <span className="config-perfilT-tresbolillo-label config-perfilT-tresbolillo-pasoH1">
+                {pasoH1 || '—'} mm
+              </span>
+
+              <span className="config-perfilT-tresbolillo-label config-perfilT1-tresbolillo-margenDerH1">
+                {margenDerH1 || '—'} mm
+              </span>
+
+              <span className="config-perfilT-tresbolillo-label config-perfilT1--tresbolillo-margenIzqH1">
+                {margenIzqH1|| '—'} mm
+              </span>
             </div>
 
           ) : (hileras <= 1 ? (

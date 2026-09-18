@@ -640,6 +640,14 @@ a {
   margin-bottom: 20px;
 }
 
+.config-step-label-t {
+  font-size: 15px;
+  font-weight: 500;
+  color: #4a6f8a;
+  margin-bottom: 10px;
+  margin-top: 15px;
+}
+
 /* ---- formulario ---- */
 .config-form {
   display: flex;
