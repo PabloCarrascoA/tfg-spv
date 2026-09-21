@@ -693,6 +693,13 @@ function PerfilTConfigView() {
                               />
                           </div>
                         </div>
+
+                        {parseFloat(anchoPerfH1) > parseFloat(anchoBanda) && (
+                          
+                          <p style={{ fontSize: 13, color: '#e57373' }}>
+                            El ancho del perfil introducido excede el ancho total de la banda
+                          </p>
+                        )}
                         
 
                         <div className="form-row">
@@ -717,6 +724,14 @@ function PerfilTConfigView() {
                             />
                           </div>
                         </div>
+
+                        {(margenIzqH1 === '' || margenDerH1 === '') && (
+                          <p style={{ fontSize: 13, color: '#e57373' }}>
+                            La suma del ancho del perfil más el margen introducido es superior al ancho total de la banda
+                          </p>
+                        )}
+
+                        {console.log("DEBUG alertas:", anchoBanda, "margen der:", margenDerH1, "margen izq", margenIzqH1, "anchoperf:", anchoPerfH1, ancho)}
                       </>
                     )}
 
@@ -759,6 +774,13 @@ function PerfilTConfigView() {
                           />
                         </div>
 
+                        {parseFloat(anchoPerfH2) > parseFloat(anchoBanda) && (
+                          
+                          <p style={{ fontSize: 13, color: '#e57373' }}>
+                            El ancho del perfil introducido excede el ancho total de la banda
+                          </p>
+                        )}
+
                         <div className="form-row">
                           <div className="form-group">
                             <label className="form-label">Margen izquierdo (mm)</label>
@@ -781,6 +803,13 @@ function PerfilTConfigView() {
                             />
                           </div>
                         </div>
+
+                        {(margenIzqH2 === '' || margenDerH2 === '') && (
+                          <p style={{ fontSize: 13, color: '#e57373' }}>
+                            La suma del ancho del perfil más el margen introducido es superior al ancho total de la banda
+                          </p>
+                        )}
+
                       </>
                     )}
 
