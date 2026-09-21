@@ -112,7 +112,7 @@ function ResumenView() {
                 <li>Cantidad: {resultado.cantidad_bandas}</li>
                 <li>Largo: {resultado.largo_banda} mm</li>
                 <li>Ancho: {state.banda?.ancho} mm</li>
-                <li>Empalme: {state.banda?.tipoEmpalme} — {state.banda?.subtipoEmpalme ?? 'Banda abierta'}</li>
+                <li style={{ marginBottom: '10px' }}>Empalme: {state.banda?.tipoEmpalme} — {state.banda?.subtipoEmpalme ?? 'Banda abierta'}</li>
                 <li>Precio banda: {resultado.precio_banda} €</li>
                 <li>Precio empalme: {resultado.precio_empalme} €</li>
                 {state.banda?.comentarios && <li>Comentarios: {state.banda.comentarios}</li>}
@@ -176,15 +176,36 @@ function ResumenView() {
                 <li>Precio perfiles: {resultado.precio_perfilT_final} €</li>
                 {state.perfilT?.comentarios && <li>Comentarios: {state.perfilT.comentarios}</li>}
               </ul>
+
             ) : ( resultado.codigo_perfilT && state.perfilT?.tresbolillo === true ? (
+
               <ul className="resumen-lista">
+                <li style={{ marginBottom: '10px', fontWeight: 'bold' }}>TRESBOLILLO</li>
                 <li>Perfil: {state.perfilT?.tipoPerfilT}</li>
                 <li>Color del perfil: {state.perfilT?.color}</li>
-                <li>Resto del resumen del tresbolillo por configurar</li>
+                <li style={{ marginBottom: '10px' }}>Número de hileras: {state.perfilT?.hilerasT}</li>
+                <li><span style={{ fontWeight: 'bold' }}>HILERA 1:</span></li>
+                <li>Ancho del perfil: {state.perfilT?.anchoPerfH1} mm</li>
+                <li>Número de perfiles: {state.perfilT?.nPerfilesH1}</li>
+                <li>Paso entre perfiles: {state.perfilT?.pasoH1} mm</li>
+                <li>Margen lateral izquierdo: {state.perfilT?.margenIzqH1} mm</li>
+                <li style={{ marginBottom: '10px' }}>Margen lateral derecho: {state.perfilT?.margenDerH1} mm</li>
+                {state.perfilT?.hilerasT && <>
+                  <li><span style={{ fontWeight: 'bold' }}>HILERA 2:</span></li>
+                  <li>Ancho del perfil: {state.perfilT?.anchoPerfH2} mm</li>
+                  <li>Número de perfiles: {state.perfilT?.nPerfilesH2}</li>
+                  <li>Paso entre perfiles: {state.perfilT?.pasoH2} mm</li>
+                  <li>Margen lateral izquierdo: {state.perfilT?.margenIzqH2} mm</li>
+                  <li style={{ marginBottom: '10px' }}>Margen lateral derecho: {state.perfilT?.margenDerH2} mm</li>
+                </>}
+                <li>Precio perfiles: {resultado.precio_perfilT_final} €</li>
+                {state.perfilT?.comentarios && <li>Comentarios: {state.perfilT.comentarios}</li>}
               </ul>
                 
             ) : (
+
             <NoConfigurado />
+
           )) 
           }
           </div>
@@ -198,7 +219,7 @@ function ResumenView() {
                 <li>Color del runer: {state.runer?.color}</li>
                 <li>Nº runers: {resultado.n_perfiles_runer}</li>
                 <li>Luz: {resultado.luz_runer} mm</li>
-                <li>Margen: {resultado.margen_runer} mm</li>
+                <li style={{ marginBottom: '10px' }}>Margen: {resultado.margen_runer} mm</li>
                 <li>Precio runer: {resultado.precio_runer_final} €</li>
                 {state.runer?.comentarios && <li>Comentarios: {state.runer.comentarios}</li>}
               </ul>
@@ -213,7 +234,7 @@ function ResumenView() {
                 <li>Agujeros por fila: {resultado.agujeros_x_fila}</li>
                 <li>Filas: {resultado.filas_x_agujero}</li>
                 <li>Diámetro: {resultado.diametro_perforacion} mm</li>
-                <li>Paso entre filas: {resultado.paso_filas} mm</li>
+                <li style={{ marginBottom: '10px' }}>Paso entre filas: {resultado.paso_filas} mm</li>
                 <li>Precio: {resultado.precio_perforaciones} €</li>
                 {state.perforaciones?.comentarios && <li>Comentarios: {state.perforaciones.comentarios}</li>}
               </ul>
@@ -230,7 +251,7 @@ function ResumenView() {
                 <li>Base: {resultado.base_onda} mm</li>
                 <li>Altura: {resultado.altura_onda} mm</li>
                 <li>Pisada: {resultado.pisada_onda} mm</li>
-                <li>Continua: {resultado.continuidad_onda ? 'Sí' : 'No'}</li>
+                <li style={{ marginBottom: '10px' }}>Continua: {resultado.continuidad_onda ? 'Sí' : 'No'}</li>
                 <li>Precio: {resultado.precio_ondas_final} €</li>
                 {state.onda?.comentarios && <li>Comentarios: {state.onda.comentarios}</li>}
               </ul>
