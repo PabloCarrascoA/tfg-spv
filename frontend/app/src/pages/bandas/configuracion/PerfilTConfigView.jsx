@@ -725,13 +725,19 @@ function PerfilTConfigView() {
                           </div>
                         </div>
 
-                        {(margenIzqH1 === '' || margenDerH1 === '') && (
+                        {(
+                          anchoPerfH1 !== '' && anchoBanda &&
+                          (
+                            (margenIzqH1 !== '' && parseFloat(anchoPerfH1) + parseFloat(margenIzqH1) > parseFloat(anchoBanda)) ||
+                            (margenDerH1 !== '' && parseFloat(anchoPerfH1) + parseFloat(margenDerH1) > parseFloat(anchoBanda))
+                          )
+                        ) && (
                           <p style={{ fontSize: 13, color: '#e57373' }}>
                             La suma del ancho del perfil más el margen introducido es superior al ancho total de la banda
                           </p>
                         )}
 
-                        {console.log("DEBUG alertas:", anchoBanda, "margen der:", margenDerH1, "margen izq", margenIzqH1, "anchoperf:", anchoPerfH1, ancho)}
+                        
                       </>
                     )}
 
@@ -804,7 +810,13 @@ function PerfilTConfigView() {
                           </div>
                         </div>
 
-                        {(margenIzqH2 === '' || margenDerH2 === '') && (
+                        {(
+                          anchoPerfH2 !== '' && anchoBanda &&
+                          (
+                            (margenIzqH2 !== '' && parseFloat(anchoPerfH2) + parseFloat(margenIzqH2) > parseFloat(anchoBanda)) ||
+                            (margenDerH2 !== '' && parseFloat(anchoPerfH2) + parseFloat(margenDerH2) > parseFloat(anchoBanda))
+                          )
+                        ) && (
                           <p style={{ fontSize: 13, color: '#e57373' }}>
                             La suma del ancho del perfil más el margen introducido es superior al ancho total de la banda
                           </p>
