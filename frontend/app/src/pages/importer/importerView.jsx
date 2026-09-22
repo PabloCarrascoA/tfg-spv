@@ -9,6 +9,7 @@ const SECCIONES = [
   { group: 'Material', value: 'empalmes',                label: 'Empalmes — Material'     },
   { group: 'Material', value: 'perfiles_longitudinales', label: 'PerfilL — Material'      },
   { group: 'Material', value: 'perfiles_transversales',  label: 'PerfilT — Material'      },
+  { group: 'Material', value: 'perfiles_transversales_tresbolillo', label: 'PerfilT Tresbolillo - Material'},
   { group: 'Material', value: 'runners',                 label: 'Runer — Material'        },
   { group: 'Material', value: 'ondas',                   label: 'Onda — Material'         },
   { group: 'Gestión',  value: 'clientes',                label: 'Clientes'                },

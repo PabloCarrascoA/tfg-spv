@@ -8,6 +8,7 @@ TABLAS_IMPORTABLES = {
     'empalmes':                'empalmes',
     'perfiles_longitudinales': 'perfiles_longitudinales',
     'perfiles_transversales':  'perfiles_transversales',
+    'perfiles_transversales_tresbolillo': 'perfiles_transversales_tresbolillo',
     'runners':                 'runners',
     'ondas':                   'ondas',
     # Gestión
@@ -20,6 +21,7 @@ CLAVES_DUPLICADOS = {
     'bandas': ['codigo'],
     'perfiles_longitudinales': ['codigo'],
     'perfiles_transversales': ['codigo'],
+    'perfiles_transversales_tresbolillo': ['codigo'],
     'runners': ['codigo'],
     'ondas': ['codigo'],
     'clientes': ['codigo'],
