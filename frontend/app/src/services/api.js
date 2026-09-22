@@ -25,6 +25,11 @@ export async function getPerfilesTransversales() {
   return res.json()
 }
 
+export async function getPerfilesTransversalesTresbolillo() {
+  const res = await fetch(`${BASE_URL}/configuracion/perfiles/transversales/tresbolillo`)
+  return res.json()
+}
+
 export async function getRuners() {
   const res = await fetch(`${BASE_URL}/configuracion/runers`)
   return res.json()

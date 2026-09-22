@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getPerfilesTransversales } from '../../../services/api'
+import { getPerfilesTransversalesTresbolillo } from '../../../services/api'
 import AutocompleteSelect from '../../../components/common/AutocompleteSelect'
 
 const COLORES = [
@@ -33,24 +34,30 @@ function PerfilTConfigView() {
   const [tresbolillo, setTresbolillo]   = useState(false)
   const [hilerasT, setHilerasT]         = useState(1)
 
+  const [codigoPerfilTH1, setCodigoPerfilTH1] = useState('')
   const [anchoPerfH1, setAnchoPerfH1]   = useState('')
   const [pasoH1, setPasoH1]             = useState('')
   const [margenIzqH1, setMargenIzqH1]   = useState('')
   const [margenDerH1, setMargenDerH1]   = useState('')
   const [nPerfilesH1, setNPerfilesH1] = useState(1)
+  const [tipoPerfilTH1, setTipoPerfilTH1] = useState('')
+  const [colorH1, setColorH1] = useState('')
 
 
+  const [codigoPerfilTH2, setCodigoPerfilTH2] = useState('')
   const [anchoPerfH2, setAnchoPerfH2]   = useState('')
   const [pasoH2, setPasoH2]             = useState('')
   const [margenIzqH2, setMargenIzqH2]   = useState('')
   const [margenDerH2, setMargenDerH2]   = useState('')
   const [nPerfilesH2, setNPerfilesH2] = useState(1)
+  const [tipoPerfilTH2, setTipoPerfilTH2] = useState('')
+  const [colorH2, setColorH2] = useState('')
 
 
   const [comentarios, setComentarios]   = useState('')
 
   const [color, setColor] = useState('')
-  const [tipoPerfilT, setTipoPerfil] = useState('')
+  const [tipoPerfilT, setTipoPerfil] = useState('')  
 
   // --- datos de la API ---
 
@@ -73,6 +80,15 @@ function PerfilTConfigView() {
     getPerfilesTransversales()
       .then(data => setPerfilesT(data))
       .catch(err => console.error('Error cargando perfiles transversales:', err))
+  }, [])
+
+
+  const [perfilesTTresbolillo, setPerfilesTTresbolillo] = useState([])
+
+  useEffect(() => {
+    getPerfilesTransversalesTresbolillo()
+      .then(data => setPerfilesTTresbolillo(data))
+      .catch(err => console.error('Error cargando perfiles transversales tresbolillo:', err))
   }, [])
 
   // ---------------- MANEJO DE PERRFILES IDÉNTICOS Y NO IDÉNTICOS (PERFILET NORMAL) ----- 
@@ -176,10 +192,16 @@ function PerfilTConfigView() {
         setAncho2('')
         setLuz('')
       } else if (tresbolillo === false) {
+        setCodigoPerfilTH1('')
+        setTipoPerfilTH1('')
+        setColorH1('')
         setAnchoPerfH1('')
         setPasoH1('')
         setMargenIzqH1('')
         setMargenDerH1('')
+        setCodigoPerfilTH2('')
+        setTipoPerfilTH2('')
+        setColorH2('')
         setAnchoPerfH2('')
         setPasoH2('')
         setMargenIzqH2('')
@@ -192,6 +214,9 @@ function PerfilTConfigView() {
     useEffect(() => {
       if (hilerasT === 1) {
         setNPerfilesH2(1)
+        setCodigoPerfilTH2('')
+        setTipoPerfilTH2('')
+        setColorH2('')
         setAnchoPerfH2('')
         setPasoH2('')
         setMargenIzqH2('')
@@ -295,6 +320,12 @@ function PerfilTConfigView() {
             ancho2,
             luz,
             tresbolillo,
+            codigoPerfilTH1,
+            tipoPerfilTH1,
+            colorH1,
+            codigoPerfilTH2,
+            tipoPerfilTH2,
+            colorH2,
             hilerasT,
             anchoPerfH1,
             pasoH1,
@@ -330,46 +361,14 @@ function PerfilTConfigView() {
 
           <div className="config-form">
 
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Código de perfil</label>
-                <AutocompleteSelect
-                  opciones = {perfilesT}
-                  valorSeleccionado = {perfilesT.find(p => p.codigo === codigoPerfil) ?? null}
-                  onSeleccionar = {perfil => {
-                    setCodigoPerfil(perfil?.codigo ?? '')
-                    setTipoPerfil(perfil?.tipo ?? '')
-                  }}
-                  getLabel = {perfil => `${perfil.tipo}`}
-                  getKey = {perfil => perfil.codigo}
-                  placeholder = "Busqueda por código o tipo de perfil"
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Seleccione el color del perfil</label>
-                  <select className="form-select" 
-                          value={color}
-                          onChange={e => setColor(e.target.value)}>
-                    <option value="">- Seleccione un color -</option>
-                    {COLORES?.map(color => (
-                      <option key={color.value} value={color.value}>{color.label}</option>
-                    ))}
-                  </select>
-
-                
-            </div>
-          </div>
-
+          {/* 
           {!color && (
             <p style={{ fontSize: 13, color: '#e57373' }}>
               Selecciona primero un color para continuar con la configuración.
             </p>
           )}
-
-           {color && (
+          
+          */}
               <>
                 <div className="form-row">
                   <div className="form-group">
@@ -391,24 +390,58 @@ function PerfilTConfigView() {
 
                 {tresbolillo === false && (
                   <>
-                  
-                    <div className="form-group">
-                      <label className="form-label">Número de perfiles</label>
-                      <input
-                        type="number"
-                        className="form-input"
-                        placeholder="1"
-                        value={cantidad}
-                        onChange={e => setCantidad(e.target.value)}
-                      />
-                      {/* VERSIÓN CON CONTADOR
-                        <div className="counter">
-                        <button className="counter-btn" onClick={() => setCantidad(c => Math.max(1, c - 1))}>−</button>
-                        <span className="counter-value">{cantidad}</span>
-                        <button className="counter-btn" onClick={() => setCantidad(c => c + 1)}>+</button>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                          <label className="form-label">Código de perfil</label>
+                          <AutocompleteSelect
+                            opciones = {perfilesT}
+                            valorSeleccionado = {perfilesT.find(p => p.codigo === codigoPerfil) ?? null}
+                            onSeleccionar = {perfil => {
+                              setCodigoPerfil(perfil?.codigo ?? '')
+                              setTipoPerfil(perfil?.tipo ?? '')
+                            }}
+                            getLabel = {perfil => `${perfil.tipo}`}
+                            getKey = {perfil => perfil.codigo}
+                            placeholder = "Busqueda por código o tipo de perfil"
+                          />
+                        </div>
+
+                        <div className="form-group">
+                          <label className="form-label">Número de perfiles</label>
+                          <input
+                            type="number"
+                            className="form-input"
+                            placeholder="1"
+                            value={cantidad}
+                            onChange={e => setCantidad(e.target.value)}
+                          />
+                          {/* VERSIÓN CON CONTADOR
+                            <div className="counter">
+                            <button className="counter-btn" onClick={() => setCantidad(c => Math.max(1, c - 1))}>−</button>
+                            <span className="counter-value">{cantidad}</span>
+                            <button className="counter-btn" onClick={() => setCantidad(c => c + 1)}>+</button>
+                          </div>
+                          */}
+                          
+                        </div>
+
                       </div>
-                      */}
-                      
+
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label className="form-label">Seleccione el color del perfil</label>
+                            <select className="form-select" 
+                                    value={color}
+                                    onChange={e => setColor(e.target.value)}>
+                              <option value="">- Seleccione un color -</option>
+                              {COLORES?.map(color => (
+                                <option key={color.value} value={color.value}>{color.label}</option>
+                              ))}
+                            </select>
+
+                          
+                      </div>
                     </div>
 
                     {cantidad > 1 && (
@@ -656,6 +689,34 @@ function PerfilTConfigView() {
 
                         <div className="form-row">
                           <div className="form-group">
+                            <label className="form-label">Código de perfil</label>
+                            <AutocompleteSelect
+                              opciones={perfilesTTresbolillo}
+                              valorSeleccionado={perfilesTTresbolillo.find(p => p.codigo === codigoPerfilTH1) ?? null}
+                              onSeleccionar={perfil => {
+                                setCodigoPerfilTH1(perfil?.codigo ?? '')
+                                setTipoPerfilTH1(perfil?.tipo ?? '')
+                              }}
+                              getLabel={perfil => `${perfil.tipo}`}
+                              getKey={perfil => perfil.codigo}
+                              placeholder="Busqueda por código o tipo de perfil"
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label className="form-label">Seleccione el color del perfil</label>
+                            <select className="form-select"
+                                    value={colorH1}
+                                    onChange={e => setColorH1(e.target.value)}>
+                              <option value="">- Seleccione un color -</option>
+                              {COLORES?.map(c => (
+                                <option key={c.value} value={c.value}>{c.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="form-row">
+                          <div className="form-group">
                             <label className="form-label">Número de perfiles</label>
                             <div className="counter">
                               <button className="counter-btn" onClick={() => setNPerfilesH1(n => Math.max(1, n - 1))}>−</button>
@@ -744,6 +805,34 @@ function PerfilTConfigView() {
                     {hilerasT === 2 && (
                       <>
                         <p className="config-step-label-t">Hilera 2</p>
+
+                          <div className="form-row">
+                            <div className="form-group">
+                              <label className="form-label">Código de perfil</label>
+                              <AutocompleteSelect
+                                opciones={perfilesTTresbolillo}
+                                valorSeleccionado={perfilesTTresbolillo.find(p => p.codigo === codigoPerfilTH2) ?? null}
+                                onSeleccionar={perfil => {
+                                  setCodigoPerfilTH2(perfil?.codigo ?? '')
+                                  setTipoPerfilTH2(perfil?.tipo ?? '')
+                                }}
+                                getLabel={perfil => `${perfil.tipo}`}
+                                getKey={perfil => perfil.codigo}
+                                placeholder="Busqueda por código o tipo de perfil"
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label className="form-label">Seleccione el color del perfil</label>
+                              <select className="form-select"
+                                      value={colorH2}
+                                      onChange={e => setColorH2(e.target.value)}>
+                                <option value="">- Seleccione un color -</option>
+                                {COLORES?.map(c => (
+                                  <option key={c.value} value={c.value}>{c.label}</option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
 
                         <div className="form-row">
                           <div className="form-group">
@@ -839,7 +928,7 @@ function PerfilTConfigView() {
                   />
                 </div>
               </>
-            )}
+          
 
           </div>
 

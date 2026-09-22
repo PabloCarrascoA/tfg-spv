@@ -55,6 +55,32 @@ def obtener_perfil_transversal_por_codigo(db, codigo: str):
         "precioSoldar_AnchoMayor1300": row[8],
         "precioSoldar_Especial": row[9]
     }
+
+def obtener_perfil_transversal_tresbolillo_por_codigo(db, codigo: str):
+    cursor = db.cursor()
+    cursor.execute(
+        "SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_AnchoHasta1300, precioSoldar_AnchoMayor1300 FROM perfiles_transversales_tresbolillo WHERE codigo = ?",
+        (codigo,)
+    )
+
+    row = cursor.fetchone()
+
+    if row is None:
+        return None
+    
+    return {
+        "id": row[0],
+        "codigo": row[1],
+        "tipo": row[2],
+        "color": row[3],
+        "proveedor": row[4],
+        "material": row[5],
+        "precio_material": row[6],
+        "precioSoldar_AnchoHasta1300": row[7],
+        "precioSoldar_AnchoMayor1300": row[8],
+    }
+
+
     
 
 def obtener_perfil_longitudinal_por_codigo(db, codigo: str):
@@ -189,6 +215,28 @@ def obtener_perfiles_transversales(db):
             "precioSoldar_AnchoHasta1300": row[7],
             "precioSoldar_AnchoMayor1300": row[8],
             "precioSoldar_Especial": row[9]
+        })
+
+    return perfiles
+
+def obtener_perfiles_transversales_tresbolillo(db):
+    cursor = db.cursor()
+    cursor.execute("SELECT id, codigo, tipo, color, proveedor, material, precio_material, precioSoldar_AnchoHasta1300, precioSoldar_AnchoMayor1300 FROM perfiles_transversales_tresbolillo")
+
+    rows = cursor.fetchall()
+
+    perfiles = []
+    for row in rows:
+        perfiles.append({
+            "id": row[0],
+            "codigo": row[1],
+            "tipo": row[2],
+            "color": row[3],
+            "proveedor": row[4],
+            "material": row[5],
+            "precio_material": row[6],
+            "precioSoldar_AnchoHasta1300": row[7],
+            "precioSoldar_AnchoMayor1300": row[8],
         })
 
     return perfiles

@@ -11,8 +11,10 @@ from app.services.banda_service import (
     obtener_subtipos_empalme,
     obtener_perfil_longitudinal_por_codigo,
     obtener_perfil_transversal_por_codigo,
+    obtener_perfil_transversal_tresbolillo_por_codigo,
     obtener_perfiles_longitudinales,
     obtener_perfiles_transversales,
+    obtener_perfiles_transversales_tresbolillo,
     obtener_runers,
     obtener_runer_por_codigo,
     obtener_ondas,
@@ -65,6 +67,15 @@ def listar_perfiles_longitudinales(db = Depends(get_db)):
 
     if not perfiles:
         raise HTTPException(status_code=404, detail="No se encontraron perfiles longitudinales")
+
+    return perfiles
+
+@router.get("/perfiles/transversales/tresbolillo")
+def listar_perfiles_transversales_tresbolillo(db = Depends(get_db)):
+    perfiles = obtener_perfiles_transversales_tresbolillo(db)
+
+    if not perfiles:
+        raise HTTPException(status_code=404, detail="No se encontraron perfiles transversales")
 
     return perfiles
 
@@ -148,6 +159,25 @@ def obtener_perfil_transversal(codigo: str, db = Depends(get_db)):
         "precioSoldar_AnchoHasta1300": perfil["precioSoldar_AnchoHasta1300"],
         "precioSoldar_AnchoMayor1300": perfil["precioSoldar_AnchoMayor1300"],
         "precioSoldar_Especial": perfil["precioSoldar_Especial"]
+    }
+
+
+@router.get('/perfiles/transversales/tresbolillo/{codigo}')
+def obtener_perfil_transversal(codigo: str, db = Depends(get_db)):
+    perfil = obtener_perfil_transversal_tresbolillo_por_codigo(db, codigo)
+
+    if not perfil:
+        raise HTTPException(status_code=404, detail="Perfil no encontrado")
+    
+    return {
+        "codigo": perfil["codigo"],
+        "tipo": perfil["tipo"],
+        "color": perfil["color"],
+        "proveedor": perfil["proveedor"],
+        "material": perfil["material"],
+        "precio_material": perfil["precio_material"],
+        "precioSoldar_AnchoHasta1300": perfil["precioSoldar_AnchoHasta1300"],
+        "precioSoldar_AnchoMayor1300": perfil["precioSoldar_AnchoMayor1300"],
     }
 
 @router.get('/runers/{codigo}')
