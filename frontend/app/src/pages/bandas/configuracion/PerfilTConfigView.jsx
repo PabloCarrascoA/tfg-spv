@@ -293,13 +293,30 @@ function PerfilTConfigView() {
 
   function handleSiguiente() {
 
-    if (!codigoPerfil) {
-      return alert('Asegúrese de haber seleccionado un código de perfil')
+    if (!codigoPerfil && tresbolillo === false) {
+      return alert('Asegúrese de haber seleccionado un perfil')
     }
 
-    if (!color) {
+    if (!color && tresbolillo === false) {
       return alert('¡Acuérdese de elegir un color para el perfil!')
     }
+
+    if (tresbolillo === true && hilerasT === 1 && !codigoPerfilTH1) {
+      return alert('Asegúrese de haber seleccionado un perfil para la Hilera 1')
+    }
+
+    if (tresbolillo === true && hilerasT > 1 && (!codigoPerfilTH1 || !codigoPerfilTH2)) {
+      return alert('Asegúrese de haber seleccionado un perfil para la Hilera 1 y la Hilera 2')
+    }
+
+    if (tresbolillo === true && hilerasT === 1 && !colorH1) {
+      return alert('Asegúrese de haber seleccionado un color para los perfiles de la Hilera 1')
+    }
+
+    if (tresbolillo === true && hilerasT > 1 && (!colorH1 || !colorH2)) {
+      return alert('Asegúrese de haber seleccionado un color para los perfiles de la Hilera 1 y la Hilera 2')
+    }
+
 
     // setDistancia(distancia.toFixed(2))
 
