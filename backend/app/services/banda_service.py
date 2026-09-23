@@ -651,10 +651,10 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
 
     # - Calculo soldadura -
 
-    if ancho <= 1000:
+    if ancho <= 1300:
         precio_soldadura_mL = perfil["precioSoldar_AnchoHasta1300"]
 
-    elif ancho > 1000:
+    elif ancho > 1300:
         precio_soldadura_mL = perfil["precioSoldar_AnchoMayor1300"]
 
     else:
@@ -672,7 +672,7 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
 
     # - Calculo preparación -
 
-    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_transversales", ancho_perfil, n_hileras)
+    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_transversales", ancho, n_hileras)
 
     print(f"DEBUG TARIFA preparación perfil transversal: {tarifa_preparacion}")
     precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_perfil)
@@ -781,7 +781,7 @@ def calcular_precio_perfil_transversal_tresbolillo(db, perfilT, hilera, cantidad
 
     # - Calculo preparación -
 
-    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_transversales_tresbolillo", ancho_perfil, perfilT.hilerasT, perfilT.tresbolillo)
+    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_transversales_tresbolillo", ancho, perfilT.hilerasT, perfilT.tresbolillo)
 
     print(f"DEBUG tresbolillo H{hilera}: tarifa preparación: {tarifa_preparacion}")
 
@@ -1257,7 +1257,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
         "precio_perfilTH2_final": round(precio_perfilT_H2["precio_final"], 2) if precio_perfilT_H2 else None,
 
         "precio_perfilT_tresbolillo_final": round(precio_perfilT_tresbolillo_final, 2),
-        
+
         "codigo_runer": codigo_runer,
         "n_perfiles_runer": n_perfiles_runer,
         "margen_runer": margen_runer,

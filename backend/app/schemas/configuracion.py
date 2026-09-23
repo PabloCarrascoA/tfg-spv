@@ -175,8 +175,8 @@ class CalculoBandaResponse(BaseModel):
     precio_soldaduraT: Optional[float] = None
     precio_perfilT_final: Optional[float] = None
 
-    tresbolillo: Optional[bool] = None  # O str/int según lo que devuelva perfilT.tresbolillo
-    hilerasT: Optional[float] = None     # O int según corresponda
+    tresbolillo: Optional[bool] = None  
+    hilerasT: Optional[float] = None    
 
     codigo_perfilTH1: Optional[str] = None
     n_perfilesH1: Optional[float] = None
