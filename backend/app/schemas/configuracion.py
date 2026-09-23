@@ -25,6 +25,48 @@ class BandaRequest(BaseModel):
     descripcion: Optional[str] = None
     id_conjunto_acabados: Optional[ConjuntosAcabados] = None
 
+
+class PerfilTRequest(BaseModel):
+
+        # modo normal
+
+        codigoPerfil: Optional[str] = None
+        cantidad: Optional[float] = None
+        distancia: Optional[float] = None
+        ancho: Optional[float] = None
+        margen: Optional[float] = None
+        hileras: Optional[float] = None
+        identico: Optional[bool] = None
+        centrado: Optional[bool] = None
+        ancho1: Optional[float] = None
+        ancho2: Optional[float] = None
+        luz: Optional[float] = None
+        color: Optional[str] = None
+        tipoPerfilT: Optional[str] = None
+
+        # modo tresbolillo
+
+        tresbolillo: Optional[bool] = None
+        hilerasT: Optional[float] = None
+
+        codigoPerfilTH1: Optional[str] = None
+        tipoPerfilTH1: Optional[str] = None
+        colorH1: Optional[str] = None
+        nPerfilesH1: Optional[float] = None
+        pasoH1: Optional[float] = None
+        anchoPerfH1: Optional[float] = None
+        margenIzqH1: Optional[float] = None
+        margenDerH1: Optional[float] = None
+
+        codigoPerfilTH2: Optional[str] = None
+        tipoPerfilTH2: Optional[str] = None
+        colorH2: Optional[str] = None
+        nPerfilesH2: Optional[float] = None
+        pasoH2: Optional[float] = None
+        anchoPerfH2: Optional[float] = None
+        margenIzqH2: Optional[float] = None
+        margenDerH2: Optional[float] = None
+
 class CalculoBandaRequest(BaseModel):
 
     cliente: Optional[ClienteRequest] = None
@@ -57,16 +99,7 @@ class CalculoBandaRequest(BaseModel):
 
     # Perfil transversal
 
-    codigo_perfilT: Optional[str] = None
-    n_perfilesT: Optional[float] = None
-    distancia_paso: Optional[float] = None
-    margen_lateral: Optional[float] = None
-    ancho_perfilT: Optional[float] = None
-    distancia_paso: Optional[float] = None
-    n_hileras: Optional[float] = None
-    ancho1: Optional[float] = None
-    ancho2: Optional[float] = None
-    luz_interior: Optional[float] = None
+    perfilT: Optional[PerfilTRequest] = None
 
     #perfil longitudinal
 
@@ -141,6 +174,29 @@ class CalculoBandaResponse(BaseModel):
     precio_perfilT: Optional[float] = None
     precio_soldaduraT: Optional[float] = None
     precio_perfilT_final: Optional[float] = None
+
+    tresbolillo: Optional[bool] = None  # O str/int según lo que devuelva perfilT.tresbolillo
+    hilerasT: Optional[float] = None     # O int según corresponda
+
+    codigo_perfilTH1: Optional[str] = None
+    n_perfilesH1: Optional[float] = None
+    paso_H1: Optional[float] = None
+    ancho_perfilH1: Optional[float] = None
+    margen_izq_H1: Optional[float] = None
+    margen_der_H1: Optional[float] = None
+    color_H1: Optional[str] = None
+    precio_perfilTH1_final: Optional[float] = None
+
+    codigo_perfilTH2: Optional[str] = None
+    n_perfilesH2: Optional[float] = None
+    paso_H2: Optional[float] = None
+    ancho_perfilH2: Optional[float] = None
+    margen_izq_H2: Optional[float] = None
+    margen_der_H2: Optional[float] = None
+    color_H2: Optional[str] = None
+    precio_perfilTH2_final: Optional[float] = None
+
+    precio_perfilT_tresbolillo_final: Optional[float] = None
 
     codigo_runer: Optional[str] = None
     n_perfiles_runer: Optional[float] = None

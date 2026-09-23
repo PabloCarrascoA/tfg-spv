@@ -588,6 +588,9 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
 
     perfil = obtener_perfil_transversal_por_codigo(db, codigo_perfil)
 
+    print(f"DEBUG perfiles tresbolillo: {perfil}")
+    print(f"DEBUG codigo tresbolillo: {codigo_perfil}")
+
     if perfil is None:
         raise ValueError("Perfil T no encontrado")
     
@@ -688,6 +691,118 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
         "ancho_perfil": ancho_perfil,
         "distancia_paso": distancia_paso
     }
+
+def calcular_precio_perfil_transversal_tresbolillo(db, perfilT, hilera, cantidad_bandas, largo, ancho, cliente_id=None):
+    """
+    Calcula el precio de una hilera concreta (1 o 2) de la configuración
+    en tresbolillo, leyendo los campos codigoPerfilTH{hilera}, nPerfilesH{hilera},
+    pasoH{hilera}, anchoPerfH{hilera} del objeto perfilT.
+    """
+
+    codigo_perfil = getattr(perfilT, f"codigoPerfilTH{hilera}")
+    n_perfiles    = getattr(perfilT, f"nPerfilesH{hilera}")
+    distancia_paso = getattr(perfilT, f"pasoH{hilera}")
+    ancho_perfil  = getattr(perfilT, f"anchoPerfH{hilera}")
+
+    perfil = obtener_perfil_transversal_tresbolillo_por_codigo(db, codigo_perfil)
+
+    if perfil is None:
+        raise ValueError(f"Perfil T (tresbolillo, hilera {hilera}) no encontrado")
+
+    if ancho_perfil is not None and ancho_perfil > ancho:
+        raise ValueError(f"El ancho del perfil de la hilera {hilera} no puede superar el ancho de la banda")
+
+    if ancho_perfil is None or ancho_perfil < 250:
+        ancho_perfil = 250
+
+    # - Calculo precio perfil -
+
+    precio_perfil_mL = perfil["precio_material"]
+
+    if ancho <= 0:
+        raise ValueError("Ancho debe ser mayor que cero")
+
+    if largo <= 0:
+        raise ValueError("Largo debe ser mayor que cero")
+
+    # ajustar el número de perfiles y el paso si el largo no es múltiplo de la distancia entre perfiles
+
+    if n_perfiles and not distancia_paso:
+        distancia_paso = largo / n_perfiles
+
+    elif distancia_paso and not n_perfiles:
+        n_perfiles = round(largo / distancia_paso)
+        distancia_paso = largo / n_perfiles
+
+    elif n_perfiles and distancia_paso:
+        # priorizar nº perfiles
+        distancia_paso = largo / n_perfiles
+
+    else:
+        raise ValueError(f"Debes indicar n_perfiles o paso para la hilera {hilera}")
+
+    if n_perfiles <= 0:
+        raise ValueError(f"El número de perfiles de la hilera {hilera} no puede ser 0")
+
+    if distancia_paso <= 0:
+        raise ValueError(f"La distancia entre perfiles de la hilera {hilera} no puede ser 0")
+
+    # Usar ancho_perfil + 40mm (mismo criterio que perfiles transversales normales)
+
+    if ancho_perfil is not None and ancho_perfil > 0:
+        ancho_m = (ancho_perfil + 40) / 1000
+    else:
+        ancho_m = 0
+
+    precio_perfil_total = n_perfiles * ancho_m * precio_perfil_mL
+
+    if cliente_id is not None:
+        descuento = 1 - get_descuento_producto(db, cliente_id, "perfiles_transversales_tresbolillo", codigo_perfil, perfil["tipo"])
+        precio_perfil_total = precio_perfil_total * descuento
+
+    print(f"DEBUG tresbolillo H{hilera}: precio perfil: {precio_perfil_total}, n_perfiles: {n_perfiles}, precio mL: {precio_perfil_mL}, ancho_m: {ancho_m}")
+
+    # - Calculo soldadura -
+
+    if ancho <= 1000:
+        precio_soldadura_mL = perfil["precioSoldar_AnchoHasta1300"]
+    elif ancho > 1000:
+        precio_soldadura_mL = perfil["precioSoldar_AnchoMayor1300"]
+    else:
+        precio_soldadura_mL = perfil["precioSoldar_Especial"]
+
+    precio_soldadura_total = n_perfiles * ancho_m * precio_soldadura_mL
+
+    if cliente_id is not None:
+        descuento_soldadura = 1 - get_descuento_soldadura(db, cliente_id, "perfiles_transversales_tresbolillo")
+        precio_soldadura_total = precio_soldadura_total * descuento_soldadura
+
+    print(f"DEBUG tresbolillo H{hilera}: precio soldadura: {precio_soldadura_total}, n_perfiles: {n_perfiles}, precio soldadura mL: {precio_soldadura_mL}, ancho_m: {ancho_m}")
+
+    # - Calculo preparación -
+
+    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_transversales_tresbolillo", ancho_perfil, perfilT.hilerasT, perfilT.tresbolillo)
+
+    print(f"DEBUG tresbolillo H{hilera}: tarifa preparación: {tarifa_preparacion}")
+
+    precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_perfil)
+
+    precio_final = precio_perfil_total + precio_soldadura_total + precio_preparacion
+
+    return {
+        "hilera": hilera,
+        "codigo_perfil": codigo_perfil,
+        "precio_perfil": precio_perfil_mL,
+        "precio_perfil_total": precio_perfil_total,
+        "precio_soldadura": precio_soldadura_mL,
+        "precio_soldadura_total": precio_soldadura_total,
+        "precio_preparacion": precio_preparacion,
+        "precio_final": precio_final,
+        "numero_perfiles": n_perfiles,
+        "ancho_perfil": ancho_perfil,
+        "distancia_paso": distancia_paso,
+    }
+
 
 def calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_perfiles, cliente_id = None):
 
@@ -872,7 +987,7 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
 
 
-def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, codigo_perfilT = None, n_perfilesT = None, margen_lateral = None, distancia_paso = None, ancho_perfilT = None, n_hileras = None, ancho1 = None, ancho2 = None, luz_interior = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, codigo_onda = None, n_ondas = None, base_onda = None, altura_onda = None, continuidad_onda = None, ancho_onda = None, pisada_onda = None):
+def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, perfilT = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, codigo_onda = None, n_ondas = None, base_onda = None, altura_onda = None, continuidad_onda = None, ancho_onda = None, pisada_onda = None):
     
     cliente_id = cliente.cod if cliente is not None else None
     # - Precio banda -
@@ -986,15 +1101,38 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
     
     # PERFILES TRANSVERSALES
 
-    if codigo_perfilT is not None and (distancia_paso is not None or n_perfilesT is not None):
+    precio_perfilT_H1 = None
+    precio_perfilT_H2 = None
+    precio_perfilT_tresbolillo_final = 0
 
-        print(f"DEBUG: {codigo_perfilT}")
+    n_perfilesT = None
+    distancia_paso = None
+    ancho_perfilT = None
 
-        resultado_perfil = calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfilT, ancho, largo, n_perfilesT, distancia_paso, ancho_perfilT, n_hileras, cliente_id)
+    if perfilT is not None and perfilT.tresbolillo:
+
+        if perfilT.codigoPerfilTH1 is not None:
+            precio_perfilT_H1 = calcular_precio_perfil_transversal_tresbolillo(
+                db, perfilT, 1, cantidad_bandas, largo, ancho, cliente_id
+            )
+            precio_perfilT_tresbolillo_final += precio_perfilT_H1["precio_final"]
+
+        if perfilT.hilerasT == 2 and perfilT.codigoPerfilTH2 is not None:
+            precio_perfilT_H2 = calcular_precio_perfil_transversal_tresbolillo(
+                db, perfilT, 2, cantidad_bandas, largo, ancho, cliente_id
+            )
+            precio_perfilT_tresbolillo_final += precio_perfilT_H2["precio_final"]
+
+
+    elif perfilT is not None and perfilT.codigoPerfil is not None and (perfilT.distancia is not None or perfilT.cantidad is not None):
+
+        resultado_perfil = calcular_precio_perfil_transversal(
+            db, cantidad_bandas, perfilT.codigoPerfil, ancho, largo,
+            perfilT.cantidad, perfilT.distancia, perfilT.ancho, perfilT.hileras, cliente_id
+        )
 
         precio_perfilT = resultado_perfil["precio_perfil_total"]
         precio_soldaduraT = resultado_perfil["precio_soldadura_total"]
-
         precio_perfilT_final += resultado_perfil["precio_final"]
 
         n_perfilesT = resultado_perfil["numero_pefiles"]
@@ -1057,7 +1195,7 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
 
     # - Precio total -
 
-    precio_total = precio_banda + precio_empalme + precio_perfilT_final + precio_perfilL_final +precio_runer_final + precio_perforaciones_final + precio_ondas_final
+    precio_total = precio_banda + precio_empalme + precio_perfilT_final + precio_perfilT_tresbolillo_final + precio_perfilL_final + precio_runer_final + precio_perforaciones_final + precio_ondas_final
 
     return {
 
@@ -1081,18 +1219,45 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
         "precio_perfilL_final": round(precio_perfilL_final, 2),
         "precio_perfilL_S": round(precio_perfilL_S, 2),
         "precio_perfilL_I": round(precio_perfilL_I, 2),
-        "codigo_perfilT": codigo_perfilT,
+
+        # perfil transversal - modo normal
+        "codigo_perfilT": perfilT.codigoPerfil if perfilT is not None else None,
         "n_perfilesT": n_perfilesT,
-        "margen_lateral": margen_lateral,
+        "margen_lateral": perfilT.margen if perfilT is not None else None,
         "ancho_perfilT": ancho_perfilT,
-        "n_hileras": n_hileras,
-        "ancho1": ancho1,
-        "ancho2": ancho2,
-        "luz_interior": luz_interior,
+        "n_hileras": perfilT.hileras if perfilT is not None else None,
+        "ancho1": perfilT.ancho1 if perfilT is not None else None,
+        "ancho2": perfilT.ancho2 if perfilT is not None else None,
+        "luz_interior": perfilT.luz if perfilT is not None else None,
         "distancia_paso": distancia_paso,
         "precio_perfilT": round(precio_perfilT, 2),
         "precio_soldaduraT": round(precio_soldaduraT, 2),
         "precio_perfilT_final": round(precio_perfilT_final, 2),
+
+        # perfil transversal - modo tresbolillo
+        "tresbolillo": perfilT.tresbolillo if perfilT is not None else None,
+        "hilerasT": perfilT.hilerasT if perfilT is not None else None,
+
+        "codigo_perfilTH1": precio_perfilT_H1["codigo_perfil"] if precio_perfilT_H1 else None,
+        "n_perfilesH1": precio_perfilT_H1["numero_perfiles"] if precio_perfilT_H1 else None,
+        "paso_H1": precio_perfilT_H1["distancia_paso"] if precio_perfilT_H1 else None,
+        "ancho_perfilH1": precio_perfilT_H1["ancho_perfil"] if precio_perfilT_H1 else None,
+        "margen_izq_H1": perfilT.margenIzqH1 if perfilT is not None else None,
+        "margen_der_H1": perfilT.margenDerH1 if perfilT is not None else None,
+        "color_H1": perfilT.colorH1 if perfilT is not None else None,
+        "precio_perfilTH1_final": round(precio_perfilT_H1["precio_final"], 2) if precio_perfilT_H1 else None,
+
+        "codigo_perfilTH2": precio_perfilT_H2["codigo_perfil"] if precio_perfilT_H2 else None,
+        "n_perfilesH2": precio_perfilT_H2["numero_perfiles"] if precio_perfilT_H2 else None,
+        "paso_H2": precio_perfilT_H2["distancia_paso"] if precio_perfilT_H2 else None,
+        "ancho_perfilH2": precio_perfilT_H2["ancho_perfil"] if precio_perfilT_H2 else None,
+        "margen_izq_H2": perfilT.margenIzqH2 if perfilT is not None else None,
+        "margen_der_H2": perfilT.margenDerH2 if perfilT is not None else None,
+        "color_H2": perfilT.colorH2 if perfilT is not None else None,
+        "precio_perfilTH2_final": round(precio_perfilT_H2["precio_final"], 2) if precio_perfilT_H2 else None,
+
+        "precio_perfilT_tresbolillo_final": round(precio_perfilT_tresbolillo_final, 2),
+        
         "codigo_runer": codigo_runer,
         "n_perfiles_runer": n_perfiles_runer,
         "margen_runer": margen_runer,

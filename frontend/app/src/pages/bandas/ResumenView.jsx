@@ -177,7 +177,7 @@ function ResumenView() {
                 {state.perfilT?.comentarios && <li>Comentarios: {state.perfilT.comentarios}</li>}
               </ul>
 
-            ) : ( resultado.codigo_perfilT && state.perfilT?.tresbolillo === true ? (
+            ) : ((state.perfilT?.codigoPerfilTH1 || state.perfilT?.codigoPerfilTH2) && state.perfilT?.tresbolillo === true ? (
 
               <ul className="resumen-lista">
                 <li style={{ marginBottom: '10px', fontWeight: 'bold' }}>TRESBOLILLO</li>
@@ -191,7 +191,7 @@ function ResumenView() {
                 <li>Paso entre perfiles: {state.perfilT?.pasoH1} mm</li>
                 <li>Margen lateral izquierdo: {state.perfilT?.margenIzqH1} mm</li>
                 <li style={{ marginBottom: '10px' }}>Margen lateral derecho: {state.perfilT?.margenDerH1} mm</li>
-                {state.perfilT?.hilerasT && <>
+                {state.perfilT?.hilerasT > 1 && <>
                   <li><span style={{ fontWeight: 'bold' }}>HILERA 2:</span></li>
                   <li>Perfil: {state.perfilT?.tipoPerfilTH2}</li>
                   <li>Color del perfil: {state.perfilT?.colorH2}</li>
@@ -201,9 +201,13 @@ function ResumenView() {
                   <li>Margen lateral izquierdo: {state.perfilT?.margenIzqH2} mm</li>
                   <li style={{ marginBottom: '10px' }}>Margen lateral derecho: {state.perfilT?.margenDerH2} mm</li>
                 </>}
-                <li>Precio perfiles: {resultado.precio_perfilT_final} €</li>
+                <li>Precio perfiles: {resultado.precio_perfilT_tresbolillo_final} €</li>
+                {console.log("DEGUB precio final tresbolillo:", resultado.precio_perfilT_tresbolillo_final)}
+                {console.log("DEGUB array resultado:", resultado)}
                 {state.perfilT?.comentarios && <li>Comentarios: {state.perfilT.comentarios}</li>}
               </ul>
+
+              
                 
             ) : (
 
@@ -315,15 +319,7 @@ function construirPayload(state) {
     codigo_perfil_inferior:    state.perfilL?.inferior?.activo ? state.perfilL.inferior.codigo                        : null,
     n_perfiles_inferior:       state.perfilL?.inferior?.activo ? state.perfilL.inferior.cantidad                      : null,
     distancia_margen_inferior: state.perfilL?.inferior?.activo ? toFloat(state.perfilL.inferior.distanciaBordeCentro) : null,
-    codigo_perfilT:   state.perfilT?.codigoPerfil ?? null,
-    n_perfilesT:      state.perfilT?.cantidad     ?? null,
-    ancho_perfilT:    toFloat(state.perfilT?.ancho),
-    distancia_paso:   toFloat(state.perfilT?.distancia),
-    margen_lateral:   toFloat(state.perfilT?.margen),
-    n_hileras:        state.perfilT?.hileras      ?? null,
-    ancho1:           toFloat(state.perfilT?.ancho1),
-    ancho2:           toFloat(state.perfilT?.ancho2),
-    luz_interior:     toFloat(state.perfilT?.luz),
+    perfilT: sanearPerfilT(state.perfilT),
     codigo_runer:     state.runer?.codigoRuner    ?? null,
     n_perfiles_runer: state.runer?.cantidad       ?? null,
     margen_runer:     toFloat(state.runer?.margen),
@@ -340,6 +336,22 @@ function construirPayload(state) {
     ancho_onda:       toFloat(state.onda?.anchoOnda),
     pisada_onda:      toFloat(state.onda?.pisada),
   }
+}
+
+function sanearPerfilT(perfilT) {
+  if (!perfilT) return null
+
+  const limpio = {}
+
+  for (const [clave, valor] of Object.entries(perfilT)) {
+    if (valor === '') {
+      limpio[clave] = null
+    } else {
+      limpio[clave] = valor
+    }
+  }
+
+  return limpio
 }
 
 export default ResumenView

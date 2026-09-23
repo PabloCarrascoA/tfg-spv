@@ -47,19 +47,19 @@ def get_descuento_soldadura(db, cliente_id, tabla):
     return row["descuento"] if row else 0.0
 
 
-def get_tarifa_preparacion(db, cliente_id, tabla, ancho_perfilT=None, n_hilerasT=None):
+def get_tarifa_preparacion(db, cliente_id, tabla, ancho_perfilT=None, n_hilerasT=None, tresbolillo=None):
     row = db.execute(
         "SELECT precio FROM tarifas_preparacion WHERE cliente_id=? AND tabla=?",
         (cliente_id, tabla)
     ).fetchone()
 
-    if not row:
-        if n_hilerasT == 1:
+    if not row and (tabla == 'perfiles_transversales' or tabla == 'perfiles_transversales_tresbolillo'):
+        if n_hilerasT == 1 and not tresbolillo:
             if ancho_perfilT <= 1300:
                 return 40
             if ancho_perfilT > 1300:
                 return 45
-        if n_hilerasT > 1:
+        if n_hilerasT > 1 and not tresbolillo:
             if ancho_perfilT <= 1300:
                 return 60
             if ancho_perfilT > 1300:
