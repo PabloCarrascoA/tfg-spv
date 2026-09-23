@@ -520,6 +520,10 @@ a {
 }
 /* panel lateral --> PERFIL T */
 
+.config-panel-pefilesT {
+  height: max-content;
+}
+
 /* --- sketch perfilT-1 --- */
 
 .config-side-img-wrapper-perfilT {

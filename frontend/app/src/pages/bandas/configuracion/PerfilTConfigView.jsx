@@ -369,7 +369,7 @@ function PerfilTConfigView() {
 
   return (
     <div className="config-view">
-      <div className="config-row">
+      <div className="config-row config-panel-pefilesT">
 
         <div className="config-form-panel">
           <h2 className="content-title">Panel de Configuración</h2>
