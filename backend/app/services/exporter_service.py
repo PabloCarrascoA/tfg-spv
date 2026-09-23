@@ -6,6 +6,7 @@ TABLAS_EXPORTABLES = {
     'bandas':                  'bandas',
     'perfiles_longitudinales': 'perfiles_longitudinales',
     'perfiles_transversales':  'perfiles_transversales',
+    'perfiles_transversales_tresbolillo': 'perfiles_transversales_tresbolillo',
     'runners':                 'runners',
     'ondas':                   'ondas',
 }

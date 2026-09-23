@@ -5,6 +5,7 @@ const SECCIONES = [
   { value: 'bandas',                  label: 'Banda Material'    },
   { value: 'perfiles_longitudinales', label: 'PerfilL Material'  },
   { value: 'perfiles_transversales',  label: 'PerfilT Material'  },
+  { value: 'perfiles_transversales_tresbolillo', label: 'PerfilT Tresbolillo Material' },
   { value: 'runners',                 label: 'Runer Material'    },
   { value: 'ondas',                   label: 'Onda Material'     },
 ]
