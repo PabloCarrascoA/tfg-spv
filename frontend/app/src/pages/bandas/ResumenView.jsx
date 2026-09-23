@@ -181,10 +181,11 @@ function ResumenView() {
 
               <ul className="resumen-lista">
                 <li style={{ marginBottom: '10px', fontWeight: 'bold' }}>TRESBOLILLO</li>
-                <li>Perfil: {state.perfilT?.tipoPerfilT}</li>
-                <li>Color del perfil: {state.perfilT?.color}</li>
+                
                 <li style={{ marginBottom: '10px' }}>Número de hileras: {state.perfilT?.hilerasT}</li>
                 <li><span style={{ fontWeight: 'bold' }}>HILERA 1:</span></li>
+                <li>Perfil: {state.perfilT?.tipoPerfilTH1}</li>
+                <li>Color del perfil: {state.perfilT?.colorH1}</li>
                 <li>Ancho del perfil: {state.perfilT?.anchoPerfH1} mm</li>
                 <li>Número de perfiles: {state.perfilT?.nPerfilesH1}</li>
                 <li>Paso entre perfiles: {state.perfilT?.pasoH1} mm</li>
@@ -192,6 +193,8 @@ function ResumenView() {
                 <li style={{ marginBottom: '10px' }}>Margen lateral derecho: {state.perfilT?.margenDerH1} mm</li>
                 {state.perfilT?.hilerasT && <>
                   <li><span style={{ fontWeight: 'bold' }}>HILERA 2:</span></li>
+                  <li>Perfil: {state.perfilT?.tipoPerfilTH2}</li>
+                  <li>Color del perfil: {state.perfilT?.colorH2}</li>
                   <li>Ancho del perfil: {state.perfilT?.anchoPerfH2} mm</li>
                   <li>Número de perfiles: {state.perfilT?.nPerfilesH2}</li>
                   <li>Paso entre perfiles: {state.perfilT?.pasoH2} mm</li>
