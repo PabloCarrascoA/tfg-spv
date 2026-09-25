@@ -134,6 +134,11 @@ function RunerConfigView() {
           <div className="config-form">
 
             <div className="form-row">
+                <span className="form-label">Ancho de la banda: <span className='config-step-label'>{state.banda?.ancho} mm</span></span>
+                <span className="form-label">Largo de la banda: <span className='config-step-label'>{state.banda?.longitud} mm</span></span>
+            </div>
+
+            <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Código de Runer</label>
 

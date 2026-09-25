@@ -387,9 +387,13 @@ function PerfilTConfigView() {
           
           */}
               <>
+              <div className="form-row">
+                <span className="form-label">Ancho de la banda: <span className='config-step-label'>{state.banda?.ancho} mm</span></span>
+                <span className="form-label">Largo de la banda: <span className='config-step-label'>{state.banda?.longitud} mm</span></span>
+              </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">¿Los perfiles van al tresbolillo?</label>
+                    <label className="form-label">¿Los perfiles van descentrados o al tresbolillo?</label>
                     <div className="radio-group">
                       <label className="radio-label">
                         <input type="radio" name="tresbolillo" checked={tresbolillo === true}
