@@ -153,7 +153,7 @@ function RunerConfigView() {
                     //console.log('Color del runer seleccionado:', runer?.color)
                     //console.log('Tipo del runer seleccionado:', runer?.tipo)
                   }}
-                  getLabel={runer => `${runer.codigo} - ${runer.tipo}`}
+                  getLabel={runer => `${runer.codigo}`}
                   getKey={runer => runer.codigo}
                   placeholder="Busqueda por código o tipo de runer"
                 />
