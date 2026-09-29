@@ -568,31 +568,72 @@ a {
 }
 
 .config-perfilT2-paso {
-  top: 18.5%; 
-  left: 8%;
+  top: 18.7%; 
+  left: 15%;
 }
 
 .config-perfilT2-ancho {
   top: 37.5%; 
-  left: 8%;
+  left: 21%;
 }
 
 .config-perfilT2-margen {
-  top: 57.5%; 
-  left: 22%; 
+  top: 63.5%; 
+  left: 82%; 
 }
 
 .config-perfilT2-luz {
-  top: 57.5%; 
-  left: 4.5%;
+  top: 60%; 
+  left: 66%;
 }
 
 .config-perfilT2-ancho1 {
-  top: 76.5%; 
-  left: 3%;
+  top: 33.2%; 
+  left: 55.5%;
 }
 
 .config-perfilT2-ancho2 {
+  top: 33%; 
+  left: 74%;
+}
+
+/* --- sketch perfilT-3 --- */
+
+.config-perfilT3-label {
+  position: absolute;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c4f6b;
+  text-align: center;
+  width: 90px;
+}
+
+.config-perfilT3-paso {
+  top: 18.5%; 
+  left: 20%;
+}
+
+.config-perfilT3-ancho {
+  top: 37.5%; 
+  left: 19%;
+}
+
+.config-perfilT3-margen {
+  top: 33%; 
+  left: 83%; 
+}
+
+.config-perfilT3-luz {
+  top: 60%; 
+  left: 66%;
+}
+
+.config-perfilT3-ancho1 {
+  top: 33%; 
+  left: 54.5%;
+}
+
+.config-perfilT3-ancho2 {
   top: 76.5%; 
   left: 22%;
 }

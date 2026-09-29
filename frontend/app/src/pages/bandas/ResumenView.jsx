@@ -162,15 +162,15 @@ function ResumenView() {
               
               <ul className="resumen-lista">
                 <li>Perfil: {state.perfilT?.tipoPerfilT}</li>
-                <li>Nº perfiles: {resultado.n_perfilesT}</li>
+                <li>Nº de filas: {resultado.n_perfilesT}</li>
                 <li>Color del perfil: {state.perfilT?.color}</li>
-                <li>Ancho del perfil: {resultado.ancho_perfilT} mm</li>
+                <li>{resultado.n_hileras > 1 ? 'Ancho total del conjunto (perfiles + luz)' : 'Ancho del perfil'}: {resultado.ancho_perfilT} mm</li>
                 {state.perfilT.distancia && <li>Distancia paso: {state.perfilT.distancia} mm</li>}
                 <li>Margen lateral: {resultado.margen_lateral} mm</li>
-                <li>Nº hileras: {resultado.n_hileras}</li>
+                <li>Nº de perfiles por fila: {resultado.n_hileras}</li>
                 {resultado.n_hileras > 1 && <>
-                  <li>Ancho 1: {resultado.ancho1} mm</li>
-                  <li>Ancho 2: {resultado.ancho2} mm</li>
+                  <li>{resultado.n_hileras > 2 ? 'Ancho de los perfiles' : 'Ancho 1'}: {resultado.ancho1} mm</li>
+                  {resultado.n_hileras <= 2 && <li>Ancho 2: {resultado.ancho2} mm</li>}
                   <li>Luz interior: {resultado.luz_interior} mm</li>
                 </>}
                 <li>Precio perfiles: {resultado.precio_perfilT_final} €</li>

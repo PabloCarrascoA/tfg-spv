@@ -639,7 +639,7 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
     else:
         ancho_m = 0
 
-    precio_perfil_total = (n_perfiles * ancho_m * precio_perfil_mL)
+    precio_perfil_total = ((n_perfiles * n_hileras) * ancho_m * precio_perfil_mL)
 
     if cliente_id is not None:
 
@@ -660,7 +660,7 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
     else:
         precio_soldadura_mL = perfil["precioSoldar_Especial"]
 
-    precio_soldadura_total = (n_perfiles * ancho_m * precio_soldadura_mL)
+    precio_soldadura_total = (n_perfiles * n_hileras * ancho_m * precio_soldadura_mL)
 
     if cliente_id is not None:
         

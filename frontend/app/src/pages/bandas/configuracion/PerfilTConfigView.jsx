@@ -429,7 +429,7 @@ function PerfilTConfigView() {
                         </div>
 
                         <div className="form-group">
-                          <label className="form-label">Número de perfiles</label>
+                          <label className="form-label">Número de filas</label>
                           <input
                             type="number"
                             className="form-input"
@@ -478,9 +478,28 @@ function PerfilTConfigView() {
                       </div>
                     )}
 
+                    
+
                     <div className="form-row">
                       <div className="form-group">
-                        <label className="form-label">Ancho del perfil (mm)</label>
+                        <label className="form-label">Perfiles por fila</label>
+                        <div className="counter">
+                          <button className="counter-btn" onClick={() => setHileras(h => Math.max(1, h - 1))}>−</button>
+                          <span className="counter-value">{hileras}</span>
+                          <button className="counter-btn" onClick={() => setHileras(h => h + 1)}>+</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label className="form-label">
+                          {hileras === 1
+                            ? 'Ancho del perfil (mm)'
+                            : 'Ancho total ocupado (perfiles + luces) (mm)'
+                          }
+                        </label>
+
                         <input
                           type="number"
                           className="form-input"
@@ -488,6 +507,13 @@ function PerfilTConfigView() {
                           value={ancho}
                           onChange={e => setAncho(e.target.value)}
                         />
+
+                        {hileras > 1 && (
+                          <span className="form-help" style={{ fontSize: 13, color: '#4a6f8a' }}>
+                            Introduce el ancho total del conjunto, incluyendo las separaciones entre perfiles.
+                          </span>
+                        )}
+
                       </div>
                       <div className="form-group">
                         <label className="form-label">Margen lateral (mm)</label>
@@ -503,13 +529,16 @@ function PerfilTConfigView() {
 
                     {parseFloat(ancho) > 1600 && (
                       <p style={{ fontSize: 13, color: '#e57373' }}>
-                        El ancho de perfil no puede superar los 1600 mm
+                        {hileras === 1
+                          ? 'El ancho del perfil no puede superar los 1600 mm'
+                          : 'El ancho total del conjunto de perfiles no puede superar los 1600 mm'
+                        }
                       </p>
                     )}
 
                     {parseFloat(ancho) > anchoBanda && (
                       <p style={{ fontSize: 13, color: '#e57373' }}>
-                        El ancho de perfil no puede ser mayor que el ancho de la banda ({anchoBanda} mm)
+                        El ancho introducido no puede ser mayor que el ancho de la banda ({anchoBanda} mm)
                       </p>
                     )}
 
@@ -519,20 +548,9 @@ function PerfilTConfigView() {
                       </p>
                     )}
 
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label className="form-label">Número de hileras</label>
-                        <div className="counter">
-                          <button className="counter-btn" onClick={() => setHileras(h => Math.max(1, h - 1))}>−</button>
-                          <span className="counter-value">{hileras}</span>
-                          <button className="counter-btn" onClick={() => setHileras(h => h + 1)}>+</button>
-                        </div>
-                      </div>
-                    </div>
-
                     {hileras > 2 && (
                       <p style={{ fontSize: 13, color: '#4a6f8a', textDecoration: 'underline' }}>
-                        Para más de 2 hileras se asume que los perfiles resultantes son indénticos.
+                        Para más de 2 perfiles por fila se asume que los perfiles son indénticos.
                       </p>
                     )}
 
@@ -684,7 +702,7 @@ function PerfilTConfigView() {
 
                     {hileras > 1 && !ancho && (
                       <p style={{ fontSize: 13, color: '#e57373' }}>
-                        Introduce primero el ancho del perfil para calcular las hileras
+                        Introduce primero el ancho total que ocupará el conjunto de perfiles.
                       </p>
                     )}
                   </>
@@ -779,7 +797,7 @@ function PerfilTConfigView() {
                         {parseFloat(anchoPerfH1) > parseFloat(anchoBanda) && (
                           
                           <p style={{ fontSize: 13, color: '#e57373' }}>
-                            El ancho del perfil introducido excede el ancho total de la banda
+                            El ancho introducido excede el ancho total de la banda
                           </p>
                         )}
                         
@@ -1037,11 +1055,11 @@ function PerfilTConfigView() {
               </span>
             </div>
 
-          ) : (
+          ) : hileras === 2 ? (
 
             <div className="config-side-img-wrapper-perfilT config-perfilT2-wrapper">
               <img
-                src="/images/sketch-perfilT-2.svg"
+                src="/images/sketch-perfilT-2-2.svg"
                 alt="Esquema de perfil transversal con hileras"
                 className="config-side-img"
               />
@@ -1063,6 +1081,32 @@ function PerfilTConfigView() {
               <span className="config-perfilT2-label config-perfilT2-ancho2">
                 {ancho2 || '—'} mm
               </span>
+            </div>
+
+          ) : (
+
+            <div className="config-side-img-wrapper-perfilT config-perfilT3-wrapper">
+              <img
+                src="/images/sketch-perfilT-2-3.svg"
+                alt="Esquema de perfil transversal con hileras"
+                className="config-side-img"
+              />
+              <span className="config-perfilT3-label config-perfilT3-paso">
+                {distancia || '—'} mm
+              </span>
+              <span className="config-perfilT3-label config-perfilT3-ancho">
+                {ancho || '—'} mm
+              </span>
+              <span className="config-perfilT3-label config-perfilT3-margen">
+                {margen || '—'} mm
+              </span>
+              <span className="config-perfilT3-label config-perfilT3-luz">
+                {luz || '—'} mm
+              </span>
+              <span className="config-perfilT3-label config-perfilT3-ancho1">
+                {ancho1 || '—'} mm
+              </span>
+            
             </div>
             
           )
