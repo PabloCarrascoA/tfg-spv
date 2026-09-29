@@ -32,9 +32,17 @@ function RunerConfigView() {
 
   const anchoRuner = runers.find(r => r.codigo === codigoRuner)?.ancho ?? null
 
-  console.log("ancho runer: " + anchoRuner)
-
   const anchoBanda = parseFloat(state.banda?.ancho) || null
+
+  const largoBanda = Number(state.banda?.longitud)
+  const anchoPerfil = Number(anchoRuner)
+  const medidasValidas = Number.isFinite(anchoPerfil) && anchoPerfil > 0 &&
+    Number.isFinite(largoBanda) && largoBanda > 0
+  const proporcion = medidasValidas ? largoBanda / anchoPerfil : null
+
+  const largoEsMultiploDelAncho = medidasValidas && Math.round(proporcion) >= 1 &&
+    Math.abs(proporcion - Math.round(proporcion)) <=
+      Number.EPSILON * Math.max(1, Math.abs(proporcion)) * 4
 
   // -----  Función en desuso por el AutocompleteSelect -----
   function handleCodigoRunerChange(e) {
@@ -157,6 +165,15 @@ function RunerConfigView() {
                   getKey={runer => runer.codigo}
                   placeholder="Busqueda por código o tipo de runer"
                 />
+                {codigoRuner && (
+                  <p role="status" style={{ fontSize: 13, color: largoEsMultiploDelAncho ? '#2e7d32' : '#e57373' }}>
+                    {!medidasValidas
+                      ? 'No se puede verificar el múltiplo: el paso del runer y el largo de la banda deben ser números positivos.'
+                      : largoEsMultiploDelAncho
+                        ? `El largo de la banda (${largoBanda} mm) es múltiplo del paso del runer (${anchoPerfil} mm).`
+                        : `El largo de la banda (${largoBanda} mm) no es múltiplo del paso del runer (${anchoPerfil} mm).`}
+                  </p>
+                )}
                   
               </div>
 
