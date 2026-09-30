@@ -289,7 +289,36 @@ function PerfilTConfigView() {
       setMargenDerH2('')
     }, [anchoPerfH2])
 
+  
+  function anchoIncorrecto(anchoTotal, codigo) {
+    const ancho = Number(anchoTotal)
+    const tipoPerfil = codigo || ''
 
+    if (tipoPerfil.includes('T')) {
+      if ((ancho % 10 && ancho % 25) !== 0) {
+        return true
+      }
+      return false
+    }
+
+    if (tipoPerfil.includes('L')) {
+      if (ancho % 25 !== 0) {
+        return true
+      }
+      return false
+    }
+
+     if (tipoPerfil.includes('RR')) {
+      if (ancho % 25 !== 0) {
+        return true
+      }
+      return false
+    }
+
+
+
+    return false
+  }
 
   function handleSiguiente() {
 
@@ -315,6 +344,14 @@ function PerfilTConfigView() {
 
     if (tresbolillo === true && hilerasT > 1 && (!colorH1 || !colorH2)) {
       return alert('Asegúrese de haber seleccionado un color para los perfiles de la Hilera 1 y la Hilera 2')
+    }
+
+    if (tresbolillo === false && anchoIncorrecto(ancho, codigoPerfil)) {
+       return alert('El ancho total introducido no es compatible con el tipo de perfil escogido')
+    }
+
+    if (!ancho) {
+      return alert('¡Recuerde introducir un ancho total antes de continuar!')
     }
 
 
@@ -547,6 +584,25 @@ function PerfilTConfigView() {
                         La suma de ambos márgenes laterales no puede superar el ancho de la banda ({anchoBanda} mm)
                       </p>
                     )}
+
+                    {anchoIncorrecto(ancho, tipoPerfilT) && (
+                      <>
+                        {tipoPerfilT.includes('T') && (
+                          <p className='alert-error'>Error: El ancho introducido no es compatible, para perfiles T debe ser múltiplo de 10 o 25</p>
+                        )}
+
+                        {tipoPerfilT.includes('L') && (
+                          <p className='alert-error'>Error: El ancho introducido no es compatible, para perfiles L debe ser múltiplo de 25</p>
+                        )}
+
+                        {tipoPerfilT.includes('RR') && (
+                          <p className='alert-error'>Error: El ancho introducido no es compatible, para perfiles RR debe ser múltiplo de 25</p>
+                        )}
+                        
+                      </>
+                    )}
+                      
+                    
 
                     {hileras > 2 && (
                       <p style={{ fontSize: 13, color: '#4a6f8a', textDecoration: 'underline' }}>

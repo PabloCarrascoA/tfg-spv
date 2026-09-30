@@ -18,6 +18,11 @@ a {
   color: inherit;
 }
 
+.alert-error {
+  color: #e57373;
+  font-size: 13px;
+}
+
 /* =============================================
    APP SHELL
    ============================================= */
@@ -610,7 +615,7 @@ a {
 
 .config-perfilT3-paso {
   top: 18.5%; 
-  left: 20%;
+  left: 18%;
 }
 
 .config-perfilT3-ancho {
