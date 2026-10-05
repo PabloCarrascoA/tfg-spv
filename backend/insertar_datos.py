@@ -5,8 +5,8 @@ from app.db.database import get_db_connection
 # -----------------------
 
 runners = [
-    {"tipo": "Runner Ej1", "codigo": "R01", "color": "Blanco", "material": "PVC", "precio_material": 10, "precioSoldar_PVC": 18, "precioSoldar_PVC": 18, "precioSoldar_Uretano": 25},
-    {"tipo": "Runner Ej2", "codigo": "R02", "color": "Azul", "material": "Uretano", "precio_material": 15, "precioSoldar_PVC": 18, "precioSoldar_PVC": 18, "precioSoldar_Uretano": 25},
+    {"tipo": "Runner Ej1", "codigo": "R01", "color": "Blanco", "material": "PVC", "precio_material": 10, "precio_soldar": 18},
+    {"tipo": "Runner Ej2", "codigo": "R02", "color": "Azul", "material": "Uretano", "precio_material": 15, "precio_soldar": 18},
 ]
 
 perfiles_longitudinales = [
@@ -191,16 +191,15 @@ with get_db_connection() as conn:
 
     for runner in runners:
         cursor.execute("""
-            INSERT INTO runners (tipo, codigo, color, material, precio_material, precioSoldar_PVC, precioSoldar_Uretano)
-            VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO runners (tipo, codigo, color, material, precio_material, precio_soldar)
+            VALUES (?, ?, ?, ?, ?, ?)
         """, (
             runner.get("tipo", ""),
             runner["codigo"],
             runner.get("color", ""),
             runner.get("material", ""),
             runner.get("precio_material", 0.0),
-            runner.get("precioSoldar_PVC", 0.0),
-            runner.get("precioSoldar_Uretano", 0.0),
+            runner.get("precio_soldar", 0.0),
 
         ))
 

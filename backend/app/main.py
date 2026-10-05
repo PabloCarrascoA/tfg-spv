@@ -73,8 +73,7 @@ with get_db_connection() as conn:
             color TEXT,
             material TEXT,
             precio_material REAL,
-            precioSoldar_PVC REAL,
-            precioSoldar_Uretano REAL
+            precio_soldar REAL,
                    
         )
     """)

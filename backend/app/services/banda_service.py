@@ -111,7 +111,7 @@ def obtener_perfil_longitudinal_por_codigo(db, codigo: str):
 def obtener_runer_por_codigo(db, codigo:str):
     cursor = db.cursor()
     cursor.execute(
-        "SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_PVC, precioSoldar_Uretano, ancho FROM runners WHERE codigo = ?",
+        "SELECT id, tipo, codigo, color, material, precio_material, precio_soldar, ancho FROM runners WHERE codigo = ?",
         (codigo,)
     )
 
@@ -127,9 +127,8 @@ def obtener_runer_por_codigo(db, codigo:str):
         "color": row[3],
         "material": row[4],
         "precio_material": row[5],
-        "precioSoldar_PVC": row[6],
-        "precioSoldar_Uretano": row[7],
-        "ancho": row[8]
+        "precio_soldar": row[6],
+        "ancho": row[7]
     }
 
 def obtener_onda_por_codigo(db, codigo:str):
@@ -266,7 +265,7 @@ def obtener_perfiles_longitudinales(db):
 
 def obtener_runers(db):
     cursor = db.cursor()
-    cursor.execute("SELECT id, tipo, codigo, color, material, precio_material, precioSoldar_PVC, precioSoldar_Uretano, ancho FROM runners")
+    cursor.execute("SELECT id, tipo, codigo, color, material, precio_material, precio_soldar, ancho FROM runners")
     rows = cursor.fetchall()
 
     runers = []
@@ -278,9 +277,8 @@ def obtener_runers(db):
             "color": row[3],
             "material": row[4],
             "precio_material": row[5],
-            "precioSoldar_PVC": row[6],
-            "precioSoldar_Uretano": row[7],
-            "ancho": row[8]
+            "precio_soldar": row[6],
+            "ancho": row[7]
         })
 
     return runers
@@ -839,13 +837,7 @@ def calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_per
 
     # - Calculo soldadura
 
-    if runer["precioSoldar_PVC"]:
-
-        precio_soldadura_mL = runer["precioSoldar_PVC"]
-
-    else:
-
-        precio_soldadura_mL = runer["precioSoldar_Uretano"]
+    precio_soldadura_mL = runer["precio_soldar"]
 
     precio_soldadura_total = (n_perfiles * largo_m * precio_soldadura_mL)
 
