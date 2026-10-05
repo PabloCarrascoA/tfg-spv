@@ -4,6 +4,7 @@ from datetime import date
 
 TABLAS_EXPORTABLES = {
     'bandas':                  'bandas',
+    'empalmes':                'empalmes',
     'perfiles_longitudinales': 'perfiles_longitudinales',
     'perfiles_transversales':  'perfiles_transversales',
     'perfiles_transversales_tresbolillo': 'perfiles_transversales_tresbolillo',

@@ -853,7 +853,7 @@ def calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_per
 
     if cliente_id is not None:
 
-        tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "runers")
+        tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "runers", codigo_material=codigo_runer)
 
         precio_preparacion = calcular_precio_preparacionLR(tarifa_preparacion, cantidad_bandas, n_perfiles)
 

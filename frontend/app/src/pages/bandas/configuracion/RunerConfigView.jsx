@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { siguienteRuta, infoPaso } from '../BandaWizard'
 import { getRuners } from '../../../services/api'
@@ -18,6 +18,9 @@ function RunerConfigView() {
 
   const { actual, total } = infoPaso(state.seleccion, 'runer')
 
+  const [anchoEditado, setAnchoEditado] = useState(state.banda?.ancho ?? '')
+  const [largoEditado, setLargoEditado] = useState(state.banda?.longitud ?? '')
+
   const [runers, setRuners]             = useState([])
   const [codigoRuner, setCodigoRuner]   = useState('')
   const [cantidad, setCantidad]         = useState(2)
@@ -32,9 +35,9 @@ function RunerConfigView() {
 
   const anchoRuner = runers.find(r => r.codigo === codigoRuner)?.ancho ?? null
 
-  const anchoBanda = parseFloat(state.banda?.ancho) || null
+  const anchoBanda = Number(anchoEditado) || null
 
-  const largoBanda = Number(state.banda?.longitud)
+  const largoBanda = Number(largoEditado)
   const anchoPerfil = Number(anchoRuner)
   const medidasValidas = Number.isFinite(anchoPerfil) && anchoPerfil > 0 &&
     Number.isFinite(largoBanda) && largoBanda > 0
@@ -63,48 +66,43 @@ function RunerConfigView() {
       .catch(err => console.error('Error cargando runers:', err))
   }, [])
 
-  const editando = useRef(null)
+  function handleMargenChange(valor) {
+    setMargen(valor)
+    if (valor === '' || !Number.isFinite(Number(valor)) ||
+        !anchoBanda || !anchoPerfil || cantidad <= 1) {
+      setLuz('')
+      return
+    }
 
-  // cuando cambia margen -> recalcula luz
-
-  useEffect(() => {
-
-  if (editando.current === 'luz') return 
-  if (!anchoBanda || !anchoRuner || !margen) return
-
-  let luzCalculada
-
-  if (cantidad >= 1) {
-    luzCalculada = (anchoBanda - 2 * parseFloat(margen) - cantidad * anchoRuner) / (cantidad - 1)
+    setLuz((anchoBanda - 2 * Number(valor) - cantidad * anchoPerfil) / (cantidad - 1))
   }
 
-  editando.current = 'margen'
-  setLuz(luzCalculada)
-  setTimeout(() => { editando.current = null }, 0)
+  function handleLuzChange(valor) {
+    setLuz(valor)
+    if (valor === '' || !Number.isFinite(Number(valor)) ||
+        !anchoBanda || !anchoPerfil || cantidad <= 1) {
+      setMargen('')
+      return
+    }
 
-  }, [margen, cantidad, anchoRuner, anchoBanda])
-
-  // cuando cambia luz -> recalcula margen
-
-  useEffect(() => {
-
-  if (editando.current === 'margen') return
-
-  if (!anchoBanda || !anchoRuner || !luz) return
-
-  let margenCalculado
-
-  if (cantidad >= 3) {
-    margenCalculado = (anchoBanda - (cantidad - 1) * parseFloat(luz) - cantidad * anchoRuner) / 2
+    setMargen((anchoBanda - (cantidad - 1) * Number(valor) - cantidad * anchoPerfil) / 2)
   }
 
-  editando.current = 'luz'
-  setMargen(margenCalculado)
-  setTimeout(() => { editando.current = null }, 0)
-
-  }, [luz, cantidad, anchoRuner, anchoBanda])
+  const estadoActualizado = {
+    ...state,
+    banda: {
+      ...state.banda,
+      ancho: anchoEditado,
+      longitud: largoEditado,
+    },
+  }
 
   function handleSiguiente() {
+    if (!Number.isFinite(anchoBanda) || anchoBanda <= 0 ||
+        !Number.isFinite(largoBanda) || largoBanda <= 0) {
+      return alert('Introduce un ancho y un largo de banda mayores que cero')
+    }
+
 
     if (!codigoRuner) {
         return alert('Asegúrese de haber elegido un código de runer')
@@ -112,7 +110,7 @@ function RunerConfigView() {
     const ruta = siguienteRuta(state.seleccion, 'runer')
     navigate(ruta, {
       state: {
-        ...state,
+        ...estadoActualizado,
         runer: {
           codigoRuner,
           cantidad,
@@ -128,7 +126,7 @@ function RunerConfigView() {
   }
 
   function handleAtras() {
-    navigate('/banda/configurar/perfil-transversal', { state })
+    navigate('/banda/configurar/perfil-transversal', { state: estadoActualizado })
   }
 
   return (
@@ -142,9 +140,41 @@ function RunerConfigView() {
           <div className="config-form">
 
             <div className="form-row">
-                <span className="form-label">Ancho de la banda: <span className='config-step-label'>{state.banda?.ancho} mm</span></span>
-                <span className="form-label">Largo de la banda: <span className='config-step-label'>{state.banda?.longitud} mm</span></span>
+              <span className="form-label">- Valores introducidos previamente -</span>
             </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label" htmlFor="runer-ancho-banda">Ancho de la banda (mm)</label>
+                <input
+                  id="runer-ancho-banda"
+                  type="number"
+                  className="form-input"
+                  min="0"
+                  step="any"
+                  value={anchoEditado}
+                  onChange={e => {
+                    setAnchoEditado(e.target.value)
+                    setMargen('')
+                    setLuz('')
+                  }}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="runer-largo-banda">Largo de la banda (mm)</label>
+                <input
+                  id="runer-largo-banda"
+                  type="number"
+                  className="form-input"
+                  min="0"
+                  step="any"
+                  value={largoEditado}
+                  onChange={e => setLargoEditado(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <hr style={{ border: 0, borderTop: '1px solid #4a6f8a' }} />
 
             <div className="form-row">
               <div className="form-group">
@@ -221,7 +251,7 @@ function RunerConfigView() {
                       className="form-input"
                       placeholder="0"
                       value={margen}
-                      onChange={e => setMargen(e.target.value)}
+                      onChange={e => handleMargenChange(e.target.value)}
                     />
                   </div>
                   <div className="form-group">
@@ -231,7 +261,7 @@ function RunerConfigView() {
                       className="form-input"
                       placeholder="0"
                       value={luz}
-                      onChange={e => setLuz(e.target.value)}
+                      onChange={e => handleLuzChange(e.target.value)}
                     />
                   </div>
                 </div>
@@ -253,7 +283,7 @@ function RunerConfigView() {
 
             {codigoRuner && !anchoBanda && (
               <p style={{ fontSize: 13, color: '#e57373' }}>
-                No se encontró el ancho de banda — asegúrate de haberlo introducido en el paso anterior
+                Introduce el ancho de la banda en el campo superior
               </p>
             )}
 
@@ -293,10 +323,10 @@ function RunerConfigView() {
                 className="config-side-img"
               />
               <span className="config-banda-label config-runer-margen">
-                {margen || '—'} mm
+                {margen === '' ? '—' : margen} mm
               </span>
               <span className="config-banda-label config-runer-luz">
-                {luz || '—'} mm
+                {luz === '' ? '—' : luz} mm
               </span>
             </div>
 

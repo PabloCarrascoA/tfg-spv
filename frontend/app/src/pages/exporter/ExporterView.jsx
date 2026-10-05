@@ -3,6 +3,7 @@ import { getInfoTabla, exportarTabla } from '../../services/api'
 
 const SECCIONES = [
   { value: 'bandas',                  label: 'Banda Material'    },
+  { value: 'empalmes',                label: 'Empalmes Material'},
   { value: 'perfiles_longitudinales', label: 'PerfilL Material'  },
   { value: 'perfiles_transversales',  label: 'PerfilT Material'  },
   { value: 'perfiles_transversales_tresbolillo', label: 'PerfilT Tresbolillo Material' },

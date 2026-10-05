@@ -74,6 +74,7 @@ with get_db_connection() as conn:
             material TEXT,
             precio_material REAL,
             precio_soldar REAL,
+            preparacion REAL
                    
         )
     """)
