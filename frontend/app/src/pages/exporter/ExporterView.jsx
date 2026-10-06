@@ -14,7 +14,7 @@ const SECCIONES = [
 function ExporterView() {
   const [seccion,       setSeccion]       = useState('')
   const [infoTabla,     setInfoTabla]     = useState(null)
-  const [paso,          setPaso]          = useState(1)   // 1: selección, 2: previa, 3: descargado
+  const [paso,          setPaso]          = useState(1)  
   const [cargando,      setCargando]      = useState(false)
   const [archivoNombre, setArchivoNombre] = useState('')
 

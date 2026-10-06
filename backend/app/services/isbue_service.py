@@ -119,7 +119,6 @@ class IsbueService:
             distancia_entre_bandas_I = perfil_l_state.get("inferior", {}).get("distanciaEntreBandas")
 
         # COLOR/TIPO PERFIL TRANSVERSAL
-        tipo_perfilT = perfil_t_state.get("tipoPerfilT")
         color_perfilT = perfil_t_state.get("color")
 
         # COLOR/TIPO RUNER
@@ -364,48 +363,50 @@ class IsbueService:
         # PERFILES TRANSVERSALES
         #
 
-        if resultado.get("codigo_perfilT"):
+        if perfil_t_state.get("codigoPerfilTH1") or resultado.get("codigo_perfilTH1") or resultado.get("codigo_perfilT") or perfil_t_state.get("codigoPerfilTH2") or resultado.get("codigo_perfilTH2"):
+            observaciones.append("PERFIL TRANSVERSAL\n")
 
-            n_perfilesT = resultado.get('n_perfilesT')
+        tresbolillo = perfil_t_state.get("tresbolillo", resultado.get("tresbolillo", False))
 
-            if resultado.get("n_hileras", 1) <= 1:
+        if tresbolillo and (
+            perfil_t_state.get("codigoPerfilTH1") or resultado.get("codigo_perfilTH1")
+        ):
+            n_hileras = perfil_t_state.get("hilerasT", resultado.get("hilerasT")) or 1
+            lineas = ["Posición: Tresbolillo", f"Nº hileras: {n_hileras}\n"]
 
-                if n_perfilesT == 1:
-                    observaciones.append(
-                        f"CON 1 PERFIL TRANSVERSAL "
-                        f"{tipo_perfilT} "
-                        f"{color_perfilT} "
-                        f"DE {resultado.get('ancho_perfilT')} mm, "
-                        f"COLOCADO A UN PASO DE {resultado.get('distancia_paso')} mm"
-                    )
-                else:
-                    observaciones.append(
-                        f"CON {n_perfilesT} PERFILES TRANSVERSALES "
-                        f"{tipo_perfilT} "
-                        f"{color_perfilT} "
-                        f"DE {resultado.get('ancho_perfilT')} mm, "
-                        f"COLOCADOS A UN PASO DE {resultado.get('distancia_paso')} mm"
-                    )
+            for hilera in range(1, 3 if n_hileras > 1 else 2):
+                codigo = resultado.get(f"tipo_perfilTH{hilera}") or perfil_t_state.get(f"tipoPerfilTH{hilera}")
+                color = perfil_t_state.get(f"colorH{hilera}") or resultado.get(f"color_H{hilera}") or ""
+                campos = [
+                    f"Código perfil: {codigo} {color}".rstrip(),
+                    f"Ancho perfil: {resultado.get(f'ancho_perfilH{hilera}', perfil_t_state.get(f'anchoPerfH{hilera}'))} mm",
+                    f"Nº perfiles: {resultado.get(f'n_perfilesH{hilera}', perfil_t_state.get(f'nPerfilesH{hilera}'))}",
+                    f"Paso: {resultado.get(f'paso_H{hilera}', perfil_t_state.get(f'pasoH{hilera}'))} mm",
+                    f"Margen lateral izquierdo: {resultado.get(f'margen_izq_H{hilera}', perfil_t_state.get(f'margenIzqH{hilera}'))} mm",
+                    f"Margen lateral derecho: {resultado.get(f'margen_der_H{hilera}', perfil_t_state.get(f'margenDerH{hilera}'))} mm\n",
+                ]
+                lineas.append(f"HILERA {hilera} -> " + "; ".join(campos))
 
-            else:
+            observaciones.append("\n".join(lineas))
 
-                n_hileras = resultado.get('n_hileras')
-                n_interrupciones = n_hileras - 1
+        elif not tresbolillo and resultado.get("codigo_perfilT"):
+            n_hileras = resultado.get("n_hileras") or 1
+            etiqueta_ancho = "Ancho perfil" if n_hileras <= 1 else "Ancho del conjunto"
+            campos = [
+                f"Código perfil: {perfil_t_state.get('tipoPerfilT')} {color_perfilT or ''}".rstrip(),
+                f"filas: {resultado.get('n_perfilesT')}",
+                f"{etiqueta_ancho}: {resultado.get('ancho_perfilT')} mm",
+                f"Margen lateral: {resultado.get('margen_lateral')} mm",
+                f"Paso: {resultado.get('distancia_paso')} mm",
+            ]
+            if n_hileras > 1:
+                campos.extend([
+                    f"perfiles por fila: {n_hileras}",
+                    f"Ancho perfiles: {resultado.get('ancho1')} mm",
+                    f"Luz interior: {resultado.get('luz_interior')} mm",
+                ])
 
-                texto_hileras = "1 FILA DE" if n_hileras == 1 else f"{n_hileras} FILAS DE"
-                texto_perfilesT = f"1 PERFIL TRANSVERSAL" if n_perfilesT == 1 else f"{n_perfilesT} PERFILES TRANSVERSALES"
-                texto_interrupciones = "1 INTERRUPCIÓN CENTRAL" if n_interrupciones == 1 else f"{n_interrupciones} INTERRUPCIONES CENTRALES"
-
-                observaciones.append(
-                    f"CON {texto_hileras} "
-                    f"{texto_perfilesT} "
-                    f"{tipo_perfilT} "
-                    f"{color_perfilT} "
-                    f"DE {resultado.get('ancho_perfilT')} mm "
-                    f"CON {texto_interrupciones} "
-                    f"DE {resultado.get('luz_interior')} mm "
-                    f"COLOCADOS A UN PASO DE {resultado.get('distancia_paso')} mm"
-                )
+            observaciones.append("Posición: Centrado\n" + "; ".join(campos))
 
         #
         # RUNER

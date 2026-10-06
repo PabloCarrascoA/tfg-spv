@@ -350,7 +350,7 @@ function PerfilTConfigView() {
        return alert('El ancho total introducido no es compatible con el tipo de perfil escogido')
     }
 
-    if (!ancho) {
+    if (!ancho && tresbolillo === false) {
       return alert('¡Recuerde introducir un ancho total antes de continuar!')
     }
 
