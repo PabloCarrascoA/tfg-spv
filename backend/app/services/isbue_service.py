@@ -78,22 +78,17 @@ class IsbueService:
         runer_state = state_frontend.get("runer", {})
 
         # COLOR/TIPO PERFIL LONGITUDINAL
-        tipo_perfil_superior = (
-            perfil_l_state.get("tipoPerfilSuperior")
-            or perfil_l_state.get("superior", {}).get("tipo")
-        )
         color_perfil_superior = (
             perfil_l_state.get("colorPerfilSuperior")
             or perfil_l_state.get("superior", {}).get("color")
-        )
-        tipo_perfil_inferior = (
-            perfil_l_state.get("tipoPerfilInferior")
-            or perfil_l_state.get("inferior", {}).get("tipo")
         )
         color_perfil_inferior = (
             perfil_l_state.get("colorPerfilInferior")
             or perfil_l_state.get("inferior", {}).get("color")
         )
+
+        codigo_perfil_l_superior = perfil_l_state.get("tipoPerfilSuperior")
+        codigo_perfil_l_inferior = perfil_l_state.get("tipoPerfilInferior")
 
         acotacion_superior = perfil_l_state.get("superior", {}).get("acotado")
         acotacion_inferior = perfil_l_state.get("inferior", {}).get("acotado")
@@ -131,233 +126,70 @@ class IsbueService:
 
         if resultado.get("tipo_empalme"):
             observaciones.append(
-                f"{resultado.get('subtipo_empalme').upper()} "
+                f"{resultado.get('subtipo_empalme').upper()}\n"
             )
 
         #
         # PERFILES LONGITUDINALES
         #
 
-        if resultado.get("codigo_perfil_inferior"):
+        n_inf = resultado.get("n_perfiles_inferior") or 0
+        n_inf_existe = False
 
-            n_inf = resultado.get('n_perfiles_inferior')
+        if n_inf > 0:
+            n_inf_existe = True
+            observaciones.append('PERFIL LONGITUDINAL\n')
+            texto_inferior = (
+                "- PERFIL INFERIOR\n"
+                f"Código de perfil: {codigo_perfil_l_inferior} {color_perfil_inferior or ''}; "
+                f"Nº Perfiles: {n_inf}"
+            )
 
-            if n_inf >= 2:
+            if n_inf == 1 and centrado_I:
+                texto_inferior += "; Posición: CENTRADO\n"
+            elif acotacion_inferior == 1:
+                texto_inferior += f"; Distancia canto banda / canto perfil: {distancia_borde_banda_I} mm\n"
+            elif acotacion_inferior == 2:
+                texto_inferior += f"; Distancia canto banda / centro perfil: {distancia_borde_centro_I} mm\n"
+            elif acotacion_inferior == 3:
+                texto_inferior += f"; Distancia entre centros de perfiles: {distancia_entre_centros_I} mm\n"
+            elif acotacion_inferior == 4:
+                texto_inferior += f"; Distancia interior / interior: {distancia_entre_bandas_I} mm\n"
+            elif acotacion_inferior == 5:
+                texto_inferior += "; Posición: SEGÚN PLANO\n"
+            elif acotacion_inferior == 6:
+                texto_inferior += "; Posición: EXTREMOS DE LA BANDA\n"
 
-                # ACOTACION 1 (CENTRO / CENTRO)
+            observaciones.append(texto_inferior)
 
-                if acotacion_inferior == 3:
-                    observaciones.append(
-                        f"CON {n_inf} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_inferior} "
-                        f"{color_perfil_inferior} "
-                        f"COLOCADOS A {distancia_entre_centros_I} mm ENTRE CENTROS DE PERFIL "
-                        f"POR LA PARTE INFERIOR"
-                    )
+        n_sup = resultado.get("n_perfiles_superior") or 0
 
-                # ACOTACIÓN 2 (CANTO BANDA / CENTRO PERFIL)
+        if n_sup > 0:
+            if n_inf_existe == False:
+                observaciones.append('PERFIL LONGITUDINAL\n')
 
-                if acotacion_inferior == 2:
-                    observaciones.append(
-                        f"CON {n_inf} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_inferior} "
-                        f"{color_perfil_inferior} "
-                        f"COLOCADOS A {distancia_borde_centro_I} mm CANTO BANDA CENTRO PERFIL " # ?
-                        f"POR LA PARTE INFERIOR"
-                    )
+            texto_superior = (
+                "- PERFIL SUPERIOR\n"
+                f"Código de perfil: {codigo_perfil_l_superior} {color_perfil_superior or ''}; "
+                f"Nº Perfiles: {n_sup}"
+            )
 
-                # ACOTACIÓN 3 (CANTO BANDA / CANTO PERFIL)
+            if n_sup == 1 and centrado_S:
+                texto_superior += "; Posición: CENTRADO\n"
+            elif acotacion_superior == 1:
+                texto_superior += f"; Distancia canto banda / canto perfil: {distancia_borde_banda_S} mm\n"
+            elif acotacion_superior == 2:
+                texto_superior += f"; Distancia canto banda / centro perfil: {distancia_borde_centro_S} mm\n"
+            elif acotacion_superior == 3:
+                texto_superior += f"; Distancia entre centros de perfiles: {distancia_entre_centros_S} mm\n"
+            elif acotacion_superior == 4:
+                texto_superior += f"; Distancia interior / interior: {distancia_entre_bandas_S} mm\n"
+            elif acotacion_superior == 5:
+                texto_superior += "; Posición: SEGÚN PLANO\n"
+            elif acotacion_superior == 6:
+                texto_superior += "; Posición: EXTREMOS DE LA BANDA\n"
 
-                if acotacion_inferior == 1:
-                    observaciones.append(
-                        f"CON {n_inf} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_inferior} "
-                        f"{color_perfil_inferior} "
-                        f"COLOCADOS A {distancia_borde_banda_I} mm CANTO BANDA CANTO PERFIL "
-                        f"POR LA PARTE INFERIOR"
-                    )
-
-                # ACOTACIÓN 4 (INTERIOR / INTERIOR)
-
-                if acotacion_inferior == 4:
-                    observaciones.append(
-                        f"CON {n_inf} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_inferior} "
-                        f"{color_perfil_inferior} "
-                        f"COLOCADOS A {distancia_entre_bandas_I} mm DE INTERIOR A INTERIOR DEL PERFIL "
-                        f"POR LA PARTE INFERIOR"
-                    )
-
-                # SEGÚN PLANO
-
-                if acotacion_inferior == 5:
-                    observaciones.append(
-                        f"CON {n_inf} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_inferior} "
-                        f"{color_perfil_inferior} "
-                        f"COLOCADOS SEGÚN PLANO "
-                        f"POR LA PARTE INFERIOR"
-                    )
-
-                # EXTREMOS
-
-                if acotacion_inferior == 6:
-                    observaciones.append(
-                        f"CON {n_inf} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_inferior} "
-                        f"{color_perfil_inferior} "
-                        f"COLOCADOS EN LOS EXTREMOS DE LA BANDA "
-                        f"POR LA PARTE INFERIOR"
-                    )
-
-            # falta ver lo de si es centrado
-            if n_inf == 1:
-
-                if centrado_I == True:
-
-                    observaciones.append(
-                        f"CON 1 PERFIL LONGITUDINAL "
-                        f"TIPO {tipo_perfil_inferior} "
-                        f"{color_perfil_inferior} "
-                        f"COLOCADO CENTRADO "
-                        f"POR LA PARTE INFERIOR"
-                    )
-
-                else:
-
-                    if acotacion_inferior == 1:
-
-                        observaciones.append(
-                            f"CON 1 PERFIL LONGITUDINAL "
-                            f"TIPO {tipo_perfil_inferior} "
-                            f"{color_perfil_inferior} "
-                            f"COLOCADO A {distancia_borde_banda_I} mm CANTO BANDA CANTO PERFIL " # ?
-                            f"POR LA PARTE INFERIOR"
-                        )
-
-                    if acotacion_inferior == 2:
-
-                        observaciones.append(
-                            f"CON 1 PERFIL LONGITUDINAL "
-                            f"TIPO {tipo_perfil_inferior} "
-                            f"{color_perfil_inferior} "
-                            f"COLOCADO A {distancia_borde_centro_I} mm CANTO BANDA CENTRO PERFIL " # ?
-                            f"POR LA PARTE INFERIOR"
-                        )
-
-                
-
-
-        if resultado.get("codigo_perfil_superior"):
-
-            n_sup = resultado.get('n_perfiles_superior')
-
-            if n_sup >= 2:
-
-                # ACOTACION 1 (CENTRO / CENTRO)
-
-                if acotacion_superior == 3:
-                    observaciones.append(
-                        f"CON {n_sup} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_superior} "
-                        f"{color_perfil_superior} "
-                        f"COLOCADOS A {distancia_entre_centros_S} mm ENTRE CENTROS DE PERFIL "
-                        f"POR LA PARTE SUPERIOR"
-                    )
-
-                # ACOTACIÓN 2 (CANTO CENTRO-BANDA / CANTO PERFIL)
-
-                if acotacion_superior == 2:
-                    observaciones.append(
-                        f"CON {n_sup} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_superior} "
-                        f"{color_perfil_superior} "
-                        f"COLOCADOS A {distancia_borde_centro_S} mm CANTO BANDA CENTRO PERFIL " # ?
-                        f"POR LA PARTE SUPERIOR"
-                    )
-
-                # ACOTACIÓN 3 (CANTO BANDA / CANTO PERFIL)
-
-                if acotacion_superior == 1:
-                    observaciones.append(
-                        f"CON {n_sup} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_superior} "
-                        f"{color_perfil_superior} "
-                        f"COLOCADOS A {distancia_borde_banda_S} mm CANTO BANDA CANTO PERFIL "
-                        f"POR LA PARTE SUPERIOR"
-                    )
-
-                # ACOTACIÓN 4 (INTERIOR / INTERIOR)
-
-                if acotacion_superior == 4:
-                    observaciones.append(
-                        f"CON {n_sup} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_superior} "
-                        f"{color_perfil_superior} "
-                        f"COLOCADOS A {distancia_entre_bandas_S} mm DE INTERIOR A INTERIOR DE PERFIL "
-                        f"POR LA PARTE SUPERIOR"
-                    )
-
-                # SEGÚN PLANO
-
-                if acotacion_superior == 5:
-                    observaciones.append(
-                        f"CON {n_sup} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_superior} "
-                        f"{color_perfil_superior} "
-                        f"COLOCADOS SEGÚN PLANO "
-                        f"POR LA PARTE SUPERIOR"
-                    )
-
-                # EXTREMOS
-
-                if acotacion_superior == 6:
-                    observaciones.append(
-                        f"CON {n_sup} PERFILES LONGITUDINALES "
-                        f"TIPO {tipo_perfil_superior} "
-                        f"{color_perfil_superior} "
-                        f"COLOCADOS EN LOS EXTREMOS DE LA BANDA "
-                        f"POR LA PARTE SUPERIOR"
-                    )
-
-            # falta ver lo de si es centrado
-            if n_sup == 1:
-
-                if centrado_S == True:
-
-                    observaciones.append(
-                        f"CON 1 PERFIL LONGITUDINAL "
-                        f"TIPO {tipo_perfil_superior} "
-                        f"{color_perfil_superior} "
-                        f"COLOCADO CENTRADO "
-                        f"POR LA PARTE SUPERIOR"
-                    )
-
-                else:
-
-                    if acotacion_superior == 1:
-
-                        observaciones.append(
-                            f"CON 1 PERFIL LONGITUDINAL "
-                            f"TIPO {tipo_perfil_superior} "
-                            f"{color_perfil_superior} "
-                            f"COLOCADO A {distancia_borde_banda_S} mm CANTO BANDA CANTO PERFIL " # ?
-                            f"POR LA PARTE SUPERIOR"
-                        )
-                    
-                    if acotacion_superior == 2:
-
-                        observaciones.append(
-                            f"CON 1 PERFIL LONGITUDINAL "
-                            f"TIPO {tipo_perfil_superior} "
-                            f"{color_perfil_superior} "
-                            f"COLOCADO A {distancia_borde_centro_S} mm CANTO BANDA CENTRO PERFIL " # ?
-                            f"POR LA PARTE SUPERIOR"
-                        )
-
-
-
-                
+            observaciones.append(texto_superior)
 
         #
         # PERFILES TRANSVERSALES
@@ -416,21 +248,13 @@ class IsbueService:
 
             n_runer = resultado.get('n_perfiles_runer')
 
-            if n_runer == 1:
+            if n_runer > 0:
+
                 observaciones.append(
-                    f"CON 1 RUNER "
-                    f"{tipo_runer} "
-                    f"{color_runer} "
-                    f"COLOCADO EN {resultado.get('margen_runer')} mm "
-                    f"DEL EXTREMO POR LA PARTE SUPERIOR"
-                )
-            else:
-                observaciones.append(
-                    f"CON {n_runer} RUNERS "
-                    f"{tipo_runer} "
-                    f"{color_runer} "
-                    f"COLOCADOS EN {resultado.get('margen_runer')} mm "
-                    f"DEL EXTREMO POR LA PARTE SUPERIOR"
+                    f"Código Runer: {tipo_runer} {color_runer}"
+                    f"Nº Runers: {n_runer}"
+                    f"Margen Lateral (MLR): {resultado.get('margen_runer')} mm"
+                    f"Luz Runer (LR): {resultado.get('luz_runer')} mm"
                 )
 
         #
