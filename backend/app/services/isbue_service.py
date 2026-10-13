@@ -226,14 +226,14 @@ class IsbueService:
             etiqueta_ancho = "Ancho perfil" if n_hileras <= 1 else "Ancho del conjunto"
             campos = [
                 f"Código perfil: {perfil_t_state.get('tipoPerfilT')} {color_perfilT or ''}".rstrip(),
-                f"filas: {resultado.get('n_perfilesT')}",
+                f"Filas: {resultado.get('n_perfilesT')}",
+                f"Perfiles por fila: {n_hileras}",
                 f"{etiqueta_ancho}: {resultado.get('ancho_perfilT')} mm",
                 f"Margen lateral: {resultado.get('margen_lateral')} mm",
                 f"Paso: {resultado.get('distancia_paso')} mm",
             ]
             if n_hileras > 1:
                 campos.extend([
-                    f"perfiles por fila: {n_hileras}",
                     f"Ancho perfiles: {resultado.get('ancho1')} mm",
                     f"Luz interior: {resultado.get('luz_interior')} mm",
                 ])
@@ -249,12 +249,13 @@ class IsbueService:
             n_runer = resultado.get('n_perfiles_runer')
 
             if n_runer > 0:
+                observaciones.append('\nRUNER\n')
 
                 observaciones.append(
-                    f"Código Runer: {tipo_runer} {color_runer}"
-                    f"Nº Runers: {n_runer}"
-                    f"Margen Lateral (MLR): {resultado.get('margen_runer')} mm"
-                    f"Luz Runer (LR): {resultado.get('luz_runer')} mm"
+                    f"Código Runer: {tipo_runer} {color_runer}; "
+                    f"Nº Runers: {n_runer}; "
+                    f"Margen Lateral (MLR): {resultado.get('margen_runer')} mm; "
+                    f"Luz Runer (LR): {resultado.get('luz_runer')} mm; "
                 )
 
         #
