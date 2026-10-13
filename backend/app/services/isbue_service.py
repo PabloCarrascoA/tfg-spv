@@ -141,7 +141,7 @@ class IsbueService:
             observaciones.append('PERFIL LONGITUDINAL\n')
             texto_inferior = (
                 "- PERFIL INFERIOR\n"
-                f"Código de perfil: {codigo_perfil_l_inferior} {color_perfil_inferior or ''}; "
+                f"Código perfil: {codigo_perfil_l_inferior} {color_perfil_inferior or ''}; "
                 f"Nº Perfiles: {n_inf}"
             )
 
@@ -170,7 +170,7 @@ class IsbueService:
 
             texto_superior = (
                 "- PERFIL SUPERIOR\n"
-                f"Código de perfil: {codigo_perfil_l_superior} {color_perfil_superior or ''}; "
+                f"Código perfil: {codigo_perfil_l_superior} {color_perfil_superior or ''}; "
                 f"Nº Perfiles: {n_sup}"
             )
 
