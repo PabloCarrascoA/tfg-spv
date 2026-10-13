@@ -195,6 +195,15 @@ class IsbueService:
         # PERFILES TRANSVERSALES
         #
 
+        def redondear_medida(valor):
+            if valor is None or valor == "":
+                return "—"
+            try:
+                numero = float(str(valor).replace(",", "."))
+                return f"{numero:.2f}".rstrip("0").rstrip(".")
+            except (TypeError, ValueError):
+                return str(valor)
+
         if perfil_t_state.get("codigoPerfilTH1") or resultado.get("codigo_perfilTH1") or resultado.get("codigo_perfilT") or perfil_t_state.get("codigoPerfilTH2") or resultado.get("codigo_perfilTH2"):
             observaciones.append("PERFIL TRANSVERSAL\n")
 
@@ -211,11 +220,11 @@ class IsbueService:
                 color = perfil_t_state.get(f"colorH{hilera}") or resultado.get(f"color_H{hilera}") or ""
                 campos = [
                     f"Código perfil: {codigo} {color}".rstrip(),
-                    f"Ancho perfil: {resultado.get(f'ancho_perfilH{hilera}', perfil_t_state.get(f'anchoPerfH{hilera}'))} mm",
+                    f"Ancho perfil: {redondear_medida(resultado.get(f'ancho_perfilH{hilera}', perfil_t_state.get(f'anchoPerfH{hilera}')))} mm",
                     f"Nº perfiles: {resultado.get(f'n_perfilesH{hilera}', perfil_t_state.get(f'nPerfilesH{hilera}'))}",
-                    f"Paso: {resultado.get(f'paso_H{hilera}', perfil_t_state.get(f'pasoH{hilera}'))} mm",
-                    f"Margen lateral izquierdo: {resultado.get(f'margen_izq_H{hilera}', perfil_t_state.get(f'margenIzqH{hilera}'))} mm",
-                    f"Margen lateral derecho: {resultado.get(f'margen_der_H{hilera}', perfil_t_state.get(f'margenDerH{hilera}'))} mm\n",
+                    f"Paso: {redondear_medida(resultado.get(f'paso_H{hilera}', perfil_t_state.get(f'pasoH{hilera}')))} mm",
+                    f"Margen lateral izquierdo: {redondear_medida(resultado.get(f'margen_izq_H{hilera}', perfil_t_state.get(f'margenIzqH{hilera}')))} mm",
+                    f"Margen lateral derecho: {redondear_medida(resultado.get(f'margen_der_H{hilera}', perfil_t_state.get(f'margenDerH{hilera}')))} mm\n",
                 ]
                 lineas.append(f"HILERA {hilera} -> " + "; ".join(campos))
 
@@ -228,14 +237,14 @@ class IsbueService:
                 f"Código perfil: {perfil_t_state.get('tipoPerfilT')} {color_perfilT or ''}".rstrip(),
                 f"Filas: {resultado.get('n_perfilesT')}",
                 f"Perfiles por fila: {n_hileras}",
-                f"{etiqueta_ancho}: {resultado.get('ancho_perfilT')} mm",
-                f"Margen lateral: {resultado.get('margen_lateral')} mm",
-                f"Paso: {resultado.get('distancia_paso')} mm",
+                f"{etiqueta_ancho}: {redondear_medida(resultado.get('ancho_perfilT'))} mm",
+                f"Margen lateral: {redondear_medida(resultado.get('margen_lateral'))} mm",
+                f"Paso: {redondear_medida(resultado.get('distancia_paso'))} mm",
             ]
             if n_hileras > 1:
                 campos.extend([
-                    f"Ancho perfiles: {resultado.get('ancho1')} mm",
-                    f"Luz interior: {resultado.get('luz_interior')} mm",
+                    f"Ancho perfiles: {redondear_medida(resultado.get('ancho1'))} mm",
+                    f"Luz interior: {redondear_medida(resultado.get('luz_interior'))} mm",
                 ])
 
             observaciones.append("Posición: Centrado\n" + "; ".join(campos))
