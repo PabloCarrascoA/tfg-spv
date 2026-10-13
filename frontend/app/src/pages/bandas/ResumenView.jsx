@@ -108,13 +108,14 @@ function ResumenView() {
             <p className="resumen-seccion-titulo">1. Banda cortada y empalme</p>
             {state.banda?.banda?.codigo_barras ? (
               <ul className="resumen-lista">
-                <li>Banda: {state.banda.banda.codigo_barras} - {state.banda.banda.descripcion}</li>
+                <li><strong>Banda: </strong>{state.banda.banda.codigo_barras} - {state.banda.banda.descripcion}</li>
                 <li>Cantidad: {resultado.cantidad_bandas}</li>
                 <li>Largo: {resultado.largo_banda} mm</li>
                 <li>Ancho: {state.banda?.ancho} mm</li>
-                <li style={{ marginBottom: '10px' }}>Empalme: {state.banda?.tipoEmpalme} — {state.banda?.subtipoEmpalme ?? 'Banda abierta'}</li>
-                <li>Precio banda: {resultado.precio_banda} €</li>
-                <li>Precio empalme: {resultado.precio_empalme} €</li>
+                <li style={{ marginBottom: '10px' }}><strong>Precio banda: </strong>{resultado.precio_banda} €</li>
+
+                <li><strong>Empalme: </strong>{state.banda?.tipoEmpalme} — {state.banda?.subtipoEmpalme ?? 'Banda abierta'}</li>
+                <li><strong>Precio empalme: </strong>{resultado.precio_empalme} €</li>
                 {state.banda?.comentarios && <li>Comentarios: {state.banda.comentarios}</li>}
               </ul>
             ) : <NoConfigurado />}
@@ -161,7 +162,7 @@ function ResumenView() {
             {resultado.codigo_perfilT && state.perfilT?.tresbolillo === false ? (
               
               <ul className="resumen-lista">
-                <li>Perfil: {state.perfilT?.tipoPerfilT}</li>
+                <li><strong>Perfil: </strong>{state.perfilT?.tipoPerfilT}</li>
                 <li>Nº de filas: {resultado.n_perfilesT}</li>
                 <li>Color del perfil: {state.perfilT?.color}</li>
                 <li>{resultado.n_hileras > 1 ? 'Ancho total del conjunto (perfiles + luz)' : 'Ancho del perfil'}: {resultado.ancho_perfilT} mm</li>
@@ -173,7 +174,7 @@ function ResumenView() {
                   {resultado.n_hileras <= 2 && <li>Ancho 2: {resultado.ancho2} mm</li>}
                   <li>Luz interior: {resultado.luz_interior} mm</li>
                 </>}
-                <li>Precio perfiles: {resultado.precio_perfilT_final} €</li>
+                <li><strong>Precio perfiles: </strong>{resultado.precio_perfilT_final} €</li>
                 {state.perfilT?.comentarios && <li>Comentarios: {state.perfilT.comentarios}</li>}
               </ul>
 
@@ -222,12 +223,12 @@ function ResumenView() {
             <p className="resumen-seccion-titulo">4. Runer</p>
             {resultado.codigo_runer ? (
               <ul className="resumen-lista">
-                <li>Runer: {resultado.codigo_runer}</li>
+                <li><strong>Runer: </strong>{resultado.codigo_runer}</li>
                 <li>Color del runer: {state.runer?.color}</li>
                 <li>Nº runers: {resultado.n_perfiles_runer}</li>
                 <li>Luz: {resultado.luz_runer} mm</li>
-                <li style={{ marginBottom: '10px' }}>Margen: {resultado.margen_runer} mm</li>
-                <li>Precio runer: {resultado.precio_runer_final} €</li>
+                <li>Margen: {resultado.margen_runer} mm</li>
+                <li><strong>Precio runer: </strong>{resultado.precio_runer_final} €</li>
                 {state.runer?.comentarios && <li>Comentarios: {state.runer.comentarios}</li>}
               </ul>
             ) : <NoConfigurado />}
