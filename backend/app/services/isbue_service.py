@@ -148,13 +148,25 @@ class IsbueService:
             if n_inf == 1 and centrado_I:
                 texto_inferior += "; Posición: CENTRADO\n"
             elif acotacion_inferior == 1:
-                texto_inferior += f"; Distancia canto banda / canto perfil: {distancia_borde_banda_I} mm\n"
+                texto_inferior += (
+                    f"; Distancia canto banda / canto perfil: {distancia_borde_banda_I} mm"
+                    f"; Distancia entre centros de perfiles: {distancia_entre_centros_I} mm\n"
+                )
             elif acotacion_inferior == 2:
-                texto_inferior += f"; Distancia canto banda / centro perfil: {distancia_borde_centro_I} mm\n"
+                texto_inferior += (
+                    f"; Distancia canto banda / centro perfil: {distancia_borde_centro_I} mm"
+                    f"; Distancia entre centros de perfiles: {distancia_entre_centros_I} mm\n"
+                )
             elif acotacion_inferior == 3:
-                texto_inferior += f"; Distancia entre centros de perfiles: {distancia_entre_centros_I} mm\n"
+                texto_inferior += (
+                    f"; Distancia entre centros de perfiles: {distancia_entre_centros_I} mm"
+                    f"; Distancia canto banda / canto perfil: {distancia_borde_banda_I} mm\n"
+                )
             elif acotacion_inferior == 4:
-                texto_inferior += f"; Distancia interior / interior: {distancia_entre_bandas_I} mm\n"
+                texto_inferior += (
+                    f"; Distancia interior / interior: {distancia_entre_bandas_I} mm"
+                    f"; Distancia canto banda / canto perfil: {distancia_borde_banda_I} mm\n"
+                )
             elif acotacion_inferior == 5:
                 texto_inferior += "; Posición: SEGÚN PLANO\n"
             elif acotacion_inferior == 6:
@@ -177,13 +189,25 @@ class IsbueService:
             if n_sup == 1 and centrado_S:
                 texto_superior += "; Posición: CENTRADO\n"
             elif acotacion_superior == 1:
-                texto_superior += f"; Distancia canto banda / canto perfil: {distancia_borde_banda_S} mm\n"
+                texto_superior += (
+                    f"; Distancia canto banda / canto perfil: {distancia_borde_banda_S} mm"
+                    f"; Distancia entre centros de perfiles: {distancia_entre_centros_S} mm\n"
+                )
             elif acotacion_superior == 2:
-                texto_superior += f"; Distancia canto banda / centro perfil: {distancia_borde_centro_S} mm\n"
+                texto_superior += (
+                    f"; Distancia canto banda / centro perfil: {distancia_borde_centro_S} mm"
+                    f"; Distancia entre centros de perfiles: {distancia_entre_centros_S} mm\n"
+                )
             elif acotacion_superior == 3:
-                texto_superior += f"; Distancia entre centros de perfiles: {distancia_entre_centros_S} mm\n"
+                texto_superior += (
+                    f"; Distancia entre centros de perfiles: {distancia_entre_centros_S} mm"
+                    f"; Distancia canto banda / canto perfil: {distancia_borde_banda_S} mm\n"
+                )
             elif acotacion_superior == 4:
-                texto_superior += f"; Distancia interior / interior: {distancia_entre_bandas_S} mm\n"
+                texto_superior += (
+                    f"; Distancia interior / interior: {distancia_entre_bandas_S} mm"
+                    f"; Distancia canto banda / canto perfil: {distancia_borde_banda_S} mm\n"
+                )
             elif acotacion_superior == 5:
                 texto_superior += "; Posición: SEGÚN PLANO\n"
             elif acotacion_superior == 6:
@@ -242,10 +266,14 @@ class IsbueService:
                 f"Paso: {redondear_medida(resultado.get('distancia_paso'))} mm",
             ]
             if n_hileras > 1:
-                campos.extend([
-                    f"Ancho perfiles: {redondear_medida(resultado.get('ancho1'))} mm",
-                    f"Luz interior: {redondear_medida(resultado.get('luz_interior'))} mm",
-                ])
+                if n_hileras == 2:
+                    campos.extend([
+                        f"Ancho 1: {redondear_medida(resultado.get('ancho1'))} mm",
+                        f"Ancho 2: {redondear_medida(resultado.get('ancho2'))} mm",
+                    ])
+                else:
+                    campos.append(f"Ancho perfiles: {redondear_medida(resultado.get('ancho1'))} mm")
+                campos.append(f"Luz interior: {redondear_medida(resultado.get('luz_interior'))} mm")
 
             observaciones.append("Posición: Centrado\n" + "; ".join(campos))
 
