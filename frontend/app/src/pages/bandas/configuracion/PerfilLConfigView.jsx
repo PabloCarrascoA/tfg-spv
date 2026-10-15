@@ -571,6 +571,16 @@ function PerfilLConfigView() {
     }
   }, [superior.centrado, superior.cantidad, superior.distancia, anchoBanda, superior.activo])
 
+  
+  const formatearMedida = (valor) => {
+
+    if (valor == null || String(valor).trim() === '') return '—'
+    const numero = Number(String(valor).replace(',', '.'))
+
+    if (Number.isNaN(numero)) return '—'
+    return numero.toFixed(2)
+  }
+  
   function handleSiguiente() {
 
     /*
@@ -688,38 +698,38 @@ function PerfilLConfigView() {
 
                 {superior.cantidad === 1 && superior.acotado === 2 && (
                   <span className="config-banda-label config-banda-borde-centro-1">
-                    {superior.distanciaBordeCentro || '—'} mm
+                    {formatearMedida(superior.distanciaBordeCentro)} mm
                   </span>
                 )}
 
                 {/* CANTO BANDA - CANTO PERFIL */}
                 {superior.cantidad === 1 && superior.acotado === 1 && (
                   <span className="config-banda-label config-banda-borde-centro-1">
-                    {superior.distanciaBordeBanda || '—'} mm
+                    {formatearMedida(superior.distanciaBordeBanda)} mm
                   </span>
                 )}
 
                 {(superior.cantidad > 1 && superior.acotado !== 6 && superior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-borde-centro-2 ${esCotaActiva(superior.acotado, 'distanciaBordeCentro') ? 'cota-activa' : ''}`}>
-                    {superior.distanciaBordeCentro || '—'} mm
+                    {formatearMedida(superior.distanciaBordeCentro)} mm
                   </span>
                 )}
 
                 {(superior.cantidad > 1 && superior.acotado !== 6 && superior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-distancia-centros ${esCotaActiva(superior.acotado, 'distancia') ? 'cota-activa' : ''} `}>
-                    {superior.distancia || '—'} mm
+                    {formatearMedida(superior.distancia)} mm
                   </span>
                 )}
 
                 {(superior.cantidad > 1 && superior.acotado !== 6 && superior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-borde-banda ${esCotaActiva(superior.acotado, 'distanciaBordeBanda') ? 'cota-activa' : ''}`}>
-                    {superior.distanciaBordeBanda || '—'} mm
+                    {formatearMedida(superior.distanciaBordeBanda)} mm
                   </span>
                 )}
 
                 {(superior.cantidad > 1 && superior.acotado !== 6 && superior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-entre-bandas ${esCotaActiva(superior.acotado, 'distanciaEntreBandas') ? 'cota-activa' : ''}`}>
-                    {superior.distanciaEntreBandas || '—'} mm
+                    {formatearMedida(superior.distanciaEntreBandas)} mm
                   </span>
                 )}
 
@@ -757,38 +767,38 @@ function PerfilLConfigView() {
 
                 {inferior.cantidad === 1 && inferior.acotado === 2 && (
                   <span className="config-banda-label config-banda-borde-centro-1">
-                    {inferior.distanciaBordeCentro || '—'} mm
+                    {formatearMedida(inferior.distanciaBordeCentro)} mm
                   </span>
                 )}
 
                 {/* CANTO BANDA - CANTO PERFIL */}
                 {inferior.cantidad === 1 && inferior.acotado === 1 && (
                   <span className="config-banda-label config-banda-borde-centro-1">
-                    {inferior.distanciaBordeBanda || '—'} mm
+                    {formatearMedida(inferior.distanciaBordeBanda)} mm
                   </span>
                 )}
 
                 {(inferior.cantidad > 1 && inferior.acotado !== 6 && inferior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-borde-centro-2 ${esCotaActiva(inferior.acotado, 'distanciaBordeCentro') ? 'cota-activa' : ''}`}>
-                    {inferior.distanciaBordeCentro || '—'} mm
+                    {formatearMedida(inferior.distanciaBordeCentro)} mm
                   </span>
                 )}
 
                 {(inferior.cantidad > 1 && inferior.acotado !== 6 && inferior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-distancia-centros ${esCotaActiva(inferior.acotado, 'distancia') ? 'cota-activa' : ''} `}>
-                    {inferior.distancia || '—'} mm
+                    {formatearMedida(inferior.distancia)} mm
                   </span>
                 )}
 
                 {(inferior.cantidad > 1 && inferior.acotado !== 6 && inferior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-borde-banda ${esCotaActiva(inferior.acotado, 'distanciaBordeBanda') ? 'cota-activa' : ''}`}>
-                    {inferior.distanciaBordeBanda || '—'} mm
+                    {formatearMedida(inferior.distanciaBordeBanda)} mm
                   </span>
                 )}
 
                 {(inferior.cantidad > 1 && inferior.acotado !== 6 && inferior.acotado !== 5) && (
                   <span className={`config-banda-label config-banda-entre-bandas ${esCotaActiva(inferior.acotado, 'distanciaEntreBandas') ? 'cota-activa' : ''}`}>
-                    {inferior.distanciaEntreBandas || '—'} mm
+                    {formatearMedida(inferior.distanciaEntreBandas)} mm
                   </span>
                 )}
               </div>
