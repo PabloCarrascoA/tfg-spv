@@ -125,9 +125,46 @@ class IsbueService:
         #
 
         if resultado.get("tipo_empalme"):
-            observaciones.append(
-                f"{resultado.get('subtipo_empalme').upper()}\n"
-            )
+
+            print(f"DEBUG: tipo_empalme={resultado.get('tipo_empalme')}, subtipo_empalme={resultado.get('subtipo_empalme')}")
+
+            if resultado.get("tipo_empalme") == "banda-sin-fin":
+                subtipos_sin_fin = {
+                    "sin-fin-z": "Z",
+                    "sin-fin-solapada": "SOLAPADA",
+                    "sin-fin-doble": "DOBLE",
+                    "sin-fin-biselado": "BISELADO",
+                }
+                subtipo = subtipos_sin_fin.get(resultado.get("subtipo_empalme"))
+                observaciones.append(f"SIN FIN - {subtipo}\n" if subtipo else "SIN FIN")
+
+            if resultado.get("tipo_empalme") == "extremos-preparados":
+                            observaciones.append(
+                                f"EXTREMOS PREPARADOS - {resultado.get('subtipo_empalme').upper()}\n"
+                            )
+
+            if resultado.get("tipo_empalme") == "emp-mec-inox":
+                            observaciones.append(
+                                f"INOXIDABLE - {resultado.get('subtipo_empalme').upper()}\n"
+                            )
+
+            if resultado.get("tipo_empalme") == "emp-mec-galvan":
+                            observaciones.append(
+                                f"GALVANIZADO - {resultado.get('subtipo_empalme').upper()}\n"
+                            )
+
+            if resultado.get("tipo_empalme") == "emp-mec-plastico":
+                            observaciones.append(
+                                f"PLÁSTICO - {resultado.get('subtipo_empalme').upper()}\n"
+                            )
+
+          
+           
+
+           
+           # observaciones.append(
+           #     f"{resultado.get('tipo_empalme').upper()} - {resultado.get('subtipo_empalme').upper()}\n"
+           # )
 
         #
         # PERFILES LONGITUDINALES
