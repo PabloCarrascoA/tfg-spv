@@ -256,15 +256,20 @@ class IsbueService:
 
         elif not tresbolillo and resultado.get("codigo_perfilT"):
             n_hileras = resultado.get("n_hileras") or 1
-            etiqueta_ancho = "Ancho perfil" if n_hileras <= 1 else "Ancho del conjunto"
+            etiqueta_ancho = "Ancho perfil" if n_hileras <= 1 else ""
             campos = [
                 f"Código perfil: {perfil_t_state.get('tipoPerfilT')} {color_perfilT or ''}".rstrip(),
                 f"Filas: {resultado.get('n_perfilesT')}",
                 f"Perfiles por fila: {n_hileras}",
-                f"{etiqueta_ancho}: {redondear_medida(resultado.get('ancho_perfilT'))} mm",
-                f"Margen lateral: {redondear_medida(resultado.get('margen_lateral'))} mm",
-                f"Paso: {redondear_medida(resultado.get('distancia_paso'))} mm",
             ]
+
+            if etiqueta_ancho:
+                campos.append(f"{etiqueta_ancho}: {redondear_medida(resultado.get('ancho_perfilT'))} mm")
+
+            campos.append(f"Margen lateral: {redondear_medida(resultado.get('margen_lateral'))} mm")
+
+            campos.append(f"Paso: {redondear_medida(resultado.get('distancia_paso'))} mm")
+
             if n_hileras > 1:
                 if n_hileras == 2:
                     campos.extend([
