@@ -139,9 +139,14 @@ class IsbueService:
                 observaciones.append(f"SIN FIN - {subtipo}\n" if subtipo else "SIN FIN")
 
             if resultado.get("tipo_empalme") == "extremos-preparados":
-                            observaciones.append(
-                                f"EXTREMOS PREPARADOS - {resultado.get('subtipo_empalme').upper()}\n"
-                            )
+                subtipos_preparados = {
+                    "extremos-preparados-z": "Z",
+                    "extremos-preparados-solapada": "SOLAPADA",
+                    "extremos-preparados-doble": "DOBLE",
+                    "extremos-preparados-biselado": "BISELADO",
+                }
+                subtipo = subtipos_preparados.get(resultado.get("subtipo_empalme"))
+                observaciones.append(f"PREPARADA - {subtipo}\n" if subtipo else "PREPARADA")
 
             if resultado.get("tipo_empalme") == "emp-mec-inox":
                             observaciones.append(
