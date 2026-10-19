@@ -15,6 +15,7 @@ API_URL = os.getenv("ISBUE_API_URL")
 USERNAME = os.getenv("ISBUE_USERNAME")
 PASSWORD = os.getenv("ISBUE_PASSWORD")
 INSTALLATION_COD = os.getenv("ISBUE_INSTALLATION_COD")
+X_API_KEY = os.getenv("ISBUE_X_API_KEY")
 
 class IsbueService:
 
@@ -26,6 +27,9 @@ class IsbueService:
 
         response = requests.post(
             f"{API_URL}/auth/login",
+            headers={
+                "X-Api-Key": X_API_KEY,
+            },
             json={
                 "username": USERNAME,
                 "password": PASSWORD,
