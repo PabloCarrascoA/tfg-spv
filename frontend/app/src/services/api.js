@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000"
+const BASE_URL = "/api"
 
 export async function getBandas() {
   const res = await fetch(`${BASE_URL}/configuracion/bandas`)
