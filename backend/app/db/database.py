@@ -1,7 +1,12 @@
+import os
 import sqlite3
+from pathlib import Path
 from contextlib import contextmanager
 
-DATABASE_URL = "test.db"
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    str(Path(__file__).resolve().parents[2] / "spv.db")
+)
 
 @contextmanager
 def get_db_connection():

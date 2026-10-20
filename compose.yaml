@@ -5,8 +5,10 @@ services:
     restart: unless-stopped
     env_file:
       - ./backend/app/credentials.env
+    environment:
+      DATABASE_URL: /app/spv.db
     volumes:
-      - ./test.db:/app/test.db
+      - ./backend/spv.db:/app/spv.db
     networks:
       - interna
 
