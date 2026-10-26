@@ -2,6 +2,8 @@
 
 import os
 import requests
+import time
+import logging
 from datetime import datetime, timedelta
 from app.services import carrito_service
 from dotenv import load_dotenv
@@ -17,6 +19,26 @@ PASSWORD = os.getenv("ISBUE_PASSWORD")
 INSTALLATION_COD = os.getenv("ISBUE_INSTALLATION_COD")
 X_API_KEY = os.getenv("ISBUE_X_API_KEY")
 
+logger = logging.getLogger(__name__)
+
+class IsbueUnavailableError(Exception):
+    pass
+
+
+def post_isbue_lectura(url, **kwargs):
+    """Dos intentos para conexión/timeout en peticiones sin efectos secundarios."""
+    for intento in range(2):
+        try:
+            response = requests.post(url, timeout=(5, 15), **kwargs)
+            response.raise_for_status()
+            return response
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as exc:
+            if intento == 1:
+                logger.error("ISBUE no disponible tras 2 intentos: %s", type(exc).__name__)
+                raise IsbueUnavailableError("No se ha podido conectar con ISBUE. Inténtalo de nuevo.") from exc
+            logger.warning("Conexión ISBUE fallida; reintentando (2/2): %s", type(exc).__name__)
+            time.sleep(0.5)
+
 class IsbueService:
 
     def __init__(self):
@@ -24,28 +46,18 @@ class IsbueService:
         self.expiration = None
 
     def login(self):
-
-        response = requests.post(
+        response = post_isbue_lectura(
             f"{API_URL}/auth/login",
-            headers={
-                "X-Api-Key": X_API_KEY,
-            },
+            headers={"X-Api-Key": X_API_KEY},
             json={
                 "username": USERNAME,
                 "password": PASSWORD,
-                "installationCod": INSTALLATION_COD
-            }
+                "installationCod": INSTALLATION_COD,
+            },
         )
-
-        response.raise_for_status()
-
         data = response.json()
-
         self.token = data["token"]
-
-        # El token dura 10 horas
         self.expiration = datetime.now() + timedelta(hours=9, minutes=50)
-
         return self.token
 
     def get_token(self):
@@ -409,7 +421,7 @@ class IsbueService:
 
         token = self.get_token()
 
-        response = requests.post(
+        response = post_isbue_lectura(
             f"{API_URL}/i/{INSTALLATION_COD}/list",
             headers={
                 "Authorization": f"Bearer {token}"
@@ -426,7 +438,6 @@ class IsbueService:
             }
         )
 
-        response.raise_for_status()
 
         return response.json()["data"]
     
