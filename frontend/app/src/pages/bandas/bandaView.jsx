@@ -56,6 +56,7 @@ const COMPONENTES_VALOR_3 = ['banda', 'perfil-longitudinal']
 function AutocompleteCliente({ cliente, onSeleccionar, bloqueado, onDesbloquear }) {
 
   const [clientes, setClientes] = useState([])
+  const [errorClientes, setErrorClientes] = useState('')
   const [texto, setTexto] = useState("")
   const [sugerencias, setSugerencias] = useState([])
   const [abierto, setAbierto] = useState(false)
@@ -64,8 +65,14 @@ function AutocompleteCliente({ cliente, onSeleccionar, bloqueado, onDesbloquear 
 
   useEffect(() => {
     getClientes()
-      .then(setClientes)
-      .catch(err => console.error(err))
+      .then(data => {
+        setClientes(data)
+        setErrorClientes('')
+      })
+      .catch(err => {
+        console.error('Error cargando clientes:', err)
+        setErrorClientes(err.message)
+      })
   }, [])
 
   useEffect(() => {
@@ -137,6 +144,8 @@ function AutocompleteCliente({ cliente, onSeleccionar, bloqueado, onDesbloquear 
         onFocus={() => sugerencias.length && setAbierto(true)}
         disabled={bloqueado}
       />
+
+      {errorClientes && <p role="alert" style={{ color: '#b42318', marginTop: '8px' }}>{errorClientes}</p>}
 
       {bloqueado && (
         <button
