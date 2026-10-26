@@ -22,3 +22,8 @@ build/
 # Editor / SO
 .vscode/
 .DS_Store
+
+# Docker
+*.tar
+*.tar.gz
+
