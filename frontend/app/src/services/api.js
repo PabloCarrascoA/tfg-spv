@@ -129,8 +129,21 @@ export async function exportarTabla(tabla) {
 // Funciones de clientes
 
 export async function getClientes() {
-  const res = await fetch(`${BASE_URL}/clientes`)
-  return res.json()
+  let res
+  try {
+    res = await fetch(`${BASE_URL}/clientes`)
+  } catch {
+    throw new Error('No se ha podido conectar con el servidor de SPV.')
+  }
+
+  const data = await res.json().catch(() => null)
+  if (!res.ok) {
+    throw new Error(data?.detail || 'No se han podido cargar los clientes.')
+  }
+  if (!Array.isArray(data)) {
+    throw new Error('La respuesta de clientes no tiene el formato esperado.')
+  }
+  return data
 }
 
 // Funciones importar
