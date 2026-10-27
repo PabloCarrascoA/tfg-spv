@@ -80,7 +80,7 @@ function CarritoPedidosView() {
 
     try {
         await guardarPedido({}, stateFrontend)
-        navigate('/pedidos')
+        navigate('/')
     } catch (err) {
         console.error('Error confirmando el pedido:', err)
         setProcesando(false)
