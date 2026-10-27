@@ -914,7 +914,9 @@ a {
    RESUMEN VIEW
    ============================================= */
 .resumen-view {
-  max-width: 860px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
 }
 
 .resumen-card {
