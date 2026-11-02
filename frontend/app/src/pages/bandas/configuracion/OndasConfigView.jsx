@@ -239,7 +239,7 @@ useEffect(() => {
             {columnas > 1 && (
               <div className="form-row">
                 <div className="form-group">
-                  <label className="form-label">Luz (mm)</label>
+                  <label className="form-label">Luz Interior(mm)</label>
                   <input type="number" min="0" className="form-input" placeholder="0"
                     value={luz} onChange={e => setLuz(e.target.value)} />
                   {luzIncompatible && <p style={{ fontSize: 13, color: '#e57373' }}>Las luces deben dejar un ancho positivo para cada onda.</p>}
