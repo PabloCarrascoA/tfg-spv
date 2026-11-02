@@ -32,6 +32,7 @@ function OndaConfigView() {
 
   const [paso, setPaso]                 = useState(1)
   const [columnas, setColumnas]         = useState(1)
+  const [margen, setMargen]             = useState('')
 
   const anchoBanda = Number(state.banda?.ancho)
   const largoBanda = Number(state.banda?.longitud)
@@ -173,6 +174,36 @@ useEffect(() => {
 
             <div className="form-row">
               <div className="form-group">
+                <label className="form-label">Ondas por fila</label>
+                <div className="counter">
+                  <button className="counter-btn" onClick={() => setColumnas(c => Math.max(1, c - 1))}>−</button>
+                  <span className="counter-value">{columnas}</span>
+                  <button className="counter-btn" onClick={() => setColumnas(c => c + 1)}>+</button>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Ancho onda (mm)</label>
+                <input type="number" className="form-input" placeholder="0"
+                  value={anchoOnda} onChange={e => setAnchoOnda(e.target.value)} />
+                {anchoOndaMayorQueAnchoBanda && <p style={{ fontSize: 13, color: '#e57373' }}>El ancho de la onda no puede ser superior al ancho de la banda ({anchoBanda} mm)</p>}
+              </div>
+
+               <div className="form-group">
+                <label className="form-label">Margen Lateral (mm)</label>
+
+                <input type="number" className="form-input" placeholder="0"
+                  value={margen} onChange={e => setMargen(e.target.value)} />
+
+              </div>
+            </div>
+
+            <hr style={{ border: 0, borderTop: '1px solid #4a6f8a' }} />
+
+            <div className="form-row">
+              <div className="form-group">
                 <label className="form-label">Base (mm)</label>
                 <input type="number" className="form-input" placeholder="0"
                   value={base} onChange={e => setBase(e.target.value)} />
@@ -192,14 +223,7 @@ useEffect(() => {
             </div>
 
             <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Ancho onda (mm)</label>
-                <input type="number" className="form-input" placeholder="0"
-                  value={anchoOnda} onChange={e => setAnchoOnda(e.target.value)} />
-                {anchoOndaMayorQueAnchoBanda && <p style={{ fontSize: 13, color: '#e57373' }}>El ancho de la onda no puede ser superior al ancho de la banda ({anchoBanda} mm)</p>}
-              </div>
-
-
+              
               <div className="form-group">
                 <label className="form-label">Pisada (mm)</label>
                 <select
