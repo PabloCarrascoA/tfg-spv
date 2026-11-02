@@ -25,7 +25,7 @@ function OndaConfigView() {
   const [continua, setContinua]         = useState(null)
   const [base, setBase]                 = useState('')
   const [altura, setAltura]             = useState('')
-  const [anchoOnda, setAnchoOnda]       = useState('')
+  const [anchoOndaTotal, setAnchoOndaTotal]       = useState('')
   const [pisada, setPisada]             = useState('')
   const [comentarios, setComentarios]   = useState('')
   const [color, setColor]               = useState('')
@@ -33,12 +33,15 @@ function OndaConfigView() {
   const [paso, setPaso]                 = useState(1)
   const [columnas, setColumnas]         = useState(1)
   const [margen, setMargen]             = useState('')
+  const [luz, setLuz]                   = useState('')
+  const [anchoOnda, setAnchoOnda]       = useState('')
+  const [referenciaAncho, setReferenciaAncho] = useState('ancho')
 
   const anchoBanda = Number(state.banda?.ancho)
   const largoBanda = Number(state.banda?.longitud)
   const alturaNumero = Number(altura)
   const baseMayorQueLargoBanda = base !== '' && Number(base) > largoBanda
-  const anchoOndaMayorQueAnchoBanda = anchoOnda !== '' && Number(anchoOnda) > anchoBanda
+  const anchoOndaTotalMayorQueAnchoBanda = anchoOndaTotal !== '' && Number(anchoOndaTotal) > anchoBanda
   const alturaFueraDeRango = altura !== '' && (alturaNumero > 100 || alturaNumero < 10)
 
  useEffect(() => {
@@ -58,9 +61,36 @@ useEffect(() => {
       setPaso(paso.toFixed(2))  
     }, [cantidad, state.banda?.longitud])
 
+  useEffect(() => {
+    if (!Number.isFinite(anchoBanda) || anchoBanda <= 0) return
+    if (referenciaAncho === 'margen') {
+      setAnchoOndaTotal(margen === '' ? '' : String(anchoBanda - 2 * Number(margen)))
+    } else {
+      setMargen(anchoOndaTotal === '' ? '' : String((anchoBanda - Number(anchoOndaTotal)) / 2))
+    }
+  }, [anchoBanda, anchoOndaTotal, margen, referenciaAncho])
+
+  useEffect(() => {
+    if (columnas === 1) {
+      setAnchoOnda(anchoOndaTotal)
+      return
+    }
+    if (anchoOndaTotal === '' || luz === '') {
+      setAnchoOnda('')
+      return
+    }
+    const anchoCalculado = (Number(anchoOndaTotal) - Number(luz) * (columnas - 1)) / columnas
+    setAnchoOnda(anchoCalculado > 0 ? anchoCalculado.toFixed(2) : '')
+  }, [anchoOndaTotal, luz, columnas])
+
+  const luzIncompatible = columnas > 1 && luz !== '' && (
+    Number(luz) < 0 || (anchoOndaTotal !== '' && Number(luz) * (columnas - 1) >= Number(anchoOndaTotal))
+  )
+  const margenIncompatible = margen !== '' && (Number(margen) < 0 || Number(margen) * 2 >= anchoBanda)
+
   function handleSiguiente() {
 
-    if (alturaFueraDeRango || baseMayorQueLargoBanda || anchoOndaMayorQueAnchoBanda) {
+    if (alturaFueraDeRango || baseMayorQueLargoBanda || anchoOndaTotalMayorQueAnchoBanda || luzIncompatible || margenIncompatible) {
       return alert('Revisa las alertas de configuración, hay parámetros incompatibles')
     }
 
@@ -78,7 +108,12 @@ useEffect(() => {
           continua,
           base,
           altura,
+          anchoOndaTotal,
           anchoOnda,
+          columnas,
+          margen,
+          luz: columnas > 1 ? luz : '',
+          paso,
           pisada,
           comentarios,
         }
@@ -185,20 +220,39 @@ useEffect(() => {
 
             <div className="form-row">
               <div className="form-group">
-                <label className="form-label">Ancho onda (mm)</label>
+                <label className="form-label">{columnas === 1 ? 'Ancho onda (mm)' : 'Ancho total (ondas + luces) (mm)'}</label>
                 <input type="number" className="form-input" placeholder="0"
-                  value={anchoOnda} onChange={e => setAnchoOnda(e.target.value)} />
-                {anchoOndaMayorQueAnchoBanda && <p style={{ fontSize: 13, color: '#e57373' }}>El ancho de la onda no puede ser superior al ancho de la banda ({anchoBanda} mm)</p>}
+                  value={anchoOndaTotal} onChange={e => { setReferenciaAncho('ancho'); setAnchoOndaTotal(e.target.value) }} />
+                {anchoOndaTotalMayorQueAnchoBanda && <p style={{ fontSize: 13, color: '#e57373' }}>El ancho de la onda no puede ser superior al ancho de la banda ({anchoBanda} mm)</p>}
               </div>
 
                <div className="form-group">
                 <label className="form-label">Margen Lateral (mm)</label>
 
                 <input type="number" className="form-input" placeholder="0"
-                  value={margen} onChange={e => setMargen(e.target.value)} />
+                  value={margen} onChange={e => { setReferenciaAncho('margen'); setMargen(e.target.value) }} />
+                {margenIncompatible && <p style={{ fontSize: 13, color: '#e57373' }}>El margen debe dejar un ancho positivo para las ondas dentro de la banda.</p>}
 
               </div>
             </div>
+
+            {columnas > 1 && (
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Luz (mm)</label>
+                  <input type="number" min="0" className="form-input" placeholder="0"
+                    value={luz} onChange={e => setLuz(e.target.value)} />
+                  {luzIncompatible && <p style={{ fontSize: 13, color: '#e57373' }}>Las luces deben dejar un ancho positivo para cada onda.</p>}
+                </div>
+                {luz !== '' && (
+                  <div className="form-group">
+                    <label className="form-label">Ancho onda (mm)</label>
+                    <input type="number" className="form-input" value={anchoOnda} readOnly
+                      style={{ background: '#f5f6f8', color: '#6b7280' }} />
+                  </div>
+                )}
+              </div>
+            )}
 
             <hr style={{ border: 0, borderTop: '1px solid #4a6f8a' }} />
 

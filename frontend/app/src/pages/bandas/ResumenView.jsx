@@ -334,7 +334,7 @@ function construirPayload(state) {
     continuidad_onda: state.onda?.continua     ?? null,
     base_onda:        toFloat(state.onda?.base),
     altura_onda:      toFloat(state.onda?.altura),
-    ancho_onda:       toFloat(state.onda?.anchoOnda),
+    ancho_onda:       toFloat(state.onda?.anchoOndaTotal ?? state.onda?.anchoOnda),
     pisada_onda:      toFloat(state.onda?.pisada),
   }
 }
