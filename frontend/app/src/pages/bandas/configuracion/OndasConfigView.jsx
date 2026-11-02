@@ -30,7 +30,9 @@ function OndaConfigView() {
   const [comentarios, setComentarios]   = useState('')
   const [color, setColor]               = useState('')
 
-  const [paso, setPaso]                 = useState(1)
+  const [pasoIntroducido, setPasoIntroducido] = useState('')
+  const [pasoReal, setPasoReal]         = useState('')
+  const [referenciaPaso, setReferenciaPaso] = useState('cantidad')
   const [columnas, setColumnas]         = useState(1)
   const [margen, setMargen]             = useState('')
   const [luz, setLuz]                   = useState('')
@@ -50,16 +52,34 @@ function OndaConfigView() {
        .catch(err => console.error('Error cargando ondas:', err))
    }, [])
 
-useEffect(() => {
-      const largo = parseFloat(state.banda?.longitud)
-      if (!largo || cantidad <= 1) {
-        setPaso('')  // reset
-        return
-      }
+  useEffect(() => {
+    if (!Number.isFinite(largoBanda) || largoBanda <= 0) {
+      setPasoReal('')
+      return
+    }
 
-      const paso = largo / cantidad
-      setPaso(paso.toFixed(2))  
-    }, [cantidad, state.banda?.longitud])
+    if (referenciaPaso === 'cantidad') {
+      const nuevoPaso = cantidad > 1 ? largoBanda / cantidad : ''
+      setPasoIntroducido(nuevoPaso === '' ? '' : nuevoPaso.toFixed(2))
+      setPasoReal(nuevoPaso)
+      return
+    }
+
+    const pasoNumero = Number(pasoIntroducido)
+    if (pasoIntroducido === '' || !Number.isFinite(pasoNumero) || pasoNumero <= 0) {
+      setPasoReal('')
+      return
+    }
+
+    const filasCalculadas = largoBanda / pasoNumero
+    const filasEnteras = Math.floor(filasCalculadas)
+    // En el límite exacto de 0,7 se conserva el entero inferior.
+    const nuevasFilas = Math.max(1,
+      filasEnteras + (filasCalculadas - filasEnteras > 0.7 + 1e-10 ? 1 : 0)
+    )
+    setCantidad(nuevasFilas)
+    setPasoReal(largoBanda / nuevasFilas)
+  }, [cantidad, largoBanda, pasoIntroducido, referenciaPaso])
 
   useEffect(() => {
     if (!Number.isFinite(anchoBanda) || anchoBanda <= 0) return
@@ -94,6 +114,10 @@ useEffect(() => {
       return alert('Revisa las alertas de configuración, hay parámetros incompatibles')
     }
 
+    if (referenciaPaso === 'paso' && pasoReal === '') {
+      return alert('Introduce un paso mayor que cero')
+    }
+
     if (!codigoOnda) {
        return alert('Asegúrese de haber elegido un código de onda')
     }
@@ -113,7 +137,8 @@ useEffect(() => {
           columnas,
           margen,
           luz: columnas > 1 ? luz : '',
-          paso,
+          paso: pasoReal,
+          pasoIntroducido,
           pisada,
           comentarios,
         }
@@ -160,26 +185,33 @@ useEffect(() => {
               <div className="form-group">
                 <label className="form-label">Número de filas</label>
                 <div className="counter">
-                  <button className="counter-btn" onClick={() => setCantidad(c => Math.max(1, c - 1))}>−</button>
+                  <button className="counter-btn" onClick={() => { setReferenciaPaso('cantidad'); setCantidad(c => Math.max(1, c - 1)) }}>−</button>
                   <span className="counter-value">{cantidad}</span>
-                  <button className="counter-btn" onClick={() => setCantidad(c => c + 1)}>+</button>
+                  <button className="counter-btn" onClick={() => { setReferenciaPaso('cantidad'); setCantidad(c => c + 1) }}>+</button>
                 </div>
               </div>
 
             </div>
 
-            {cantidad > 1 && (
                       <div className="form-group">
                         <label className="form-label">Paso entre ondas (mm)</label>
                         <input
                           type="number"
                           className="form-input"
-                          value={paso}
-                          readOnly
-                          style={{ background: '#f5f6f8', color: '#6b7280' }}
+                          min="0"
+                          step="any"
+                          value={pasoIntroducido}
+                          onChange={e => {
+                            setReferenciaPaso('paso')
+                            setPasoIntroducido(e.target.value)
+                          }}
                         />
+                        {pasoReal !== '' && (
+                          <p style={{ color: '#6b7280', fontSize: 13 }}>
+                            Paso real: {pasoReal.toFixed(2)} mm
+                          </p>
+                        )}
                       </div>
-                    )}
 
             <div className="form-group">
               <label className="form-label">¿Es la onda continua?</label>
