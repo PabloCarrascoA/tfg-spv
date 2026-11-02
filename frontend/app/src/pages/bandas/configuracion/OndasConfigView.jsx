@@ -30,6 +30,9 @@ function OndaConfigView() {
   const [comentarios, setComentarios]   = useState('')
   const [color, setColor]               = useState('')
 
+  const [paso, setPaso]                 = useState(1)
+  const [columnas, setColumnas]         = useState(1)
+
   const anchoBanda = Number(state.banda?.ancho)
   const largoBanda = Number(state.banda?.longitud)
   const alturaNumero = Number(altura)
@@ -42,6 +45,17 @@ function OndaConfigView() {
        .then(data => setOndas(data))
        .catch(err => console.error('Error cargando ondas:', err))
    }, [])
+
+useEffect(() => {
+      const largo = parseFloat(state.banda?.longitud)
+      if (!largo || cantidad <= 1) {
+        setPaso('')  // reset
+        return
+      }
+
+      const paso = largo / cantidad
+      setPaso(paso.toFixed(2))  
+    }, [cantidad, state.banda?.longitud])
 
   function handleSiguiente() {
 
@@ -106,15 +120,30 @@ function OndaConfigView() {
                 />
 
               </div>
+
               <div className="form-group">
-                <label className="form-label">Cantidad de ondas</label>
+                <label className="form-label">Número de filas</label>
                 <div className="counter">
                   <button className="counter-btn" onClick={() => setCantidad(c => Math.max(1, c - 1))}>−</button>
                   <span className="counter-value">{cantidad}</span>
                   <button className="counter-btn" onClick={() => setCantidad(c => c + 1)}>+</button>
                 </div>
               </div>
+
             </div>
+
+            {cantidad > 1 && (
+                      <div className="form-group">
+                        <label className="form-label">Paso entre ondas (mm)</label>
+                        <input
+                          type="number"
+                          className="form-input"
+                          value={paso}
+                          readOnly
+                          style={{ background: '#f5f6f8', color: '#6b7280' }}
+                        />
+                      </div>
+                    )}
 
             <div className="form-group">
               <label className="form-label">¿Es la onda continua?</label>
