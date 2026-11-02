@@ -206,7 +206,7 @@ function OndaConfigView() {
                             setPasoIntroducido(e.target.value)
                           }}
                         />
-                        {pasoReal !== '' && (
+                        {pasoReal !== '' && pasoReal.toFixed(2) !== Number(pasoIntroducido).toFixed(2) && (
                           <p style={{ color: '#6b7280', fontSize: 13 }}>
                             Paso real: {pasoReal.toFixed(2)} mm
                           </p>
