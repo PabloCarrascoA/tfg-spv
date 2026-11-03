@@ -695,6 +695,86 @@ a {
 
 
 
+.config-ondas-panel {
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.config-ondas-sketches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+}
+
+.config-ondas-sketches .config-onda-wrapper {
+  position: relative;
+  flex: 0 1 275px;
+  width: 100%;
+  max-width: 275px;
+  min-width: 0;
+}
+
+.config-ondas-sketches .config-side-img {
+  width: 100%;
+  height: auto;
+}
+
+.config-onda-measures {
+  position: absolute;
+  inset: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c4f6b;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.config-onda-measures > span {
+  position: absolute;
+  width: 80px;
+}
+
+/* Posiciones sobre sketch-ondas-1.svg (una columna). */
+.config-onda-total-1 {
+  top: 45%;
+  left: 43%;
+}
+
+.config-onda-paso-1 {
+  top: 27%;
+  left: 32%;
+}
+
+.config-onda-margen-1 {
+  top: 64.5%;
+  left: 57%;
+}
+
+/* Posiciones sobre sketch-ondas-2.svg (varias columnas). */
+.config-onda-total-2 {
+  top: 8.4%;
+  left: 41%;
+}
+
+.config-onda-luz-2 {
+  top: 24.5%;
+  left: 37.5%;
+}
+
+.config-onda-paso-2 {
+  top: 39%;
+  left: 34%;
+}
+
+.config-onda-margen-2 {
+  top: 54%;
+  left: 19.5%;
+}
+
 .config-onda-label {
   position: absolute;
   font-size: 12px;
@@ -705,23 +785,23 @@ a {
 }
 
 .config-onda-ancho {
-  top: 26.8%; 
-  left: 33%;
+  top: 26%; 
+  left: 27%;
 }
 
 .config-onda-altura {
-  top: 50.5%; 
-  left: 30%;
+  top: 49.5%; 
+  left: 22%;
 }
 
 .config-onda-base {
-  top: 76.8%; 
-  left: 56%;
+  top: 76%; 
+  left: 48%;
 }
 
 .config-onda-pisada {
-  top: 64.5%; 
-  left: 25%;
+  top: 63.8%; 
+  left: 17.5%;
 }
 
 .config-step-label {

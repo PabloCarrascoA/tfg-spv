@@ -339,25 +339,45 @@ function OndaConfigView() {
           </div>
         </div>
 
-        <div className="config-side-panel">
-          <div className="config-side-img-wrapper config-onda-wrapper">
-            <img
-              src="/images/sketch-ondas.svg"
-              alt="Esquema de onda"
-              className="config-side-img"
-            />
-            <span className="config-onda-label config-onda-ancho">
-              {anchoOnda || '—'} mm
-            </span>
-            <span className="config-onda-label config-onda-altura">
-              {altura || '—'} mm
-            </span>
-            <span className="config-onda-label config-onda-base">
-              {base || '—'} mm
-            </span>
-            <span className="config-onda-label config-onda-pisada">
-              {pisada || '—'} mm
-            </span>
+        <div className="config-side-panel config-ondas-panel">
+          <div className="config-ondas-sketches">
+            <div className="config-onda-wrapper config-onda-detail">
+
+              <img
+                src="/images/sketch-ondas.svg" alt="Detalle de onda" className="config-side-img"
+              />
+
+              <span className="config-onda-label config-onda-ancho">{anchoOnda || '—'} mm</span>
+              <span className="config-onda-label config-onda-altura">{altura || '—'} mm</span>
+              <span className="config-onda-label config-onda-base">{base || '—'} mm</span>
+              <span className="config-onda-label config-onda-pisada">{pisada || '—'} mm</span>
+
+            </div>
+
+            <div className="config-onda-wrapper config-onda-layout">
+
+              <img
+                src={columnas === 1 ? '/images/sketch-ondas-1.svg' : '/images/sketch-ondas-2.svg'}
+                alt={columnas === 1 ? 'Distribución de ondas en una columna' : 'Distribución de ondas en varias columnas'}
+                className="config-side-img"
+              />
+
+              {columnas === 1 && (
+                <div className="config-onda-measures config-onda-measures-1">
+                  <span className="config-onda-total-1">{anchoOndaTotal || '—'} mm</span>
+                  <span className="config-onda-paso-1">{pasoReal === '' ? '—' : pasoReal.toFixed(2)} mm</span>
+                  <span className="config-onda-margen-1">{margen === '' ? '—' : margen} mm</span>
+                </div>
+              )}
+              {columnas > 1 && (
+                <div className="config-onda-measures config-onda-measures-2">
+                  <span className="config-onda-total-2">{anchoOndaTotal || '—'} mm</span>
+                  <span className="config-onda-luz-2">{luz === '' ? '—' : luz} mm</span>
+                  <span className="config-onda-paso-2">{pasoReal === '' ? '—' : pasoReal.toFixed(2)} mm</span>
+                  <span className="config-onda-margen-2">{margen === '' ? '—' : margen} mm</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
