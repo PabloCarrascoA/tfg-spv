@@ -283,6 +283,8 @@ def obtener_runers(db):
 
     return runers
 
+# ---- ONDAS -----
+
 def obtener_ondas(db):
     cursor = db.cursor()
     cursor.execute("SELECT id, codigo, tipo, color, proveedor, material, precio FROM ondas")
@@ -302,6 +304,52 @@ def obtener_ondas(db):
         })
 
     return ondas
+
+def get_precio_soldar_onda(db):
+
+            cursor = db.cursor()
+            cursor.execute("SELECT precio FROM ondas_soldar WHERE codigo = ?", ("precio_soldar",))
+            row = cursor.fetchone()
+        
+            if row is None:
+                return None
+        
+            return {"precio": row[0]}
+            
+
+def calcular_soldadura_ondas(ancho_onda, n_ondas, continuidad, db):
+
+            precio_soldadura = get_precio_soldar_onda(db)
+            
+            if precio_soldadura is None:
+                raise ValueError("No se encontró precio de soldadura para ondas")
+
+            if ancho_onda < 500:
+                ancho_onda = 0.5
+
+            if ancho_onda > 500:
+                ancho_onda = (ancho_onda + 40) / 1000
+
+            precio_soldadura_total = (n_ondas * ancho_onda * precio_soldadura["precio"])
+
+            if not continuidad:
+                precio_soldadura_total = precio_soldadura_total * 2
+
+            return precio_soldadura_total
+
+def ajustar_ancho_onda(ancho):
+
+   # Ajuste a múltiplo de 50 mm
+
+    if ancho <= 0:
+        raise ValueError("El ancho de la onda debe ser mayor que cero")
+    
+    if (ancho % 50) != 0:
+        ancho_ajustado = ((math.trunc(ancho / 50)) + 1) * 50
+    else:
+        ancho_ajustado = ancho
+
+    return ancho_ajustado
 
 def obtener_desarrollo_ondas(base, altura):
 
@@ -909,13 +957,15 @@ def calcular_precio_perforaciones(db, agujeros_x_fila, filas_x_agujero, diametro
 
 
 def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, ancho, pisada, cantidad_bandas, ancho_onda = None, cliente_id = None):
+
+    print(f"DEBUG: --------- ONDAS ---------")
     
     onda = obtener_onda_por_codigo(db, codigo_onda)
 
     if onda is None:
         raise ValueError("Onda no encontrada")
     
-    if continuidad == True:
+    if continuidad:
         desarrollo_total = ((obtener_desarrollo_ondas(base, altura) + pisada) * n_ondas) + 1000
         # [TODO] revisar ajuste de la base según si se da el paso o n_ondas
     else:
@@ -934,9 +984,14 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
     ancho_calculo = ancho_onda if ancho_onda is not None else ancho
 
-    precio_onda_total = (desarrollo_total * ancho_calculo * onda["precio"]) / 1000000
+    ancho_ajustado = ajustar_ancho_onda(ancho_calculo)
 
-    # - Descuento preparación -
+    print(f"DEBUG: valor de ancho pre -> {ancho_calculo}")
+    print(f"DEBUG: valor de ancho post -> {ancho_ajustado}")
+
+    precio_onda_total = (desarrollo_total * ancho_ajustado * onda["precio"]) / 1000000
+
+    # - Descuento material -
 
     if cliente_id is not None:
         
@@ -948,6 +1003,10 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
     # - Cálculo soldadura -
 
+    precio_soldadura_total = calcular_soldadura_ondas(ancho_onda, n_ondas, continuidad, db)
+
+    print(f"DEBUG: precio_soldadura_total -> {precio_soldadura_total}")
+
     if cliente_id is not None:
         
         descuento_soldadura = 1 - get_descuento_soldadura(db, cliente_id, "ondas")
@@ -955,16 +1014,19 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
         precio_soldadura_total = precio_soldadura_total * (descuento_soldadura)
 
 
-    precio_preparacion = 25
+    # precio_preparacion = 25
 
     # - Cálculo preparación -
  
-    if cliente_id is not None:
+    # if cliente_id is not None:
 
-        tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "ondas")
+    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "ondas")
 
-        print(f"DEBUG preparación ondas - ancho_onda: {ancho_onda}, ancho_banda: {ancho}, ancho_usado: {ancho_calculo}")
-        precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_calculo)
+    precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_calculo)
+
+    print(f"DEBUG: precio_preparacion -> {precio_preparacion}")
+
+    print(f"DEBUG: --------- ONDAS FIN ---------")
 
     precio_final = precio_onda_total + precio_soldadura_total + precio_preparacion
 
