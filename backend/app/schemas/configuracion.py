@@ -67,6 +67,22 @@ class PerfilTRequest(BaseModel):
         margenIzqH2: Optional[float] = None
         margenDerH2: Optional[float] = None
 
+class OndaRequest(BaseModel):
+    codigoOnda: str
+    cantidad: int = Field(default=1, gt=0)
+    columnas: int = Field(default=1, gt=0)
+    continua: Optional[bool] = None
+    base: Optional[float] = None
+    altura: Optional[float] = None
+    anchoOndaTotal: Optional[float] = None
+    anchoOnda: Optional[float] = None
+    pisada: Optional[float] = None
+    margen: Optional[float] = None
+    luz: Optional[float] = None
+    paso: Optional[float] = None
+    comentarios: Optional[str] = None
+
+
 class CalculoBandaRequest(BaseModel):
 
     cliente: Optional[ClienteRequest] = None
@@ -126,13 +142,7 @@ class CalculoBandaRequest(BaseModel):
 
     #Campos para la onda
 
-    codigo_onda:      Optional[str]   = None
-    n_ondas:          Optional[int]   = None
-    continuidad_onda: Optional[bool]  = None
-    base_onda:        Optional[float] = None
-    altura_onda:      Optional[float] = None
-    ancho_onda:       Optional[float] = None
-    pisada_onda:      Optional[float] = None
+    onda: Optional[OndaRequest] = None
 
 
 class CalculoBandaResponse(BaseModel):

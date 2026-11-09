@@ -47,7 +47,7 @@ def get_descuento_soldadura(db, cliente_id, tabla):
     return row["descuento"] if row else 0.0
 
 
-def get_tarifa_preparacion(db, cliente_id, tabla, ancho_perfilT=None, n_hilerasT=None, tresbolillo=None, *, codigo_material=None):
+def get_tarifa_preparacion(db, cliente_id, tabla, ancho_perfilT=None, columnas=None, tresbolillo=None, *, codigo_material=None):
     row = db.execute(
         "SELECT precio FROM tarifas_preparacion WHERE cliente_id=? AND tabla=?",
         (cliente_id, tabla)
@@ -63,10 +63,10 @@ def get_tarifa_preparacion(db, cliente_id, tabla, ancho_perfilT=None, n_hilerasT
             return runer["preparacion"]
 
     if not row and (tabla == 'perfiles_transversales' or tabla == 'perfiles_transversales_tresbolillo'):
-        if n_hilerasT == 1 and not tresbolillo:
+        if columnas == 1 and not tresbolillo:
             if ancho_perfilT:
                 return 40
-        if n_hilerasT > 1 and not tresbolillo:
+        if columnas > 1 and not tresbolillo:
             if ancho_perfilT:
                 return 60
             
@@ -78,9 +78,9 @@ def get_tarifa_preparacion(db, cliente_id, tabla, ancho_perfilT=None, n_hilerasT
 
     if not row and tabla == 'ondas':
 
-        if columnas_onda == 1:
+        if columnas == 1:
             return 40
-        if columnas_onda > 1:
+        if columnas > 1:
             return 60
             
     return row["precio"] if row else 25.0  # Valor por defecto si no se encuentra tarifa

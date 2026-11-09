@@ -329,13 +329,21 @@ function construirPayload(state) {
     agujeros_x_fila:      state.perforaciones?.agujerosPorFila ?? null,
     filas_x_agujero:      state.perforaciones?.filas           ?? null,
     diametro_perforacion: toFloat(state.perforaciones?.diametro),
-    codigo_onda:      state.onda?.codigoOnda   ?? null,
-    n_ondas:          state.onda?.cantidad     ?? null,
-    continuidad_onda: state.onda?.continua     ?? null,
-    base_onda:        toFloat(state.onda?.base),
-    altura_onda:      toFloat(state.onda?.altura),
-    ancho_onda:       toFloat(state.onda?.anchoOndaTotal ?? state.onda?.anchoOnda),
-    pisada_onda:      toFloat(state.onda?.pisada),
+    onda: state.onda?.codigoOnda ? {
+      codigoOnda: state.onda.codigoOnda,
+      cantidad: Number(state.onda.cantidad),
+      columnas: Number(state.onda.columnas ?? 1),
+      continua: state.onda.continua ?? null,
+      base: toFloat(state.onda.base),
+      altura: toFloat(state.onda.altura),
+      anchoOndaTotal: toFloat(state.onda.anchoOndaTotal ?? state.onda.anchoOnda),
+      anchoOnda: toFloat(state.onda.anchoOnda),
+      pisada: toFloat(state.onda.pisada),
+      margen: toFloat(state.onda.margen),
+      luz: toFloat(state.onda.luz),
+      paso: toFloat(state.onda.paso),
+      comentarios: state.onda.comentarios ?? null,
+    } : null,
   }
 }
 

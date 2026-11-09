@@ -721,7 +721,7 @@ def calcular_precio_perfil_transversal(db, cantidad_bandas, codigo_perfil, ancho
     tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "perfiles_transversales", ancho, n_hileras)
 
     print(f"DEBUG TARIFA preparación perfil transversal: {tarifa_preparacion}")
-    precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_perfil)
+    precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_perfil, tabla="perfiles_transversales")
 
 
     precio_final = precio_perfil_total + precio_soldadura_total + precio_preparacion
@@ -831,7 +831,7 @@ def calcular_precio_perfil_transversal_tresbolillo(db, perfilT, hilera, cantidad
 
     print(f"DEBUG tresbolillo H{hilera}: tarifa preparación: {tarifa_preparacion}")
 
-    precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_perfil)
+    precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_perfil, tabla="perfiles_transversales_tresbolillo")
 
     precio_final = precio_perfil_total + precio_soldadura_total + precio_preparacion
 
@@ -956,15 +956,19 @@ def calcular_precio_perforaciones(db, agujeros_x_fila, filas_x_agujero, diametro
     }
 
 
-def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, ancho, pisada, cantidad_bandas, ancho_onda = None, cliente_id = None):
+def calcular_precio_ondas(db, onda, ancho, cantidad_bandas, cliente_id=None):
+    continuidad = onda.continua
+    codigo_onda = onda.codigoOnda
+    n_ondas = onda.cantidad
+    base = onda.base
+    altura = onda.altura
+    pisada = onda.pisada
+    ancho_onda = onda.anchoOndaTotal
+    columnas = onda.columnas
+    tabla = "ondas"
+    material_onda = obtener_onda_por_codigo(db, codigo_onda)
 
-    print(f"DEBUG: --------- ONDAS ---------")
-
-    print(f"DEBUG: número de ondas -> {n_ondas}")
-    
-    onda = obtener_onda_por_codigo(db, codigo_onda)
-
-    if onda is None:
+    if material_onda is None:
         raise ValueError("Onda no encontrada")
     
     if continuidad:
@@ -991,13 +995,13 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
     print(f"DEBUG: valor de ancho pre -> {ancho_calculo}")
     print(f"DEBUG: valor de ancho post -> {ancho_ajustado}")
 
-    precio_onda_total = (desarrollo_total * ancho_ajustado * onda["precio"]) / 1000000
+    precio_onda_total = (desarrollo_total * ancho_ajustado * material_onda["precio"]) / 1000000
 
     # - Descuento material -
 
     if cliente_id is not None:
         
-        descuento = 1 - get_descuento_producto(db, cliente_id, "ondas", codigo_onda, onda["tipo"])
+        descuento = 1 - get_descuento_producto(db, cliente_id, "ondas", codigo_onda, material_onda["tipo"])
 
         precio_onda_total = precio_onda_total * (descuento)
 
@@ -1022,9 +1026,9 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
  
     # if cliente_id is not None:
 
-    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "ondas")
+    tarifa_preparacion = get_tarifa_preparacion(db, cliente_id, "ondas", columnas=columnas)
 
-    precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_calculo)
+    precio_preparacion = calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_calculo, tabla)
 
     print(f"DEBUG: precio_preparacion -> {precio_preparacion}")
 
@@ -1035,7 +1039,7 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
     return {
 
         "codigo_onda": codigo_onda,
-        "precio_onda": onda["precio"],
+        "precio_onda": material_onda["precio"],
         "precio_onda_total": precio_onda_total,
         "precio_soldadura_total": precio_soldadura_total,
         "precio_final": precio_final,
@@ -1043,7 +1047,7 @@ def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, a
 
 
 
-def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, perfilT = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, codigo_onda = None, n_ondas = None, base_onda = None, altura_onda = None, continuidad_onda = None, ancho_onda = None, pisada_onda = None):
+def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, perfilT = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, onda = None):
     
     cliente_id = cliente.cod if cliente is not None else None
     # - Precio banda -
@@ -1241,9 +1245,8 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
     precio_ondas_total = 0
     precio_ondas_final = 0
 
-    if codigo_onda is not None:
-        
-        resultado_ondas = calcular_precio_ondas(db, continuidad_onda, codigo_onda, n_ondas, base_onda, altura_onda, ancho, pisada_onda, cantidad_bandas, ancho_onda, cliente_id)
+    if onda is not None:
+        resultado_ondas = calcular_precio_ondas(db, onda, ancho, cantidad_bandas, cliente_id=cliente_id)
 
         precio_ondas = resultado_ondas["precio_onda"]
         precio_ondas_total = resultado_ondas["precio_onda_total"]
@@ -1327,13 +1330,13 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
         "diametro_perforacion": diametro_perforacion,
         "agujeros_x_fila": agujeros_x_fila,
         "filas_x_agujero": filas_x_agujero,
-        "codigo_onda": codigo_onda,
-        "n_ondas": n_ondas,
-        "base_onda": base_onda,
-        "altura_onda": altura_onda,
-        "ancho_onda": ancho_onda,
-        "continuidad_onda": continuidad_onda,
-        "pisada_onda": pisada_onda,
+        "codigo_onda": onda.codigoOnda if onda is not None else None,
+        "n_ondas": onda.cantidad if onda is not None else None,
+        "base_onda": onda.base if onda is not None else None,
+        "altura_onda": onda.altura if onda is not None else None,
+        "ancho_onda": onda.anchoOndaTotal if onda is not None else None,
+        "continuidad_onda": onda.continua if onda is not None else None,
+        "pisada_onda": onda.pisada if onda is not None else None,
         "precio_onda": round(precio_ondas, 2),
         "precio_onda_total": round(precio_ondas_total, 2),
         "precio_ondas_final": round(precio_ondas_final, 2),
