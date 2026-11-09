@@ -9,17 +9,17 @@ def calcular_precio_preparacionLR(tarifa_preparacion, cantidad_bandas, n_perfile
 
     if cantidad_bandas == 1 and n_perfiles == 1:
         precio_preparacion = tarifa_preparacion
-        print("entro en caso 1")
+        # print("entro en caso 1")
 
     elif cantidad_bandas > 1 and n_perfiles == 1:
         precio_preparacion = (tarifa_preparacion) / cantidad_bandas
-        print("entro en caso 2")
+        # print("entro en caso 2")
 
     elif n_perfiles > 1 and cantidad_bandas >= 1:
 
         if n_perfiles % 2 == 0:
             n_cobros = n_perfiles / 2
-            print("entro en caso 3.1")
+            # print("entro en caso 3.1")
         else:
             n_cobros = math.floor(n_perfiles/2) + 1 
 
@@ -30,7 +30,7 @@ def calcular_precio_preparacionLR(tarifa_preparacion, cantidad_bandas, n_perfile
     
     return precio_preparacion
 
-def calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_perfil):
+def calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_perfil=None, ancho_onda=None):
 
     precio_preparacion = 0
     n_preparaciones = 1
@@ -38,8 +38,14 @@ def calcular_precio_preparacionTO(tarifa_preparacion, cantidad_bandas, ancho_per
     if ancho_perfil is not None and ancho_perfil >= 1000 and ancho_perfil <= 1600:
         n_preparaciones = 2
 
+    if ancho_onda is not None and ancho_onda >= 1350 and ancho_onda <= 1550:
+        n_preparaciones = 2
+
     if ancho_perfil > 1600:
-        raise ValueError("el ancho de perfil no puede ser mayor que 1600mm")
+        raise ValueError("el ancho de perfil no puede ser mayor que 1600 mm")
+
+    if ancho_onda > 1550:
+        raise ValueError("el ancho de onda no puede ser mayor que 1550 mm")
 
     precio_preparacion = (n_preparaciones * tarifa_preparacion) / cantidad_bandas
     

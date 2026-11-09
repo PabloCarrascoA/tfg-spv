@@ -64,20 +64,23 @@ def get_tarifa_preparacion(db, cliente_id, tabla, ancho_perfilT=None, n_hilerasT
 
     if not row and (tabla == 'perfiles_transversales' or tabla == 'perfiles_transversales_tresbolillo'):
         if n_hilerasT == 1 and not tresbolillo:
-            if ancho_perfilT <= 1300:
+            if ancho_perfilT:
                 return 40
-            if ancho_perfilT > 1300:
-                return 45
         if n_hilerasT > 1 and not tresbolillo:
-            if ancho_perfilT <= 1300:
+            if ancho_perfilT:
                 return 60
-            if ancho_perfilT > 1300:
-                return 70
             
     if not row and tresbolillo == True:
         if ancho_perfilT <= 1300:
             return 65
         if ancho_perfilT > 1300:
             return 75
+
+    if not row and tabla == 'ondas':
+
+        if columnas_onda == 1:
+            return 40
+        if columnas_onda > 1:
+            return 60
             
     return row["precio"] if row else 25.0  # Valor por defecto si no se encuentra tarifa

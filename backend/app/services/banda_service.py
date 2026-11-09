@@ -959,6 +959,8 @@ def calcular_precio_perforaciones(db, agujeros_x_fila, filas_x_agujero, diametro
 def calcular_precio_ondas(db, continuidad, codigo_onda, n_ondas, base, altura, ancho, pisada, cantidad_bandas, ancho_onda = None, cliente_id = None):
 
     print(f"DEBUG: --------- ONDAS ---------")
+
+    print(f"DEBUG: número de ondas -> {n_ondas}")
     
     onda = obtener_onda_por_codigo(db, codigo_onda)
 
