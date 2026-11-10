@@ -314,12 +314,11 @@ function construirPayload(state) {
     ancho_banda:      toFloat(state.banda?.anchoAjustado),
     tipo_empalme:     state.banda?.tipoEmpalme   ?? null,
     subtipo_empalme:  state.banda?.subtipoEmpalme ?? null,
-    codigo_perfil_superior:    state.perfilL?.superior?.activo ? state.perfilL.superior.codigo                        : null,
-    n_perfiles_superior:       state.perfilL?.superior?.activo ? state.perfilL.superior.cantidad                      : null,
-    distancia_margen_superior: state.perfilL?.superior?.activo ? toFloat(state.perfilL.superior.distanciaBordeCentro) : null,
-    codigo_perfil_inferior:    state.perfilL?.inferior?.activo ? state.perfilL.inferior.codigo                        : null,
-    n_perfiles_inferior:       state.perfilL?.inferior?.activo ? state.perfilL.inferior.cantidad                      : null,
-    distancia_margen_inferior: state.perfilL?.inferior?.activo ? toFloat(state.perfilL.inferior.distanciaBordeCentro) : null,
+    perfilL: state.perfilL ? {
+      superior: sanearPerfilLongitudinal(state.perfilL.superior),
+      inferior: sanearPerfilLongitudinal(state.perfilL.inferior),
+      comentarios: state.perfilL.comentarios ?? null,
+    } : null,
     perfilT: sanearPerfilT(state.perfilT),
     runer: state.runer?.codigoRuner ? {
       codigoRuner: state.runer.codigoRuner,
@@ -369,3 +368,25 @@ function sanearPerfilT(perfilT) {
 }
 
 export default ResumenView
+
+function sanearPerfilLongitudinal(perfil) {
+  if (!perfil) return null
+  const toFloat = valor => {
+    const numero = parseFloat(valor)
+    return Number.isFinite(numero) ? numero : null
+  }
+  return {
+    activo: Boolean(perfil.activo),
+    codigo: perfil.codigo || null,
+    cantidad: toFloat(perfil.cantidad),
+    distanciaBordeCentro: toFloat(perfil.distanciaBordeCentro),
+    distanciaBordeBanda: toFloat(perfil.distanciaBordeBanda),
+    distanciaEntreBandas: toFloat(perfil.distanciaEntreBandas),
+    distancia: toFloat(perfil.distancia),
+    acotado: toFloat(perfil.acotado),
+    centrado: perfil.centrado ?? null,
+    extremos: perfil.extremos ?? null,
+    tipo: perfil.tipo ?? null,
+    color: perfil.color ?? null,
+  }
+}

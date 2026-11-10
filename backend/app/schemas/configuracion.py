@@ -94,6 +94,27 @@ class RunerRequest(BaseModel):
     tipo: Optional[str] = None
 
 
+class PerfilLongitudinalLadoRequest(BaseModel):
+    activo: bool = False
+    codigo: Optional[str] = None
+    cantidad: Optional[int] = Field(default=None, gt=0)
+    distanciaBordeCentro: Optional[float] = None
+    distanciaBordeBanda: Optional[float] = None
+    distanciaEntreBandas: Optional[float] = None
+    distancia: Optional[float] = None
+    acotado: Optional[int] = None
+    centrado: Optional[bool] = None
+    extremos: Optional[bool] = None
+    tipo: Optional[str] = None
+    color: Optional[str] = None
+
+
+class PerfilLRequest(BaseModel):
+    superior: Optional[PerfilLongitudinalLadoRequest] = None
+    inferior: Optional[PerfilLongitudinalLadoRequest] = None
+    comentarios: Optional[str] = None
+
+
 class CalculoBandaRequest(BaseModel):
 
     cliente: Optional[ClienteRequest] = None
@@ -130,12 +151,7 @@ class CalculoBandaRequest(BaseModel):
 
     #perfil longitudinal
 
-    codigo_perfil_superior: Optional[str] = None
-    n_perfiles_superior: Optional[float] = None
-    distancia_margen_superior: Optional[float] = None
-    codigo_perfil_inferior: Optional[str] = None
-    n_perfiles_inferior: Optional[float] = None
-    distancia_margen_inferior: Optional[float] = None
+    perfilL: Optional[PerfilLRequest] = None
 
     # Campos para runer
 

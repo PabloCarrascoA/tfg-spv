@@ -534,7 +534,11 @@ def calcular_precio_empalme(db, tipo_empalme, subtipo, ancho, cliente_id = None)
     }
 
 
-def calcular_precio_perfil_longitudinal(db, cantidad_bandas, codigo_perfil, largo, ancho, n_perfiles, distancia_margen = None, cliente_id = None):
+def calcular_precio_perfil_longitudinal(db, cantidad_bandas, perfil, largo, ancho, cliente_id = None):
+    
+    codigo_perfil = perfil.codigo
+    n_perfiles = perfil.cantidad
+    distancia_margen = perfil.distanciaBordeCentro
 
     print(f"DEBUG: cantidad_bandas: {cantidad_bandas}")
 
@@ -1053,9 +1057,23 @@ def calcular_precio_ondas(db, onda, ancho, cantidad_bandas, cliente_id=None):
 
 
 
-def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, perfilT = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, onda = None):
+def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, perfilT = None, perfilL = None, runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, onda = None):
     
+    perfil_superior = perfilL.superior if perfilL is not None else None
+    if perfil_superior is not None and not perfil_superior.activo:
+        perfil_superior = None
+    codigo_perfil_superior = perfil_superior.codigo if perfil_superior is not None else None
+    n_perfiles_superior = perfil_superior.cantidad if perfil_superior is not None else None
+    distancia_margen_superior = perfil_superior.distanciaBordeCentro if perfil_superior is not None else None
+    perfil_inferior = perfilL.inferior if perfilL is not None else None
+    if perfil_inferior is not None and not perfil_inferior.activo:
+        perfil_inferior = None
+    codigo_perfil_inferior = perfil_inferior.codigo if perfil_inferior is not None else None
+    n_perfiles_inferior = perfil_inferior.cantidad if perfil_inferior is not None else None
+    distancia_margen_inferior = perfil_inferior.distanciaBordeCentro if perfil_inferior is not None else None
+
     cliente_id = cliente.cod if cliente is not None else None
+
     # - Precio banda -
 
     precio_banda = 0
@@ -1103,11 +1121,9 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
             resultado_perfil_superior = calcular_precio_perfil_longitudinal(
                 db,
                 cantidad_bandas,
-                codigo_perfil_superior,
+                perfil_superior,
                 largo,
                 ancho,
-                n_perfiles_superior,
-                distancia_margen_superior,
                 cliente_id
             )
             precio_perfilL += resultado_perfil_superior["precio_perfil_total"]
@@ -1131,11 +1147,9 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
             resultado_perfil_inferior = calcular_precio_perfil_longitudinal(
                 db,
                 cantidad_bandas,
-                codigo_perfil_inferior,
+                perfil_inferior,
                 largo,
                 ancho,
-                n_perfiles_inferior,
-                distancia_margen_inferior,
                 cliente_id
             )
             precio_perfilL += resultado_perfil_inferior["precio_perfil_total"]
