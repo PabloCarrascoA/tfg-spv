@@ -83,6 +83,17 @@ class OndaRequest(BaseModel):
     comentarios: Optional[str] = None
 
 
+class RunerRequest(BaseModel):
+    codigoRuner: str
+    cantidad: int = Field(default=1, gt=0, le=3)
+    margen: Optional[float] = None
+    luz: Optional[float] = None
+    anchoRuner: Optional[float] = None
+    comentarios: Optional[str] = None
+    color: Optional[str] = None
+    tipo: Optional[str] = None
+
+
 class CalculoBandaRequest(BaseModel):
 
     cliente: Optional[ClienteRequest] = None
@@ -128,11 +139,7 @@ class CalculoBandaRequest(BaseModel):
 
     # Campos para runer
 
-    codigo_runer: Optional[str] = None
-    n_perfiles_runer: Optional[float] = None
-    margen_runer: Optional[float] = None
-    luz_runer: Optional[float] = None
-    ancho_runer: Optional[float] = None
+    runer: Optional[RunerRequest] = None
 
     # Campos para perforaciones
 

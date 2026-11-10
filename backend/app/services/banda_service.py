@@ -850,11 +850,13 @@ def calcular_precio_perfil_transversal_tresbolillo(db, perfilT, hilera, cantidad
     }
 
 
-def calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_perfiles, cliente_id = None):
+def calcular_precio_runer(db, cantidad_bandas, runer, ancho, largo, cliente_id = None):
+    codigo_runer = runer.codigoRuner
+    n_perfiles = runer.cantidad
 
-    runer = obtener_runer_por_codigo(db, codigo_runer)
+    material_runer = obtener_runer_por_codigo(db, codigo_runer)
 
-    if runer is None:
+    if material_runer is None:
         raise ValueError("Runer no encontrado")
     
     if n_perfiles > 3:
@@ -862,7 +864,7 @@ def calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_per
     
    # - Calculo precio runer -
 
-    precio_runer_mL = runer["precio_material"]
+    precio_runer_mL = material_runer["precio_material"]
 
     if largo <= 0:
         raise ValueError("Largo debe ser mayor que cero")
@@ -879,13 +881,13 @@ def calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_per
 
     if cliente_id is not None:
         
-        descuento = 1 - get_descuento_producto(db, cliente_id, "runers", codigo_runer, runer["tipo"])
+        descuento = 1 - get_descuento_producto(db, cliente_id, "runers", codigo_runer, material_runer["tipo"])
 
         precio_runer_total = precio_runer_total * (descuento)
 
     # - Calculo soldadura
 
-    precio_soldadura_mL = runer["precio_soldar"]
+    precio_soldadura_mL = material_runer["precio_soldar"]
 
     precio_soldadura_total = (n_perfiles * largo_m * precio_soldadura_mL)
 
@@ -957,6 +959,7 @@ def calcular_precio_perforaciones(db, agujeros_x_fila, filas_x_agujero, diametro
 
 
 def calcular_precio_ondas(db, onda, ancho, cantidad_bandas, cliente_id=None):
+
     continuidad = onda.continua
     codigo_onda = onda.codigoOnda
     n_ondas = onda.cantidad
@@ -967,6 +970,11 @@ def calcular_precio_ondas(db, onda, ancho, cantidad_bandas, cliente_id=None):
     columnas = onda.columnas
     tabla = "ondas"
     material_onda = obtener_onda_por_codigo(db, codigo_onda)
+
+    print(f"DEBUG: --------- ONDAS INICIO ---------")
+
+    print(f"DEBUG: número de ondas -> {n_ondas}")
+    print(f"DEBUG: continuidad -> {continuidad}")
 
     if material_onda is None:
         raise ValueError("Onda no encontrada")
@@ -985,8 +993,6 @@ def calcular_precio_ondas(db, onda, ancho, cantidad_bandas, cliente_id=None):
     print(f"DEBUG: valor desarrollo onda -> {obtener_desarrollo_ondas(base, altura)}")
 
     print(f"DEBUG: valor de desarrollo total -> {desarrollo_total}")
-    
-    
 
     ancho_calculo = ancho_onda if ancho_onda is not None else ancho
 
@@ -1047,7 +1053,7 @@ def calcular_precio_ondas(db, onda, ancho, cantidad_bandas, cliente_id=None):
 
 
 
-def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, perfilT = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, codigo_runer = None, n_perfiles_runer = None, margen_runer = None, luz_runer = None, ancho_runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, onda = None):
+def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, perfilT = None, codigo_perfil_superior = None, n_perfiles_superior = None, distancia_margen_superior = None, codigo_perfil_inferior = None, n_perfiles_inferior = None, distancia_margen_inferior = None, runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, onda = None):
     
     cliente_id = cliente.cod if cliente is not None else None
     # - Precio banda -
@@ -1205,9 +1211,9 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
     precio_soldadura_runer = 0
     precio_runer_final = 0
 
-    if codigo_runer is not None:
+    if runer is not None:
 
-        resultado_runer = calcular_precio_runer(db, cantidad_bandas, codigo_runer, ancho, largo, n_perfiles_runer, cliente_id)
+        resultado_runer = calcular_precio_runer(db, cantidad_bandas, runer, ancho, largo, cliente_id)
 
         precio_runer = resultado_runer["precio_runer_total"]
         precio_soldadura_runer = resultado_runer["precio_soldadura_total"]
@@ -1317,11 +1323,11 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
 
         "precio_perfilT_tresbolillo_final": round(precio_perfilT_tresbolillo_final, 2),
 
-        "codigo_runer": codigo_runer,
-        "n_perfiles_runer": n_perfiles_runer,
-        "margen_runer": margen_runer,
-        "luz_runer": luz_runer,
-        "ancho_runer": ancho_runer,
+        "codigo_runer": runer.codigoRuner if runer is not None else None,
+        "n_perfiles_runer": runer.cantidad if runer is not None else None,
+        "margen_runer": runer.margen if runer is not None else None,
+        "luz_runer": runer.luz if runer is not None else None,
+        "ancho_runer": runer.anchoRuner if runer is not None else None,
         "precio_runer": round(precio_runer, 2),
         "precio_runer_soldadura": round(precio_soldadura_runer, 2),
         "precio_runer_final": round(precio_runer_final, 2),
