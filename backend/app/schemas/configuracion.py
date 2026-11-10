@@ -115,6 +115,12 @@ class PerfilLRequest(BaseModel):
     comentarios: Optional[str] = None
 
 
+class PerforacionRequest(BaseModel):
+    agujerosPorFila: float = Field(gt=0)
+    filas: float = Field(gt=0)
+    diametro: float = Field(default=10, gt=0)
+
+
 class CalculoBandaRequest(BaseModel):
 
     cliente: Optional[ClienteRequest] = None
@@ -159,9 +165,7 @@ class CalculoBandaRequest(BaseModel):
 
     # Campos para perforaciones
 
-    agujeros_x_fila: Optional[float] = None
-    filas_x_agujero: Optional[float] = None
-    diametro_perforacion: Optional[float] = None
+    perforacion: Optional[PerforacionRequest] = None
 
     #Campos para la onda
 

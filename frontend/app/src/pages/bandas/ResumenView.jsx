@@ -330,9 +330,11 @@ function construirPayload(state) {
       color: state.runer.color ?? null,
       tipo: state.runer.tipo ?? null,
     } : null,
-    agujeros_x_fila:      state.perforaciones?.agujerosPorFila ?? null,
-    filas_x_agujero:      state.perforaciones?.filas           ?? null,
-    diametro_perforacion: toFloat(state.perforaciones?.diametro),
+    perforacion: state.perforaciones ? {
+      agujerosPorFila: toFloat(state.perforaciones.agujerosPorFila),
+      filas: toFloat(state.perforaciones.filas),
+      diametro: toFloat(state.perforaciones.diametro) ?? 10,
+    } : null,
     onda: state.onda?.codigoOnda ? {
       codigoOnda: state.onda.codigoOnda,
       cantidad: Number(state.onda.cantidad),

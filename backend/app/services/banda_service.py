@@ -924,7 +924,10 @@ def calcular_precio_runer(db, cantidad_bandas, runer, ancho, largo, cliente_id =
     }
 
 
-def calcular_precio_perforaciones(db, agujeros_x_fila, filas_x_agujero, diametro, largo, ancho, cliente_id = None):
+def calcular_precio_perforaciones(db, perforacion, largo, ancho, cliente_id = None):
+    agujeros_x_fila = perforacion.agujerosPorFila
+    filas_x_agujero = perforacion.filas
+    diametro = perforacion.diametro
 
     if agujeros_x_fila <= 0 or filas_x_agujero <= 0 or diametro <= 0:
         raise ValueError("No pueden haber filas sin agujeros y el diámetro debe ser mayor o igual a cero")
@@ -1057,7 +1060,7 @@ def calcular_precio_ondas(db, onda, ancho, cantidad_bandas, cliente_id=None):
 
 
 
-def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, perfilT = None, perfilL = None, runer = None, agujeros_x_fila = None, filas_x_agujero = None, diametro_perforacion = None, cliente = None, onda = None):
+def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, tipo_empalme, subtipo_empalme, perfilT = None, perfilL = None, runer = None, perforacion = None, cliente = None, onda = None):
     
     perfil_superior = perfilL.superior if perfilL is not None else None
     if perfil_superior is not None and not perfil_superior.activo:
@@ -1239,18 +1242,10 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
     precio_perforaciones_final = 0
     paso_filas = None
 
-    if agujeros_x_fila is not None or filas_x_agujero is not None or diametro_perforacion is not None:
-        if agujeros_x_fila is None or filas_x_agujero is None:
-            raise ValueError("Debes indicar agujeros_x_fila y filas_x_agujero para calcular perforaciones")
-
-        if diametro_perforacion is None:
-            diametro_perforacion = 10
-
+    if perforacion is not None:
         resultado_perforaciones = calcular_precio_perforaciones(
             db,
-            agujeros_x_fila,
-            filas_x_agujero,
-            diametro_perforacion,
+            perforacion,
             largo,
             ancho,
             cliente_id
@@ -1347,9 +1342,9 @@ def calcular_configuracion_completa(db, cantidad_bandas, banda, largo, ancho, ti
         "precio_runer_final": round(precio_runer_final, 2),
         "precio_perforaciones": round(precio_perforaciones_final, 2),
         "paso_filas": paso_filas,
-        "diametro_perforacion": diametro_perforacion,
-        "agujeros_x_fila": agujeros_x_fila,
-        "filas_x_agujero": filas_x_agujero,
+        "diametro_perforacion": perforacion.diametro if perforacion is not None else None,
+        "agujeros_x_fila": perforacion.agujerosPorFila if perforacion is not None else None,
+        "filas_x_agujero": perforacion.filas if perforacion is not None else None,
         "codigo_onda": onda.codigoOnda if onda is not None else None,
         "n_ondas": onda.cantidad if onda is not None else None,
         "base_onda": onda.base if onda is not None else None,
